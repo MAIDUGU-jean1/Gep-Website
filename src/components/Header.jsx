@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Moon, Sun, Menu, X, GraduationCap } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import Logo from '../assets/Images/Logo.jpeg'; // Adjust the path as necessary
 
 const Header = () => {
   const { isDark, toggleTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navItems = ['Home', 'About', 'Courses', 'Tutors', 'Gallery', 'Contact'];
+  const navItems = ['Home', 'About', 'Courses', 'Tutors', 'Gallery','Achievements', 'Contact'];
 
   return (
     <header style={{
@@ -30,13 +31,20 @@ const Header = () => {
             alignItems: 'center',
             gap: '10px'
           }}>
-            <GraduationCap size={32} color="var(--primary-color)" />
+            <img src={Logo} alt="Not found" size={32} color="var(--primary-color)"
+              style={{
+                width: '100px',
+                height: '100px',
+                borderRadius: '50%',
+                objectFit: 'cover'
+              }} />
+            {/* <GraduationCap size={32} color="var(--primary-color)" /> */}
             <h1 style={{
               color: 'var(--text-secondary)',
-              fontSize: 'clamp(1.5rem, 4vw, 1.8rem)',
+              fontSize: 'clamp(1.5rem, 5vw, 2.0rem)',
               fontWeight: 'bold'
             }}>
-              Gep Protech Academic
+              Gep  
             </h1>
           </div>
           

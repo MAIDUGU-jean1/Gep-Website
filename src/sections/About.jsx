@@ -129,7 +129,16 @@ const About = () => {
             cursor: 'pointer',
             transition: 'all 0.3s ease'
           }}>
-            Enroll Now
+            {/* Link to Enroll in the main page */}
+            <a href="" style={{
+              textDecoration: 'none',
+              color: 'var(--secondary-color)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              Enroll Now
+            </a>
           </button>
         </motion.div>
       </div>

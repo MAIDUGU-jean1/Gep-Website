@@ -1,14 +1,16 @@
+import { image, title } from "framer-motion/client";
+
 export const courses = [
   {
     id: 1,
-    title: "Web Development",
+    title: "Front-end Web Development",
     description: "Full-stack web development with modern technologies",
-    duration: "6 months",
-    tutor: "John Smith",
-    price: "$500",
+    duration: "3 months",
+    tutor: "Jean de Dieu Maidugu",
+    price: "25,000 FCFA",
     level: "Beginner to Advanced",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["HTML5/CSS3", "JavaScript", "React.js", "Node.js", "MongoDB"]
+    features: ["HTML5/CSS3", "JavaScript", "Boastrap", "React", "Responsive Design"]
   },
   {
     id: 2,
@@ -34,7 +36,7 @@ export const courses = [
   },
   {
     id: 4,
-    title: "Data Science",
+    title: "Data Analysis",
     description: "Data analysis and machine learning fundamentals",
     duration: "3 months",
     tutor: "Mr. Ejah Elvis",
@@ -56,15 +58,50 @@ export const courses = [
   },
   {
     id: 6,
-    title: "Cybersecurity",
-    description: "Network security and ethical hacking",
-    duration: "6 months",
-    tutor: "David Wilson",
-    price: "$650",
+    title: "Computer Studies for Secretariat Duties",
+    description: "Essential computer skills for administrative roles",
+    duration: "2 months",
+    tutor: "Ngulefac Terence",
+    price: "20,000 FCFA",
+    level: "Beginner",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    features: ["Microsoft Office", "Typing Skills", "Data Entry", "Email Management", "Basic IT"]
+  },
+  {
+    id: 7,
+    title: "Back-end Development",
+    description: "Server-side programming and database management",
+    duration: "3 months",
+    tutor: "Ngulefac Terence",
+    price: "30,000 FCFA",
     level: "Advanced",
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["Network Security", "Ethical Hacking", "Cryptography", "Penetration Testing", "Security Tools"]
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    features: ["Laravel", "mySql", "PHP", "API Development", "Authentication"]
+  },
+  {
+    id: 8,
+    title: "Business Intelligence",
+    description: "Data-driven decision making and BI tools",
+    duration: "3 months",
+    tutor: "Mr. Elvis Ejah",
+    price: "30,000 FCFA",
+    level: "Advanced",
+    image: "https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    // image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    features: ["Power BI", "Tableau", "Data Warehousing", "ETL Processes", "Predictive Analytics"]
+  },
+  {
+    id: 9,
+    title: "UI/UX Design",
+    description: "User interface and user experience design principles",
+    duration: "3 months",
+    tutor: "Ngulefac Terence",
+    price: "25,000 FCFA",
+    level: "Intermediate",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    features: ["Wireframing", "Prototyping", "User Research", "Usability Testing", "Design Systems"]
   }
+
 ];
 
 export const tutors = [
@@ -97,7 +134,7 @@ export const tutors = [
     name: "Dr. Emily Brown",
     specialization: "Data Science",
     experience: "10 years",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     bio: "PhD in Computer Science with focus on machine learning and data analytics."
   }
 ];

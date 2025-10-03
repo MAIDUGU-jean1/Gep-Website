@@ -8,6 +8,7 @@ import Tutors from './sections/Tutors';
 import Gallery from './sections/Gallery';
 import Contact from './sections/Contact';
 import { useTheme } from './hooks/useTheme';
+import Achievements from './sections/Achievement';
 
 function App() {
   useTheme(); // Initialize theme
@@ -20,6 +21,7 @@ function App() {
       <Courses />
       <Tutors />
       <Gallery />
+      <Achievements/>
       <Contact />
       <Footer />
     </div>
