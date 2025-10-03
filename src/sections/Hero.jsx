@@ -1,8 +1,19 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Play, Users, Award, Clock } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Play, Users, Award, Clock, X } from 'lucide-react';
+import advert from '../../src/assets/Videos/advert.mp4'
 
 const Hero = () => {
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
+
+  const openVideo = () => {
+    setIsVideoOpen(true);
+  };
+
+  const closeVideo = () => {
+    setIsVideoOpen(false);
+  };
+
   return (
     <section id="home" style={{
       minHeight: '100vh',
@@ -76,16 +87,24 @@ const Hero = () => {
               marginBottom: '3rem'
             }}>
               <button className="btn-primary">
-                Explore Courses
+                    <a href="#courses" style={{ color: 'white', textDecoration: 'none' }}>
+                        Explore Courses
+                    </a>
               </button>
-              <button className="btn-secondary" style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
+              <motion.button 
+                className="btn-secondary" 
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={openVideo}
+              >
                 <Play size={20} />
                 Watch Intro
-              </button>
+              </motion.button>
             </div>
             
             <div style={{
@@ -141,8 +160,11 @@ const Hero = () => {
               justifyContent: 'center',
               color: 'white',
               fontSize: 'clamp(1.2rem, 3vw, 1.5rem)',
-              position: 'relative'
-            }}>
+              position: 'relative',
+              cursor: 'pointer'
+            }}
+            onClick={openVideo}
+            >
               <div style={{
                 position: 'absolute',
                 top: '50%',
@@ -158,6 +180,122 @@ const Hero = () => {
         </div>
       </div>
 
+      {/* Video Modal */}
+      <AnimatePresence>
+        {isVideoOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'rgba(0, 0, 0, 0.9)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 2000,
+              padding: '1rem'
+            }}
+            onClick={closeVideo}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              style={{
+                width: 'clamp(300px, 90vw, 800px)',
+                maxHeight: '90vh',
+                background: 'var(--card-bg)',
+                borderRadius: '15px',
+                overflow: 'hidden',
+                position: 'relative'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button 
+                onClick={closeVideo}
+                style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  right: '1rem',
+                  background: 'rgba(0,0,0,0.7)',
+                  border: 'none',
+                  color: 'white',
+                  padding: '0.5rem',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  zIndex: 2001,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <X size={20} />
+              </button>
+
+              {/* Video Player */}
+              <div style={{
+                width: '100%',
+                height: '0',
+                paddingBottom: '56.25%', // 16:9 aspect ratio
+                position: 'relative'
+              }}>
+                <video 
+                  controls 
+                  autoPlay
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    border: 'none'
+                  }}
+                >
+                  <source 
+                  src= {advert}
+                    // src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
+                    type="video/mp4" 
+                  />
+                  <source 
+                    src={advert}
+                    // src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" 
+                    type="video/mp4" 
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+              {/* Video Info */}
+              <div style={{ padding: '1.5rem' }}>
+                <h3 style={{
+                  fontSize: '1.5rem',
+                  marginBottom: '0.5rem',
+                  color: 'var(--text-secondary)',
+                  fontWeight: '600'
+                }}>
+                  Welcome to Gep Protech Academic
+                </h3>
+                <p style={{ 
+                  opacity: 0.8,
+                  lineHeight: '1.6',
+                  fontSize: '1rem'
+                }}>
+                  Discover how our vocational training programs can transform your career. 
+                  Watch this introduction to learn about our teaching methodology, 
+                  state-of-the-art facilities, and student success stories.
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <style>{`
         @media (min-width: 769px) {
           .hero-grid {
@@ -165,6 +303,12 @@ const Hero = () => {
           }
           .mobile-order-1 { order: 2 !important; }
           .mobile-order-2 { order: 1 !important; }
+        }
+
+        /* Video hover effects */
+        .video-thumbnail:hover {
+          transform: scale(1.02);
+          transition: transform 0.3s ease;
         }
       `}</style>
     </section>

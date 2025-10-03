@@ -1,7 +1,82 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { tutors } from '../data/courses';
-import { Star, Award, Users, BookOpen } from 'lucide-react';
+import { Star, Award, Users, BookOpen, Mail } from 'lucide-react';
+
+// Dedicated tutors data array
+const tutors = [
+  {
+    id: 1,
+    name: "Prof. Michael Johnson",
+    specialization: "Web Development & Full-Stack",
+    experience: "12 years",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    bio: "Former Google engineer with expertise in React, Node.js, and cloud technologies. Passionate about teaching modern web development.",
+    rating: 4.9,
+    courses: ["Web Development", "React Masterclass", "Node.js Backend"],
+    students: 2500,
+    email: "michael@gepprotech.cm"
+  },
+  {
+    id: 2,
+    name: "Dr. Sarah Williams",
+    specialization: "Data Science & Machine Learning",
+    experience: "8 years",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    bio: "PhD in Computer Science with focus on AI and machine learning. Published researcher and industry consultant.",
+    rating: 4.8,
+    courses: ["Data Science", "Machine Learning", "Python Programming"],
+    students: 1800,
+    email: "sarah@gepprotech.cm"
+  },
+  {
+    id: 3,
+    name: "Mr. David Chen",
+    specialization: "Graphic Design & UI/UX",
+    experience: "10 years",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    bio: "Award-winning designer with expertise in Adobe Creative Suite, branding, and user experience design. Worked with Fortune 500 companies.",
+    rating: 4.9,
+    courses: ["Graphic Design", "UI/UX Design", "Brand Identity"],
+    students: 2200,
+    email: "david@gepprotech.cm"
+  },
+  {
+    id: 4,
+    name: "Ms. Amanda Rodriguez",
+    specialization: "Digital Marketing & SEO",
+    experience: "7 years",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    bio: "Digital marketing strategist with proven track record in SEO, social media marketing, and content strategy for global brands.",
+    rating: 4.7,
+    courses: ["Digital Marketing", "SEO Optimization", "Social Media Strategy"],
+    students: 1900,
+    email: "amanda@gepprotech.cm"
+  },
+  {
+    id: 5,
+    name: "Mr. Robert Kim",
+    specialization: "Mobile App Development",
+    experience: "9 years",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    bio: "Expert in cross-platform mobile development with React Native and Flutter. Built over 50 successful mobile applications.",
+    rating: 4.8,
+    courses: ["Mobile Development", "React Native", "Flutter"],
+    students: 2100,
+    email: "robert@gepprotech.cm"
+  },
+  {
+    id: 6,
+    name: "Dr. Emily Thompson",
+    specialization: "Cybersecurity & Network Security",
+    experience: "11 years",
+    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    bio: "Cybersecurity expert with certifications in ethical hacking and network security. Former security consultant for financial institutions.",
+    rating: 4.9,
+    courses: ["Cybersecurity", "Ethical Hacking", "Network Security"],
+    students: 1600,
+    email: "emily@gepprotech.cm"
+  }
+];
 
 const Tutors = () => {
   return (
@@ -25,7 +100,7 @@ const Tutors = () => {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '2rem',
           marginBottom: '4rem'
         }}>
@@ -62,8 +137,11 @@ const Tutors = () => {
                   style={{
                     width: '100%',
                     height: '100%',
-                    objectFit: 'cover'
+                    objectFit: 'cover',
+                    transition: 'transform 0.3s ease'
                   }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                 />
                 <div style={{
                   position: 'absolute',
@@ -107,6 +185,38 @@ const Tutors = () => {
                   {tutor.bio}
                 </p>
                 
+                {/* Tutor Details */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '1rem',
+                  marginBottom: '1.5rem',
+                  fontSize: '0.8rem'
+                }}>
+                  <div style={{
+                    background: 'var(--bg-primary)',
+                    padding: '0.5rem',
+                    borderRadius: '8px',
+                    border: '1px solid var(--border-color)'
+                  }}>
+                    <div style={{ fontWeight: '600', color: 'var(--primary-color)' }}>
+                      {tutor.students.toLocaleString()}
+                    </div>
+                    <div style={{ opacity: 0.7 }}>Students</div>
+                  </div>
+                  <div style={{
+                    background: 'var(--bg-primary)',
+                    padding: '0.5rem',
+                    borderRadius: '8px',
+                    border: '1px solid var(--border-color)'
+                  }}>
+                    <div style={{ fontWeight: '600', color: 'var(--primary-color)' }}>
+                      {tutor.courses.length}
+                    </div>
+                    <div style={{ opacity: 0.7 }}>Courses</div>
+                  </div>
+                </div>
+
                 {/* Ratings */}
                 <div style={{
                   display: 'flex',
@@ -120,19 +230,81 @@ const Tutors = () => {
                       key={star} 
                       size={16} 
                       color="var(--primary-color)" 
-                      fill="var(--primary-color)" 
+                      fill={star <= Math.floor(tutor.rating) ? "var(--primary-color)" : "none"} 
                     />
                   ))}
-                  <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>(4.9/5)</span>
+                  <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>
+                    ({tutor.rating}/5)
+                  </span>
                 </div>
 
-                <button className="btn-secondary" style={{ 
-                  padding: '8px 20px', 
-                  fontSize: '0.9rem',
-                  width: '100%'
+                {/* Courses Taught */}
+                <div style={{
+                  marginBottom: '1.5rem',
+                  textAlign: 'left'
                 }}>
-                  View Profile
-                </button>
+                  <div style={{ 
+                    fontSize: '0.8rem', 
+                    fontWeight: '600', 
+                    marginBottom: '0.5rem',
+                    color: 'var(--text-secondary)'
+                  }}>
+                    Courses:
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '0.3rem'
+                  }}>
+                    {tutor.courses.map((course, idx) => (
+                      <span 
+                        key={idx}
+                        style={{
+                          background: 'var(--primary-color)',
+                          color: 'white',
+                          padding: '2px 8px',
+                          borderRadius: '10px',
+                          fontSize: '0.7rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        {course}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{
+                  display: 'flex',
+                  gap: '0.5rem'
+                }}>
+                  <motion.button 
+                    className="btn-primary" 
+                    style={{ 
+                      padding: '8px 16px', 
+                      fontSize: '0.8rem',
+                      flex: 1
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    View Profile
+                  </motion.button>
+                  <motion.button 
+                    className="btn-secondary" 
+                    style={{ 
+                      padding: '8px', 
+                      fontSize: '0.8rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Mail size={16} />
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -148,9 +320,17 @@ const Tutors = () => {
             background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
             padding: '3rem',
             borderRadius: '20px',
-            color: 'white'
+            color: 'white',
+            textAlign: 'center'
           }}
         >
+          <h3 style={{ 
+            fontSize: '2rem', 
+            marginBottom: '2rem', 
+            fontWeight: '600' 
+          }}>
+            Why Learn With Our Experts?
+          </h3>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -158,18 +338,47 @@ const Tutors = () => {
             textAlign: 'center'
           }}>
             {[
-              { icon: Users, number: '50+', label: 'Expert Tutors' },
-              { icon: Award, number: '10K+', label: 'Students Trained' },
-              { icon: Star, number: '4.9', label: 'Average Rating' },
-              { icon: BookOpen, number: '95%', label: 'Success Rate' }
+              { 
+                icon: Users, 
+                number: tutors.length + '+', 
+                label: 'Expert Tutors',
+                description: 'Industry professionals with real-world experience'
+              },
+              { 
+                icon: Award, 
+                number: tutors.reduce((acc, tutor) => acc + tutor.students, 0).toLocaleString() + '+', 
+                label: 'Students Trained',
+                description: 'Successful graduates worldwide'
+              },
+              { 
+                icon: Star, 
+                number: '4.8', 
+                label: 'Average Rating',
+                description: 'Based on student feedback and reviews'
+              },
+              { 
+                icon: BookOpen, 
+                number: tutors.reduce((acc, tutor) => acc + tutor.courses.length, 0) + '+', 
+                label: 'Courses Available',
+                description: 'Comprehensive learning programs'
+              }
             ].map((item, index) => (
-              <div key={index}>
+              <motion.div 
+                key={index}
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
                 <item.icon size={40} color="white" style={{ marginBottom: '1rem' }} />
                 <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
                   {item.number}
                 </div>
-                <div style={{ opacity: 0.9 }}>{item.label}</div>
-              </div>
+                <div style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem' }}>
+                  {item.label}
+                </div>
+                <div style={{ opacity: 0.9, fontSize: '0.9rem' }}>
+                  {item.description}
+                </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
