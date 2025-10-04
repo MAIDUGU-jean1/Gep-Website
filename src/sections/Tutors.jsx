@@ -1,44 +1,39 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Award, Users, BookOpen, Mail } from 'lucide-react';
+import Jean from '../assets/Images/jean.jpeg';
+import Fien from '../assets/Images/fien.jpeg';
+import Elvis from '../assets/Images/elvis.jpeg';
+import { image } from 'framer-motion/client';
 
 // Dedicated tutors data array
 const tutors = [
   {
     id: 1,
-    name: "Prof. Michael Johnson",
-    specialization: "Web Development & Full-Stack",
-    experience: "12 years",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "Former Google engineer with expertise in React, Node.js, and cloud technologies. Passionate about teaching modern web development.",
-    rating: 4.9,
-    courses: ["Web Development", "React Masterclass", "Node.js Backend"],
-    students: 2500,
-    email: "michael@gepprotech.cm"
-  },
-  {
-    id: 2,
-    name: "Dr. Sarah Williams",
-    specialization: "Data Science & Machine Learning",
-    experience: "8 years",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "PhD in Computer Science with focus on AI and machine learning. Published researcher and industry consultant.",
+    name: "Mr. Elvis Ejah Malle",
+    specialization: "Data Science & Business Analytics",
+    experience: "6 years",
+    image: Elvis,
+    // image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    bio: "Computer Science with focus on AI and machine learning. Published researcher and industry consultant.",
     rating: 4.8,
     courses: ["Data Science", "Machine Learning", "Python Programming"],
     students: 1800,
-    email: "sarah@gepprotech.cm"
+    email: "ej.bnes@gmail.com"
   },
+
   {
     id: 3,
-    name: "Mr. David Chen",
-    specialization: "Graphic Design & UI/UX",
-    experience: "10 years",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    name: "Mrs. Docila Fien",
+    specialization: "UI/UX",
+    experience: "3 years",
+    image: Fien,
+    // image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Award-winning designer with expertise in Adobe Creative Suite, branding, and user experience design. Worked with Fortune 500 companies.",
     rating: 4.9,
     courses: ["Graphic Design", "UI/UX Design", "Brand Identity"],
     students: 2200,
-    email: "david@gepprotech.cm"
+    email: "fiendocile@gmail.com"
   },
   {
     id: 4,
@@ -64,18 +59,19 @@ const tutors = [
     students: 2100,
     email: "robert@gepprotech.cm"
   },
-  {
+    {
     id: 6,
-    name: "Dr. Emily Thompson",
-    specialization: "Cybersecurity & Network Security",
-    experience: "11 years",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "Cybersecurity expert with certifications in ethical hacking and network security. Former security consultant for financial institutions.",
+    name: "Mr. Jean De Dieu Maidugu",
+    specialization: "Web Development & Full-Stack",
+    experience: "4 years",
+    image: Jean,
+    // image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    bio: "enginee with language like React, Node.js, Laravel, and more. Passionate about teaching modern web development.",
     rating: 4.9,
-    courses: ["Cybersecurity", "Ethical Hacking", "Network Security"],
-    students: 1600,
-    email: "emily@gepprotech.cm"
-  }
+    courses: ["Web Development", "React Masterclass", "LaravelBackend"],
+    students: 2500,
+    email: "maidugujeandedieu600@gmail.com"
+  },
 ];
 
 const Tutors = () => {

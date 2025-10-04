@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Trophy, Award, Star, Quote, Calendar, Users, GraduationCap, X } from 'lucide-react';
 import award from '../assets/Videos/award.mp4';
+import Lauching from '../assets/Images/lauching.jpg';
+import Launch from '../assets/Videos/Launching.mp4';
+import Graduation from '../assets/Videos/graduation.mp4';
+import { th } from 'framer-motion/client';
 
 // Data for achievements and testimonials
 const achievementsData = {
@@ -11,15 +15,15 @@ const achievementsData = {
       title: '2024 Graduation Ceremony',
       description: 'Celebrating our latest batch of successful graduates',
       date: '2024-01-15',
-      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      thumbnail: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-      awards: ['Best Overall Student', 'Most Innovative Project', 'Academic Excellence']
+      videoUrl: Graduation,
+    //   videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    thumbnail: "https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",      awards: ['Best Overall Student', 'Most Innovative Project', 'Academic Excellence']
     },
     {
       id: 2,
       title: 'Graduation and awards ceremony for 9&8 batch',
       description: 'Honoring outstanding student achievements and project showcases',
-      date: '2023-12-10',
+      date: '2024-01-15',
       videoUrl: award,
     //   videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
       thumbnail: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
@@ -27,11 +31,13 @@ const achievementsData = {
     },
     {
       id: 3,
-      title: 'Industry Partnership Awards',
+      title: 'Launching of the 9 batch',
       description: 'Recognizing outstanding industry collaborations',
       date: '2023-11-20',
-      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      thumbnail: 'https://images.unsplash.com/photo-1551836026-d5c2e0c49b13?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+        videoUrl: Launch,
+    //   videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      thumbnail: Lauching,
+    //   thumbnail: 'https://images.unsplash.com/photo-1551836026-d5c2e0c49b13?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       awards: ['Best Industry Project', 'Outstanding Partnership', 'Innovation Award']
     }
   ],
