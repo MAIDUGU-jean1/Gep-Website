@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Users, Award, Clock, X } from 'lucide-react';
 import advert from '../../src/assets/Videos/advert.mp4'
+import Impression from '../../src/assets/Images/impression.jpeg'
 
 const Hero = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
@@ -110,7 +111,7 @@ const Hero = () => {
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-              gap: '2rem'
+              gap: '2rem',
             }}>
               {[
                 { icon: Users, number: '2K+', label: 'Students Trained' },
@@ -124,11 +125,33 @@ const Hero = () => {
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                   style={{ textAlign: 'center' }}
                 >
-                  <item.icon size={32} color="var(--primary-color)" style={{ marginBottom: '0.5rem' }} />
-                  <div style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+                  <item.icon 
+                    size={32} 
+                    style={{ 
+                      marginBottom: '0.5rem',
+                      color: 'var(--primary-color)'
+                    }} 
+                    className="stats-icon"
+                  />
+                  <div 
+                    style={{ 
+                      fontSize: 'clamp(1.5rem, 3vw, 2rem)', 
+                      fontWeight: 'bold', 
+                      color: 'var(--text-secondary)' 
+                    }}
+                    className="stats-number"
+                  >
                     {item.number}
                   </div>
-                  <div style={{ fontSize: '0.9rem', opacity: 0.8 }}>{item.label}</div>
+                  <div 
+                    style={{ 
+                      fontSize: '0.9rem', 
+                      opacity: 0.8 
+                    }}
+                    className="stats-label"
+                  >
+                    {item.label}
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -150,30 +173,108 @@ const Hero = () => {
             }} 
             className="mobile-order-1"
           >
-            <div style={{
-              width: '100%',
-              height: '400px',
-              background: 'linear-gradient(45deg, var(--primary-color), var(--secondary-color))',
-              borderRadius: '15px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: 'clamp(1.2rem, 3vw, 1.5rem)',
-              position: 'relative',
-              cursor: 'pointer'
-            }}
-            onClick={openVideo}
+            {/* Video Thumbnail with Image */}
+            <div 
+              style={{
+                width: '100%',
+                height: '400px',
+                borderRadius: '15px',
+                position: 'relative',
+                overflow: 'hidden',
+                cursor: 'pointer'
+              }}
+              onClick={openVideo}
+              className="video-thumbnail"
             >
+              {/* Background Image */}
+              <img 
+                src={Impression}
+                alt="Gep Protech Student Success Stories"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  transition: 'transform 0.3s ease'
+                }}
+              />
+              
+              {/* Dark Overlay */}
               <div style={{
                 position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                textAlign: 'center'
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5))',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background 0.3s ease'
               }}>
-                <Play size={60} color="white" fill="white" style={{ marginBottom: '1rem' }} />
-                <div>Student Success Stories</div>
+                {/* Play Button */}
+                <motion.div 
+                  style={{
+                    background: 'rgba(218, 165, 32, 0.9)',
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+                  }}
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Play size={32} fill="white" />
+                </motion.div>
+              </div>
+
+              {/* Video Title */}
+              <div style={{
+                position: 'absolute',
+                bottom: '2rem',
+                left: '0',
+                width: '100%',
+                textAlign: 'center',
+                color: 'white',
+                padding: '0 1rem'
+              }}>
+                <h3 style={{
+                  fontSize: 'clamp(1.2rem, 3vw, 1.5rem)',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem',
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+                }}>
+                  Student Success Stories
+                </h3>
+                <p style={{
+                  fontSize: '0.9rem',
+                  opacity: 0.9,
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
+                }}>
+                  Click to watch inspiring stories from our graduates
+                </p>
+              </div>
+
+              {/* Play Indicator */}
+              <div style={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                background: 'rgba(0,0,0,0.7)',
+                color: 'white',
+                padding: '5px 10px',
+                borderRadius: '5px',
+                fontSize: '0.8rem',
+                fontWeight: '600',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}>
+                <Play size={12} />
+                VIDEO
               </div>
             </div>
           </motion.div>
@@ -258,13 +359,11 @@ const Hero = () => {
                   }}
                 >
                   <source 
-                  src= {advert}
-                    // src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
+                    src={advert}
                     type="video/mp4" 
                   />
                   <source 
                     src={advert}
-                    // src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" 
                     type="video/mp4" 
                   />
                   Your browser does not support the video tag.
@@ -306,9 +405,38 @@ const Hero = () => {
         }
 
         /* Video hover effects */
-        .video-thumbnail:hover {
-          transform: scale(1.02);
-          transition: transform 0.3s ease;
+        .video-thumbnail:hover img {
+          transform: scale(1.05);
+        }
+        
+        .video-thumbnail:hover > div:first-child {
+          background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+        }
+
+        /* Dark mode styles for stats */
+        [data-theme="dark"] .stats-icon {
+          color: white !important;
+        }
+
+        [data-theme="dark"] .stats-number {
+          color: white !important;
+        }
+
+        [data-theme="dark"] .stats-label {
+          color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* Light mode styles for stats */
+        [data-theme="light"] .stats-icon {
+          color: var(--primary-color) !important;
+        }
+
+        [data-theme="light"] .stats-number {
+          color: var(--text-secondary) !important;
+        }
+
+        [data-theme="light"] .stats-label {
+          color: rgba(0, 0, 0, 0.8) !important;
         }
       `}</style>
     </section>

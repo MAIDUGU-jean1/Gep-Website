@@ -5,6 +5,7 @@ import Jean from '../assets/Images/jean.jpeg';
 import Fien from '../assets/Images/fien.jpeg';
 import Elvis from '../assets/Images/elvis.jpeg';
 import { image } from 'framer-motion/client';
+import Terence from '../../src/assets/Images/Terence.jpeg'
 
 // Dedicated tutors data array
 const tutors = [
@@ -23,6 +24,20 @@ const tutors = [
   },
 
   {
+    id: 6,
+    name: "Mr Ngulefac Terence",
+    specialization: "Web Development & Full-Stack",
+    experience: "6 years",
+    image: Terence,
+    // image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+    bio: "Full-stack developer skilled in React, Node.js, and Laravel. Passionate about building innovative web solutions and sharing knowledge with others.",
+    rating: 4.9,
+    courses: ["Web Development", "React Masterclass", "LaravelBackend", "Express", "Node.js"],
+    students: 2500,
+    email: "maidugujeandedieu600@gmail.com"
+  },
+
+  {
     id: 3,
     name: "Mrs. Docila Fien",
     specialization: "UI/UX",
@@ -35,30 +50,30 @@ const tutors = [
     students: 2200,
     email: "fiendocile@gmail.com"
   },
-  {
-    id: 4,
-    name: "Ms. Amanda Rodriguez",
-    specialization: "Digital Marketing & SEO",
-    experience: "7 years",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "Digital marketing strategist with proven track record in SEO, social media marketing, and content strategy for global brands.",
-    rating: 4.7,
-    courses: ["Digital Marketing", "SEO Optimization", "Social Media Strategy"],
-    students: 1900,
-    email: "amanda@gepprotech.cm"
-  },
-  {
-    id: 5,
-    name: "Mr. Robert Kim",
-    specialization: "Mobile App Development",
-    experience: "9 years",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "Expert in cross-platform mobile development with React Native and Flutter. Built over 50 successful mobile applications.",
-    rating: 4.8,
-    courses: ["Mobile Development", "React Native", "Flutter"],
-    students: 2100,
-    email: "robert@gepprotech.cm"
-  },
+  // {
+  //   id: 4,
+  //   name: "Ms. Amanda Rodriguez",
+  //   specialization: "Digital Marketing & SEO",
+  //   experience: "7 years",
+  //   image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+  //   bio: "Digital marketing strategist with proven track record in SEO, social media marketing, and content strategy for global brands.",
+  //   rating: 4.7,
+  //   courses: ["Digital Marketing", "SEO Optimization", "Social Media Strategy"],
+  //   students: 1900,
+  //   email: "amanda@gepprotech.cm"
+  // },
+  // {
+  //   id: 5,
+  //   name: "Mr. Robert Kim",
+  //   specialization: "Mobile App Development",
+  //   experience: "9 years",
+  //   image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+  //   bio: "Expert in cross-platform mobile development with React Native and Flutter. Built over 50 successful mobile applications.",
+  //   rating: 4.8,
+  //   courses: ["Mobile Development", "React Native", "Flutter"],
+  //   students: 2100,
+  //   email: "robert@gepprotech.cm"
+  // },
     {
     id: 6,
     name: "Mr. Jean De Dieu Maidugu",

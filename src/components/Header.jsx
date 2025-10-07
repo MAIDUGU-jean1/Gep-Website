@@ -44,7 +44,7 @@ const Header = () => {
               fontSize: 'clamp(1.5rem, 5vw, 2.0rem)',
               fontWeight: 'bold'
             }}>
-              Gep  
+              Gep Protech <br /> Academy
             </h1>
           </div>
           
