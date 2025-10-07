@@ -8,14 +8,14 @@ const About = () => {
   const [expandedCard, setExpandedCard] = useState(null);
 
   const aboutSections = [
-    {
-      id: 1,
-      title: 'Our Mission',
-      shortDescription: 'Bridging the gap between education and employment through quality vocational training.',
-      fullDescription: 'At Gep Protech Academic, our mission is to provide accessible, high-quality vocational training that directly addresses the skills gap in today\'s job market. We focus on practical, hands-on learning that prepares students for immediate employment in high-demand fields. Our programs are designed in collaboration with industry experts to ensure relevance and effectiveness.',
-      image: Info,
-      features: ['Industry-relevant curriculum', 'Hands-on practical training', 'Job placement assistance']
-    },
+    // {
+    //   id: 1,
+    //   title: 'Our Mission',
+    //   shortDescription: 'Bridging the gap between education and employment through quality vocational training.',
+    //   fullDescription: 'At Gep Protech Academic, our mission is to provide accessible, high-quality vocational training that directly addresses the skills gap in today\'s job market. We focus on practical, hands-on learning that prepares students for immediate employment in high-demand fields. Our programs are designed in collaboration with industry experts to ensure relevance and effectiveness.',
+    //   image: Info,
+    //   features: ['Industry-relevant curriculum', 'Hands-on practical training', 'Job placement assistance']
+    // },
     // {
     //   id: 2,
     //   title: 'Expert Instructors',
@@ -114,7 +114,7 @@ const About = () => {
                   color: 'var(--text-secondary)',
                   fontWeight: '600'
                 }}>
-                  Why Choose Gep Protech Academic?
+                   Gep Protech Academic?
                 </h3>
                 <div style={{
                   display: 'grid',
@@ -122,22 +122,18 @@ const About = () => {
                   gap: '2rem',
                   textAlign: 'left'
                 }}>
-                  {[
+                   {[
                     {
-                      title: 'Practical Learning',
-                      description: 'Our curriculum focuses on hands-on projects and real-world scenarios.'
+                      title: 'Our Mission',
+                      description: 'To provide accessible, high-quality vocational training that bridges the gap between education and employment, empowering individuals with practical skills for sustainable careers in the modern workforce.',
                     },
                     {
-                      title: 'Industry Connections',
-                      description: 'Strong partnerships with leading companies for job placements.'
+                      title: 'Our Vision',
+                      description: 'To be the leading vocational training institution in Bamenda, recognized for producing highly skilled professionals who drive innovation and economic growth in their communities.',
                     },
                     {
-                      title: 'Flexible Programs',
-                      description: 'Full-time and part-time options to suit your schedule.'
-                    },
-                    {
-                      title: 'Career Support',
-                      description: 'Dedicated career services to help you land your dream job.'
+                      title: 'Our Objectives',
+                      description: 'To deliver industry-relevant training programs, foster partnerships with leading companies, provide career placement support, and continuously update our curriculum to meet evolving market demands.',
                     }
                   ].map((item, index) => (
                     <div key={index} style={{
