@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Info from '../../src/assets/Images/info.jpeg';
+import Certificate from '../../src/assets/Images/certificate.jpeg';
 
 const About = () => {
   const [showFullContent, setShowFullContent] = useState(false);
@@ -29,7 +30,7 @@ const About = () => {
       title: 'Certification',
       shortDescription: 'Earn recognized certifications that boost your career prospects.',
       fullDescription: 'Our certification programs are designed to be recognized and valued by employers. We partner with industry leaders to ensure our certifications meet current market standards. Graduates receive not just a certificate but a portfolio of work that demonstrates their capabilities to potential employers.',
-      image: 'https://images.unsplash.com/photo-1561089489-f13d5e730d72?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: Certificate,
       features: ['Industry-recognized', 'Portfolio building', 'Career advancement']
     }
   ];
@@ -194,8 +195,8 @@ const About = () => {
               viewport={{ once: true }}
               style={{
                 background: 'var(--card-bg)',
-                borderRadius: '15px',
-                overflow: 'hidden',
+                borderRadius: '5x',
+                // overflow: 'hidden',
                 border: '2px solid var(--border-color)',
                 transition: 'all 0.3s ease'
               }}
@@ -215,8 +216,10 @@ const About = () => {
                   alt={section.title}
                   style={{
                     width: '100%',
-                    height: '100%',
+                    height: '200%', // to be adjusted not really accurate 
                     objectFit: 'cover',
+                    objectPosition: 'center',
+                    transform: 'scale(1.1)',
                     transition: 'transform 0.3s ease'
                   }}
                 />

@@ -28,8 +28,8 @@ export const courses = [
     title: "Graphic Design",
     description: "Professional graphic design and branding",
     duration: "5 months",
-    tutor: "Mike Chen",
-    price: "$450",
+    tutor: "Mr Sekwi Thierry",
+    price: "15,000 FCFA",
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     features: ["Adobe Photoshop", "Illustrator", "Branding", "UI/UX", "Print Design"]
@@ -100,6 +100,17 @@ export const courses = [
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     features: ["Wireframing", "Prototyping", "User Research", "Usability Testing", "Design Systems"]
+  },
+    {
+    id: 9,
+    title: "Basic Catography",
+    description: "User interface and user experience design principles",
+    duration: "3 months",
+    tutor: "Ashanga Boris Ngwa	",
+    price: "30,000 FCFA",
+    level: "Intermediate",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    features: ["Cartography and GIS", "Topography and Remote sensing", "Secretarial duties ", "Topography and Remote sensing", "Cartography and GIS"]
   }
 
 ];

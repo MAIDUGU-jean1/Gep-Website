@@ -5,7 +5,8 @@ import Jean from '../assets/Images/jean.jpeg';
 import Fien from '../assets/Images/fien.jpeg';
 import Elvis from '../assets/Images/elvis.jpeg';
 import { image } from 'framer-motion/client';
-import Terence from '../../src/assets/Images/Terence.jpeg'
+import Terence from '../../src/assets/Images/Terence.jpeg';
+import Geo from '../../src/assets/Images/geo.jpeg';
 
 // Dedicated tutors data array
 const tutors = [
@@ -50,18 +51,18 @@ const tutors = [
     students: 2200,
     email: "fiendocile@gmail.com"
   },
-  // {
-  //   id: 4,
-  //   name: "Ms. Amanda Rodriguez",
-  //   specialization: "Digital Marketing & SEO",
-  //   experience: "7 years",
-  //   image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-  //   bio: "Digital marketing strategist with proven track record in SEO, social media marketing, and content strategy for global brands.",
-  //   rating: 4.7,
-  //   courses: ["Digital Marketing", "SEO Optimization", "Social Media Strategy"],
-  //   students: 1900,
-  //   email: "amanda@gepprotech.cm"
-  // },
+  {
+    id: 4,
+    name: "Mr. Ashanga Boris Ngwa	",
+    specialization: "Basic Catography",
+    experience: "4 years",
+    image: Geo,
+    bio: "These courses cover basic principles of map analysis, interpretation and design which links to mapping and projections in the contemporary world",
+    rating: 4.7,
+    courses: ["Cartography and GIS","Topography and Remote sensing", "Secretarial duties "],
+    students: 100,
+    email: "ashangaboris@gmail.com"
+  },
   // {
   //   id: 5,
   //   name: "Mr. Robert Kim",

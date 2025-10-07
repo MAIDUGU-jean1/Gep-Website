@@ -11,7 +11,7 @@ const Courses = () => {
     'All': ['Web Development', 'Digital Marketing', 'Graphic Design', 'Data Science', 'Mobile App Development', 'Cybersecurity'],
     'Tech': ['Web Development', 'Data Science', 'Mobile App Development', 'Cybersecurity'],
     'Design': ['Graphic Design'],
-    'Business': ['Digital Marketing'],
+    'Business': ['Digital Marketing','Basic Catography'],
     'Development': ['Web Development', 'Mobile App Development']
   };
 
