@@ -29,7 +29,7 @@ Sent from Gep Protech Academic Website
 
     // Encode message for WhatsApp URL
     const encodedMessage = encodeURIComponent(whatsappMessage);
-    const phoneNumber = '237682090879'; // Your WhatsApp number without +
+    const phoneNumber = '237674386778'; // Your WhatsApp number without +
     
     // Create WhatsApp URL
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
