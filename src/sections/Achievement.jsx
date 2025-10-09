@@ -6,6 +6,7 @@ import Lauching from '../assets/Images/lauching.jpg';
 import Launch from '../assets/Videos/Launching.mp4';
 import Graduation from '../assets/Videos/graduation.mp4';
 import { th } from 'framer-motion/client';
+import Jean from '../../src/assets/Images/jean.jpeg'
 
 // Data for achievements and testimonials
 const achievementsData = {
@@ -42,46 +43,37 @@ const achievementsData = {
     }
   ],
   testimonials: [
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      course: 'Web Development',
-      graduation: '2023',
-      currentRole: 'Frontend Developer at TechCorp',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-      quote: 'Gep Protech transformed my career. The hands-on projects and expert guidance prepared me perfectly for the tech industry.',
-      rating: 5
-    },
+
     {
       id: 2,
-      name: 'Michael Chen',
-      course: 'Data Science',
-      graduation: '2023',
-      currentRole: 'Data Analyst at DataWorks',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      name: 'Maidugu',
+      course: 'Web Development and Data Analysis',
+      graduation: '2024',
+      currentRole: 'Full Stack developper',
+      image: Jean,
       quote: 'The practical approach to learning and industry-relevant curriculum gave me the confidence to excel in my data science career.',
       rating: 5
     },
-    {
-      id: 3,
-      name: 'Emily Rodriguez',
-      course: 'Graphic Design',
-      graduation: '2023',
-      currentRole: 'UI/UX Designer at CreativeStudio',
-      image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-      quote: 'The mentorship and portfolio-building opportunities at Gep Protech were invaluable. I landed my dream job within weeks of graduating.',
-      rating: 5
-    },
-    {
-      id: 4,
-      name: 'David Thompson',
-      course: 'Digital Marketing',
-      graduation: '2023',
-      currentRole: 'Marketing Specialist at GrowthAgency',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-      quote: 'The real-world marketing campaigns we worked on gave me practical experience that directly translated to my current role.',
-      rating: 5
-    }
+    // {
+    //   id: 3,
+    //   name: 'Emily Rodriguez',
+    //   course: 'Graphic Design',
+    //   graduation: '2023',
+    //   currentRole: 'UI/UX Designer at CreativeStudio',
+    //   image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+    //   quote: 'The mentorship and portfolio-building opportunities at Gep Protech were invaluable. I landed my dream job within weeks of graduating.',
+    //   rating: 5
+    // },
+    // {
+    //   id: 4,
+    //   name: 'David Thompson',
+    //   course: 'Digital Marketing',
+    //   graduation: '2023',
+    //   currentRole: 'Marketing Specialist at GrowthAgency',
+    //   image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+    //   quote: 'The real-world marketing campaigns we worked on gave me practical experience that directly translated to my current role.',
+    //   rating: 5
+    // }
   ],
   awards: [
     {

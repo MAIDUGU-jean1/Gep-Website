@@ -30,14 +30,14 @@ const Gallery = () => {
       imageUrl: Student,
     //   imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
     },
-    {
-      id: 3,
-      title: 'Industry Workshop',
-      description: 'Guest speaker from tech industry sharing insights',
-      category: 'Workshops',
-      date: '2023-12-20',
-      imageUrl: 'https://images.unsplash.com/photo-1551836026-d5c2e0c49b13?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
-    },
+    // {
+    //   id: 3,
+    //   title: 'Industry Workshop',
+    //   description: 'Guest speaker from tech industry sharing insights',
+    //   category: 'Workshops',
+    //   date: '2023-12-20',
+    //   imageUrl: 'https://images.unsplash.com/photo-1551836026-d5c2e0c49b13?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    // },
     {
       id: 4,
       title: 'Student Projects Showcase',
