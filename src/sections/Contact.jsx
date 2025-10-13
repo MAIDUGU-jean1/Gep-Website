@@ -6,9 +6,27 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    course: '',
+    courses: [], // Changed from 'course' to 'courses' array
     message: ''
   });
+
+  const coursesList = [
+    "Web Development",
+    "Data Analysis",
+    "Graphic Design",
+    "Computer Studies",
+    "Mobile App Development",
+    "Cybersecurity",
+    "Digital Marketing",
+    "Software Engineering",
+    "Network Administration",
+    "Database Management",
+    "UI/UX Design",
+    "Cloud Computing",
+    "Artificial Intelligence",
+    "Machine Learning",
+    "Project Management"
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,7 +37,7 @@ New Message from Gep Protech Website:
 
 *Name:* ${formData.name}
 *Email:* ${formData.email}
-*Course Interest:* ${formData.course || 'Not specified'}
+*Course Interests:* ${formData.courses.length > 0 ? formData.courses.join(', ') : 'Not specified'}
 *Message:*
 ${formData.message}
 
@@ -41,13 +59,21 @@ Sent from Gep Protech Academic Website
     alert('Opening WhatsApp to send your message...');
     
     // Reset form
-    setFormData({ name: '', email: '', course: '', message: '' });
+    setFormData({ name: '', email: '', courses: [], message: '' });
   };
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
+    });
+  };
+
+  const handleCourseChange = (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+    setFormData({
+      ...formData,
+      courses: selectedOptions
     });
   };
 
@@ -310,12 +336,14 @@ Sent from Gep Protech Academic Website
                   fontWeight: '500',
                   color: 'var(--text-secondary)'
                 }}>
-                  Course Interest
+                  Course Interests (Select multiple)
                 </label>
                 <select 
-                  name="course"
-                  value={formData.course}
-                  onChange={handleChange}
+                  name="courses"
+                  value={formData.courses}
+                  onChange={handleCourseChange}
+                  multiple
+                  size="5"
                   style={{
                     width: '100%',
                     padding: '1rem',
@@ -326,14 +354,31 @@ Sent from Gep Protech Academic Website
                     fontSize: '1rem'
                   }}
                 >
-                  <option value="">Select a course</option>
-                  <option value="web-development">Web Development</option>
-                  <option value="data-analysis">Data Analysis</option>
-                  <option value="graphic-design">Graphic Design</option>
-                  <option value="computer-studies">Computer Studies</option>
-                  <option value="mobile-development">Mobile App Development</option>
-                  <option value="cybersecurity">Cybersecurity</option>
+                  {coursesList.map((course, index) => (
+                    <option key={index} value={course}>
+                      {course}
+                    </option>
+                  ))}
                 </select>
+                <p style={{ 
+                  marginTop: '0.5rem', 
+                  fontSize: '0.8rem', 
+                  opacity: 0.7,
+                  fontStyle: 'italic'
+                }}>
+                  Hold Ctrl (or Cmd on Mac) to select multiple courses
+                </p>
+                {formData.courses.length > 0 && (
+                  <div style={{ 
+                    marginTop: '0.5rem',
+                    padding: '0.5rem',
+                    background: 'var(--bg-primary)',
+                    borderRadius: '4px',
+                    border: '1px solid var(--border-color)'
+                  }}>
+                    <strong>Selected courses:</strong> {formData.courses.join(', ')}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -395,6 +440,11 @@ Sent from Gep Protech Academic Website
         input:focus, textarea:focus, select:focus {
           outline: none;
           border-color: var(--primary-color) !important;
+        }
+
+        select[multiple] option:checked {
+          background: var(--primary-color) linear-gradient(0deg, var(--primary-color) 0%, var(--primary-color) 100%);
+          color: white;
         }
       `}</style>
     </section>

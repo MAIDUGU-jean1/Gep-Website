@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { courses } from '../data/courses';
-import { Clock, Users, Star, BookOpen } from 'lucide-react';
+import { Clock, Users, Star, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
 
 const Courses = () => {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [expandedCourses, setExpandedCourses] = useState({});
 
   // Define course categories and their mappings
   const courseCategories = {
@@ -23,6 +24,14 @@ const Courses = () => {
     : courses.filter(course => 
         courseCategories[activeCategory]?.includes(course.title)
       );
+
+  // Toggle expanded state for individual courses
+  const toggleCourseExpansion = (courseId) => {
+    setExpandedCourses(prev => ({
+      ...prev,
+      [courseId]: !prev[courseId]
+    }));
+  };
 
   return (
     <section id="courses" style={{
@@ -179,13 +188,82 @@ const Courses = () => {
                 }}>
                   {course.title}
                 </h3>
-                <p style={{ 
-                  marginBottom: '1rem', 
-                  opacity: 0.8,
-                  lineHeight: '1.5'
-                }}>
-                  {course.description}
-                </p>
+                
+                {/* Course Description with Read More */}
+                <div style={{ marginBottom: '1rem' }}>
+                  <p style={{ 
+                    opacity: 0.8,
+                    lineHeight: '1.5',
+                    marginBottom: '0.5rem'
+                  }}>
+                    {course.description}
+                  </p>
+                  
+                  {/* Expanded Course Details */}
+                  <AnimatePresence>
+                    {expandedCourses[course.id] && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        {/* Additional course information can be added here */}
+                        <div style={{
+                          padding: '1rem',
+                          background: 'var(--bg-primary)',
+                          borderRadius: '8px',
+                          marginTop: '0.5rem',
+                          border: '1px solid var(--border-color)'
+                        }}>
+                          <h4 style={{
+                            fontSize: '0.9rem',
+                            marginBottom: '0.5rem',
+                            color: 'var(--text-secondary)',
+                            fontWeight: '600'
+                          }}>
+                            Course Highlights:
+                          </h4>
+                          <ul style={{
+                            paddingLeft: '1.2rem',
+                            margin: 0,
+                            fontSize: '0.8rem',
+                            opacity: 0.8,
+                            lineHeight: '1.6'
+                          }}>
+                            <li>Hands-on practical projects</li>
+                            <li>Industry-relevant curriculum</li>
+                            <li>Certificate upon completion</li>
+                            <li>Career guidance and support</li>
+                          </ul>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Read More Button */}
+                  <motion.button
+                    onClick={() => toggleCourseExpansion(course.id)}
+                    style={{
+                      background: 'transparent',
+                      color: 'var(--primary-color)',
+                      border: 'none',
+                      padding: '0.5rem 0',
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      transition: 'all 0.3s ease'
+                    }}
+                    whileHover={{ color: 'var(--secondary-color)' }}
+                  >
+                    {expandedCourses[course.id] ? 'Show Less' : 'Read More'}
+                    {expandedCourses[course.id] ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                  </motion.button>
+                </div>
 
                 {/* Course Details */}
                 <div style={{

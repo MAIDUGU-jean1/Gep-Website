@@ -49,12 +49,12 @@ export const courses = [
     id: 5,
     title: "Mobile App Development",
     description: "Cross-platform mobile app development",
-    duration: "3 months",
-    tutor: "",
-    price: "25,000 FCFA",
+    duration: "5 months",
+    tutor: "Mr Nengang Noel",
+    price: "50,000 FCFA",
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["React Native", "Flutter", "Firebase", "API Integration", "App Store"]
+    features: ["React Native", "Mongo DB", "Firebase", "API Integration", "App Store","Node.js","Express.js"]
   },
   {
     id: 6,
@@ -101,17 +101,36 @@ export const courses = [
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     features: ["Wireframing", "Prototyping", "User Research", "Usability Testing", "Design Systems"]
   },
-    {
+  {
     id: 9,
     title: "Basic Catography",
     description: "User interface and user experience design principles",
     duration: "3 months",
-    tutor: "Ashanga Boris Ngwa	",
-    price: "30,000 FCFA",
+    tutor: "Ashanga Boris Ngwa",
+    price: "25,000 FCFA",
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["Cartography and GIS", "Topography and Remote sensing", "Secretarial duties ", "Topography and Remote sensing", "Cartography and GIS"]
-  }
+    features: ["Cartography and GIS", "Secretarial duties ", "Cartography and GIS"]
+  },
+{
+  id: 9,
+  title: "Topography and Remote Sensing",
+  description: "Master the principles of land measurement, mapping, and satellite imagery analysis for environmental monitoring and spatial data management.",
+  duration: "4 months",
+  tutor: "Ashanga Boris Ngwa",
+  price: "40,000 FCFA",
+  level: "Intermediate",
+  image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  // image: "https://images.unsplash.com/photo-1540959733332-0b10d1c24339?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  features: [
+    "Land Surveying Techniques",
+    "GPS Data Collection",
+    "Satellite Imagery Analysis",
+    "GIS Mapping",
+    "Topographic Data Processing",
+    "Remote Sensing Applications"
+  ]
+}
 
 ];
 
