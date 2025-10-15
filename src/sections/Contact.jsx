@@ -25,7 +25,8 @@ const Contact = () => {
     "Cloud Computing",
     "Artificial Intelligence",
     "Machine Learning",
-    "Project Management"
+    "Project Management",
+    "Software/Hardware Maintenance",
   ];
 
   const handleSubmit = (e) => {

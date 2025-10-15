@@ -29,7 +29,7 @@ const tutors = [
   {
     id: 6,
     name: "Mr Ngulefac Terence",
-    specialization: "Web Development & Full-Stack",
+    specialization: "Web Development, App Development & Full-Stack",
     experience: "6 years",
     image: Terence,
     bio: "Full-stack developer skilled in React, Node.js, and Laravel. Passionate about building innovative web solutions and sharing knowledge with others.",
@@ -57,7 +57,7 @@ const tutors = [
     specialization: "Basic Catography",
     experience: "4 years",
     image: Geo,
-    bio: "These courses cover basic principles of map analysis, interpretation and design which links to mapping and projections in the contemporary world",
+    bio: "Generally, I am a geographer with keen attention to environmental issues, sustainability, contemporary challenges that incorporate to mapping by GIS and topography. I am eager to extend my tentacles in skills acquisition and dispensation to the younger generation",
     rating: 4.7,
     courses: ["Cartography and GIS","Topography and Remote sensing", "Secretarial duties "],
     students: 100,

@@ -98,7 +98,7 @@ export const courses = [
     level: "Advanced",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     features: ["SPSS", "STATA", "Excel", "Data Visualization", "Statistics"],
-    about: "Dive into the world of data analysis and statistical computing. This course provides comprehensive training in data manipulation, statistical analysis, and visualization using industry-standard tools and methodologies.",
+    about: "A three-month training designed to provide learners with essential knowledge and skills in understanding, organizing, and interpreting data for effective decision-making. It introduces the fundamentals of data types, data collection, descriptive statistics, and inferential techniques, with emphasis on real-life applications across business, research, and academic fields.",
     learns: [
       "Statistical analysis using SPSS and STATA software",
       "Advanced Excel functions for data manipulation",
@@ -329,6 +329,91 @@ export const courses = [
       "Urban and Regional Planning positions",
       "Civil Engineering support roles",
       "Natural resource management opportunities"
+    ]
+  },
+  
+  {
+    id: 12,
+    title: "Generative AI Engineering",
+    description: "Master the creation and deployment of generative AI models for text, image, and code generation using cutting-edge technologies.",
+    duration: "4 months",
+    tutor: "AI Engineering Team",
+    price: "30,000 FCFA",
+    level: "Advanced",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    features: [
+      "Large Language Models (LLMs)",
+      "Transformer Architecture",
+      "Prompt Engineering",
+      "Fine-tuning Techniques",
+      "AI Model Deployment",
+      "Ethical AI Development",
+      "Multimodal AI Systems"
+    ],
+    about: "Dive into the world of generative artificial intelligence and learn to build, fine-tune, and deploy advanced AI models. This comprehensive course covers state-of-the-art techniques in natural language processing, computer vision, and multimodal AI systems, preparing you for the future of AI development.",
+    learns: [
+      "Understand and implement transformer architecture for AI models",
+      "Fine-tune pre-trained models for specific tasks and domains",
+      "Master prompt engineering techniques for optimal AI responses",
+      "Build and deploy text generation models using GPT architectures",
+      "Create image generation systems with diffusion models and GANs",
+      "Develop multimodal AI systems that process text and images",
+      "Implement ethical AI practices and responsible deployment strategies",
+      "Optimize AI models for performance and scalability"
+    ],
+    opportunities: [
+      "Generative AI Engineer positions in tech companies",
+      "AI Research Scientist roles",
+      "Machine Learning Engineer with AI specialization",
+      "AI Product Manager opportunities",
+      "AI Consultant for businesses adopting generative AI",
+      "Startup founder in AI technology space",
+      "AI Ethics and Governance roles",
+      "Technical Lead for AI implementation projects"
+    ]
+  },
+  {
+    id: 13,
+    title: "Software/Hardware Maintenance",
+    description: "Comprehensive training in computer maintenance, troubleshooting, and repair for both software and hardware components.",
+    duration: "3 months",
+    tutor: "IT Support Team",
+    price: "60,000 FCFA",
+    level: "Beginner to Intermediate",
+    image: "https://images.unsplash.com/photo-1562408590-e32931084e23?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    features: [
+      "Computer Hardware Assembly",
+      "Operating System Installation",
+      "Virus Removal & Security",
+      "Network Troubleshooting",
+      "Data Backup & Recovery",
+      "Diagnostic Tools",
+      "Preventive Maintenance"
+    ],
+    about: "This practical course provides hands-on training in maintaining and troubleshooting computer systems. Learn to diagnose hardware issues, repair computer components, install and configure operating systems, and implement effective maintenance strategies for both personal and business computing environments.",
+    learns: [
+      "Assemble and disassemble desktop and laptop computers",
+      "Diagnose and repair common hardware failures",
+      "Install and configure Windows, Linux, and macOS operating systems",
+      "Remove viruses, malware, and implement security measures",
+      "Troubleshoot network connectivity issues",
+      "Perform data backup, recovery, and system cloning",
+      "Use diagnostic tools and software for system analysis",
+      "Implement preventive maintenance schedules",
+      "Upgrade computer components for better performance",
+      "Configure BIOS/UEFI settings and device drivers"
+    ],
+    opportunities: [
+      "Computer Repair Technician positions",
+      "IT Support Specialist roles",
+      "Desktop Support Engineer opportunities",
+      "Field Service Technician careers",
+      "Computer Maintenance Consultant",
+      "IT Help Desk Support positions",
+      "Self-employment in computer repair services",
+      "Corporate IT maintenance teams",
+      "Educational institution IT support",
+      "Retail computer service centers"
     ]
   }
 ];
