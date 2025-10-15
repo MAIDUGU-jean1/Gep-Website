@@ -493,7 +493,7 @@ const Courses = () => {
                   }}>
                     {course.price}
                   </div>
-                  <motion.button 
+                  <motion.a 
                     className="btn-primary" 
                     style={{ 
                       padding: '8px 20px', 
@@ -504,7 +504,8 @@ const Courses = () => {
                       borderRadius: '8px',
                       cursor: 'pointer',
                       fontWeight: '600',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      textDecoration: 'none',
                     }}
                     whileHover={{ 
                       scale: 1.05,
@@ -512,9 +513,10 @@ const Courses = () => {
                       boxShadow: '0 4px 12px rgba(var(--primary-color-rgb), 0.3)'
                     }}
                     whileTap={{ scale: 0.95 }}
+                    href='/#contact'
                   >
                     Enroll Now
-                  </motion.button>
+                  </motion.a>
                 </div>
               </div>
             </motion.div>
