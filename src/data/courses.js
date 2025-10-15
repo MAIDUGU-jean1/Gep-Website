@@ -1,4 +1,4 @@
-import { image, title } from "framer-motion/client";
+import { details, image, title } from "framer-motion/client";
 
 export const courses = [
   {
@@ -10,7 +10,10 @@ export const courses = [
     price: "25,000 FCFA",
     level: "Beginner to Advanced",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["HTML5/CSS3", "JavaScript", "Boastrap", "React", "Responsive Design"]
+    features: ["HTML5/CSS3", "JavaScript", "Boastrap", "React", "Responsive Design"],
+    about: '',
+    learn: [],
+    opportunities: [],
   },
   {
     id: 2,
@@ -56,6 +59,7 @@ export const courses = [
     image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     features: ["React Native", "Mongo DB", "Firebase", "API Integration", "App Store","Node.js","Express.js"]
   },
+
   {
     id: 6,
     title: "Computer Studies for Secretariat Duties",
@@ -65,7 +69,12 @@ export const courses = [
     price: "30,000 FCFA",
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["Microsoft Office", "Typing Skills", "Data Entry", "Email Management", "Basic IT"]
+    features: ["Microsoft Office", "Typing Skills", "Data Entry", "Email Management", "Basic IT"],
+    about: "This course caters to both beginners and advanced learners, aiming to bridge the gap in IT proficiency needed in today's office environments. It focuses on delivering concise computer training that spans from basic to advanced levels, ensuring participants are well-versed in critical tools and practices pertinent to modern secretariat duties and office administration.",
+    learns: ["Trainees in this course will attain proficiency in the Microsoft Office Suite, encompassing Excel for data management and spreadsheet analysis, Word for crafting professional documents, Access for handling databases, PowerPoint for designing impactful presentations, and Publisher for creating polished publications and marketing materials. Additionally, the course emphasizes developing a professional typing speed, augmenting efficiency in data entry and document preparation. Students will also cultivate excellent IT skills broadly applicable in office settings, alongside learning specific secretariat duties and office administration techniques crucial for effective coordination and management in professional environments."],
+    opportunities: ["Upon completing the Computer Studies for Secretariat Duties course, you unlock a spectrum of career opportunities. You become a prime candidate for administrative roles such as office administrator, secretary, clerk/cashier, or executive assistant, where your computer literacy and secretarial skills are invaluable. There's potential for your involvement in data management tasks leveraging your Excel and Access competencies. Your skill set also positions you to provide technical support in office environments. In Cameroon and beyond, such qualifications bolster your employability in businesses, institutions, companies, governmental offices, and NGOs craving adept computer users. Furthermore, armed with these skills, you have prospects for freelance work encompassing typing services, document preparation, and presentation design. This course serves as a roadmap for your career advancement, arming you with qualifications that can precipitate promotions or superior job prospects within administrative echelons."],
+
+    
   },
   {
     id: 7,

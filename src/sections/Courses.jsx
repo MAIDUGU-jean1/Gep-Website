@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { courses } from '../data/courses';
-import { Clock, Users, Star, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
+import { Clock, Users, Star, BookOpen, ChevronDown, ChevronUp, Target, Award, Briefcase } from 'lucide-react';
 
 const Courses = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [expandedCourses, setExpandedCourses] = useState({});
+  const [activeTabs, setActiveTabs] = useState({});
 
   // Define course categories and their mappings
   const courseCategories = {
@@ -31,6 +32,91 @@ const Courses = () => {
       ...prev,
       [courseId]: !prev[courseId]
     }));
+    
+    // Set default tab to 'about' when expanding
+    if (!expandedCourses[courseId]) {
+      setActiveTabs(prev => ({
+        ...prev,
+        [courseId]: 'about'
+      }));
+    }
+  };
+
+  // Set active tab for a course
+  const setActiveTab = (courseId, tab) => {
+    setActiveTabs(prev => ({
+      ...prev,
+      [courseId]: tab
+    }));
+  };
+
+  // Tab content configuration
+  const getTabContent = (course, tab) => {
+    const tabContent = {
+      about: (
+        <div>
+          <p style={{ fontSize: '0.8rem', lineHeight: '1.6', marginBottom: '0.5rem' }}>
+            {course.detailedDescription || course.description}
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Clock size={14} />
+              <span style={{ fontSize: '0.8rem' }}>{course.about}</span>
+            </div>
+            
+          </div>
+        </div>
+      ),
+      
+      learn: (
+        <div>
+          <ul style={{
+            paddingLeft: '1rem',
+            margin: 0,
+            fontSize: '0.8rem',
+            lineHeight: '1.6'
+          }}>
+            {course.learns.map((learn, idx) => (
+              <li key={idx} style={{ marginBottom: '0.3rem' }}>
+                {learn}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ),
+      
+      opportunities: (
+        <div>
+          <p style={{ fontSize: '0.8rem', lineHeight: '1.6', marginBottom: '0.5rem' }}>
+            {/* Upon completion of this course, you'll be prepared for: */}
+          </p>
+          <ul style={{
+            paddingLeft: '1rem',
+            margin: 0,
+            fontSize: '0.8rem',
+            lineHeight: '1.6',
+            listStyle: 'none'
+          }}>
+            {course.opportunities?.map((opportunity, idx) => (
+              <li key={idx} style={{ marginBottom: '0.3rem' }}>
+                {opportunity}
+              </li>
+            )) || [
+              "Industry-recognized certification",
+              "Career advancement opportunities",
+              "Real-world project portfolio",
+              "Networking with professionals"
+            ].map((opportunity, idx) => (
+              <li key={idx} style={{ marginBottom: '0.3rem' }}>
+                {opportunity}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    };
+
+    return tabContent[tab] || tabContent.about;
   };
 
   return (
@@ -194,12 +280,13 @@ const Courses = () => {
                   <p style={{ 
                     opacity: 0.8,
                     lineHeight: '1.5',
-                    marginBottom: '0.5rem'
+                    marginBottom: '0.5rem',
+                    fontSize: '0.9rem'
                   }}>
                     {course.description}
                   </p>
                   
-                  {/* Expanded Course Details */}
+                  {/* Expanded Course Details with Tabs */}
                   <AnimatePresence>
                     {expandedCourses[course.id] && (
                       <motion.div
@@ -209,7 +296,6 @@ const Courses = () => {
                         transition={{ duration: 0.3 }}
                         style={{ overflow: 'hidden' }}
                       >
-                        {/* Additional course information can be added here */}
                         <div style={{
                           padding: '1rem',
                           background: 'var(--bg-primary)',
@@ -217,26 +303,84 @@ const Courses = () => {
                           marginTop: '0.5rem',
                           border: '1px solid var(--border-color)'
                         }}>
-                          <h4 style={{
-                            fontSize: '0.9rem',
-                            marginBottom: '0.5rem',
-                            color: 'var(--text-secondary)',
-                            fontWeight: '600'
+                          {/* Tab Navigation */}
+                          <div style={{
+                            display: 'flex',
+                            gap: '0.5rem',
+                            marginBottom: '1rem',
+                            borderBottom: '1px solid var(--border-color)',
+                            paddingBottom: '0.5rem'
                           }}>
-                            Course Highlights:
-                          </h4>
-                          <ul style={{
-                            paddingLeft: '1.2rem',
-                            margin: 0,
-                            fontSize: '0.8rem',
-                            opacity: 0.8,
-                            lineHeight: '1.6'
-                          }}>
-                            <li>Hands-on practical projects</li>
-                            <li>Industry-relevant curriculum</li>
-                            <li>Certificate upon completion</li>
-                            <li>Career guidance and support</li>
-                          </ul>
+                            {[
+                              { key: 'about', label: 'About', icon: BookOpen },
+                              { key: 'learn', label: 'What You\'ll Learn', icon: Target },
+                              { key: 'opportunities', label: 'Opportunities', icon: Briefcase }
+                            ].map((tab) => (
+                              <motion.button
+                                key={tab.key}
+                                onClick={() => setActiveTab(course.id, tab.key)}
+                                style={{
+                                  backgroundColor: activeTabs[course.id] === tab.key 
+                                    ? 'var(--primary-color)' 
+                                    : 'var(--bg-secondary)',
+                                  color: activeTabs[course.id] === tab.key 
+                                    ? 'var(--primary)' 
+                                    : 'var(--text-primary)',
+                                  border: `1px solid ${
+                                    activeTabs[course.id] === tab.key 
+                                      ? 'var(--primary-color)' 
+                                      : 'var(--border-color)'
+                                  }`,
+                                  padding: '0.5rem 0.8rem',
+                                  borderRadius: '8px',
+                                  fontSize: '0.7rem',
+                                  fontWeight: '500',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  transition: 'all 0.3s ease',
+                                  flex: 1,
+                                  justifyContent: 'center',
+                                  boxShadow: activeTabs[course.id] === tab.key 
+                                    ? '0 2px 8px rgba(var(--primary-color-rgb), 0.3)'
+                                    : 'none'
+                                }}
+                                whileHover={{ 
+                                  backgroundColor: activeTabs[course.id] === tab.key 
+                                    ? 'var(--primary-color)'
+                                    : 'var(--hover-color)',
+                                  borderColor: 'var(--primary-color)',
+                                  transform: 'translateY(-1px)',
+                                  boxShadow: '0 4px 12px rgba(var(--primary-color-rgb), 0.2)'
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                <tab.icon 
+                                  size={12} 
+                                  color={activeTabs[course.id] === tab.key ? 'white' : 'var(--primary-color)'} 
+                                />
+                                {tab.label}
+                              </motion.button>
+                            ))}
+                          </div>
+
+                          {/* Tab Content */}
+                          <AnimatePresence mode="wait">
+                            <motion.div
+                              key={activeTabs[course.id]}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              transition={{ duration: 0.2 }}
+                              style={{
+                                minHeight: '120px',
+                                padding: '0.5rem 0'
+                              }}
+                            >
+                              {getTabContent(course, activeTabs[course.id])}
+                            </motion.div>
+                          </AnimatePresence>
                         </div>
                       </motion.div>
                     )}
@@ -258,9 +402,12 @@ const Courses = () => {
                       gap: '4px',
                       transition: 'all 0.3s ease'
                     }}
-                    whileHover={{ color: 'var(--secondary-color)' }}
+                    whileHover={{ 
+                      color: 'var(--secondary-color)',
+                      transform: 'translateX(4px)'
+                    }}
                   >
-                    {expandedCourses[course.id] ? 'Show Less' : 'Read More'}
+                    {expandedCourses[course.id] ? 'Show Less' : 'Course Details'}
                     {expandedCourses[course.id] ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                   </motion.button>
                 </div>
@@ -284,7 +431,7 @@ const Courses = () => {
                   </div>
                 </div>
 
-                {/* Features */}
+                {/* Quick Features Preview */}
                 <div style={{ marginBottom: '1.5rem' }}>
                   <div style={{ 
                     display: 'flex', 
@@ -295,7 +442,7 @@ const Courses = () => {
                     fontWeight: '600'
                   }}>
                     <BookOpen size={16} />
-                    <span>What you'll learn:</span>
+                    <span>Key Skills:</span>
                   </div>
                   <div style={{
                     display: 'flex',
@@ -348,8 +495,22 @@ const Courses = () => {
                   </div>
                   <motion.button 
                     className="btn-primary" 
-                    style={{ padding: '8px 20px', fontSize: '0.9rem' }}
-                    whileHover={{ scale: 1.05 }}
+                    style={{ 
+                      padding: '8px 20px', 
+                      fontSize: '0.9rem',
+                      background: 'var(--primary-color)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      transition: 'all 0.3s ease'
+                    }}
+                    whileHover={{ 
+                      scale: 1.05,
+                      background: 'var(--secondary-color)',
+                      boxShadow: '0 4px 12px rgba(var(--primary-color-rgb), 0.3)'
+                    }}
                     whileTap={{ scale: 0.95 }}
                   >
                     Enroll Now

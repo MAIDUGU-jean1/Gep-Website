@@ -56,7 +56,7 @@ const Header = () => {
           }} className="mobile-hidden">
             <nav style={{ display: 'flex', gap: '2rem' }}>
               {navItems.map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} style={{
+                <a key={item} href={`/#${item.toLowerCase()}`} style={{
                   color: 'var(--text-primary)',
                   textDecoration: 'none',
                   fontWeight: '500',

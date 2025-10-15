@@ -4,9 +4,12 @@ import { Star, Award, Users, BookOpen, Mail } from 'lucide-react';
 import Jean from '../assets/Images/jean.jpeg';
 import Fien from '../assets/Images/fien.jpeg';
 import Elvis from '../assets/Images/elvis.jpeg';
+import Noel from '../assets/Images/Noel.jpeg';
 import { image } from 'framer-motion/client';
 import Terence from '../../src/assets/Images/Terence.jpeg';
 import Geo from '../../src/assets/Images/geo.jpeg';
+
+import { useNavigate } from 'react-router-dom'; // Add this import
 
 // Dedicated tutors data array
 const tutors = [
@@ -16,7 +19,6 @@ const tutors = [
     specialization: "Data Science & Business Analytics",
     experience: "6 years",
     image: Elvis,
-    // image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Computer Science with focus on AI and machine learning. Published researcher and industry consultant.",
     rating: 4.8,
     courses: ["Data Science", "Machine Learning", "Python Programming"],
@@ -30,7 +32,6 @@ const tutors = [
     specialization: "Web Development & Full-Stack",
     experience: "6 years",
     image: Terence,
-    // image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Full-stack developer skilled in React, Node.js, and Laravel. Passionate about building innovative web solutions and sharing knowledge with others.",
     rating: 4.9,
     courses: ["Web Development", "React Masterclass", "LaravelBackend", "Express", "Node.js"],
@@ -44,7 +45,6 @@ const tutors = [
     specialization: "UI/UX",
     experience: "3 years",
     image: Fien,
-    // image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
     bio: "Award-winning designer with expertise in Adobe Creative Suite, branding, and user experience design. Worked with Fortune 500 companies.",
     rating: 4.9,
     courses: ["Graphic Design", "UI/UX Design", "Brand Identity"],
@@ -63,19 +63,8 @@ const tutors = [
     students: 100,
     email: "ashangaboris@gmail.com"
   },
-  // {
-  //   id: 5,
-  //   name: "Mr. Robert Kim",
-  //   specialization: "Mobile App Development",
-  //   experience: "9 years",
-  //   image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-  //   bio: "Expert in cross-platform mobile development with React Native and Flutter. Built over 50 successful mobile applications.",
-  //   rating: 4.8,
-  //   courses: ["Mobile Development", "React Native", "Flutter"],
-  //   students: 2100,
-  //   email: "robert@gepprotech.cm"
-  // },
-    {
+
+  {
     id: 6,
     name: "Mr. Jean De Dieu Maidugu",
     specialization: "Web Development & Full-Stack",
@@ -88,9 +77,28 @@ const tutors = [
     students: 2500,
     email: "maidugujeandedieu600@gmail.com"
   },
+
+
+  {
+    id: 7,
+    name: "Mr Nengang Noel",
+    specialization: "Mobile App Development",
+    experience: "4 years",
+    image: Noel,
+    bio: "Cross Platform Mobile App Developer skilled in React Native. Developed apps for startups and enterprises. Skilled in TypeScript, Basic UI Design, Node js and many more",
+    rating: 4.7,
+    courses: ["Web Development", "React Masterclass", "LaravelBackend"],
+    students: 2500,
+    email: ""
+  },
+
+
 ];
 
 const Tutors = () => {
+
+  const navigate = useNavigate(); // Add this hook
+  
   return (
     <section id="tutors" style={{
       padding: 'clamp(4rem, 8vw, 8rem) 0',
@@ -299,6 +307,7 @@ const Tutors = () => {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate(`/tutor/${tutor.id}`)} // Add this onClick
                   >
                     View Profile
                   </motion.button>
