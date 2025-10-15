@@ -36,7 +36,7 @@ const tutors = [
     rating: 4.9,
     courses: ["Web Development", "React Masterclass", "LaravelBackend", "Express", "Node.js"],
     students: 2500,
-    email: "maidugujeandedieu600@gmail.com"
+    email: "terencen143@icloud.com"
   },
 
   {
@@ -307,7 +307,7 @@ const Tutors = () => {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate(`/tutor/${tutor.id}`)} // Add this onClick
+                    // onClick={() => navigate(`/tutor/${tutor.id}`)} // Add this onClick
                   >
                     View Profile
                   </motion.button>

@@ -95,7 +95,7 @@ const Courses = () => {
             margin: 0,
             fontSize: '0.8rem',
             lineHeight: '1.6',
-            listStyle: 'none'
+            // listStyle: 'none'
           }}>
             {course.opportunities?.map((opportunity, idx) => (
               <li key={idx} style={{ marginBottom: '0.3rem' }}>

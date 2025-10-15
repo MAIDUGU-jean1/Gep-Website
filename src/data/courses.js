@@ -1,19 +1,32 @@
-import { details, image, title } from "framer-motion/client";
-
 export const courses = [
   {
     id: 1,
     title: "Front-end Web Development",
-    description: "Full-stack web development with modern technologies",
+    description: "Front end web development with modern technologies",
     duration: "3 months",
     tutor: "Jean de Dieu Maidugu",
     price: "25,000 FCFA",
     level: "Beginner to Advanced",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["HTML5/CSS3", "JavaScript", "Boastrap", "React", "Responsive Design"],
-    about: '',
-    learn: [],
-    opportunities: [],
+    features: ["HTML5/CSS3", "JavaScript", "Bootstrap", "React", "Responsive Design"],
+    about: "This comprehensive front-end development course takes you from basic web concepts to advanced modern frameworks. You'll learn to build responsive, interactive websites and web applications using the latest technologies and best practices in the industry.",
+    learns: [
+      "Master HTML5 semantic markup and CSS3 styling techniques",
+      "Learn JavaScript fundamentals and advanced ES6+ features",
+      "Build responsive layouts with Bootstrap and CSS Grid/Flexbox",
+      "Develop dynamic user interfaces with React.js",
+      "Implement state management and component-based architecture",
+      "Work with APIs and handle asynchronous operations",
+      "Optimize websites for performance and SEO"
+    ],
+    opportunities: [
+      "Front-end Developer positions in tech companies",
+      "Freelance web development projects",
+      "UI/UX Developer roles",
+      "Full-stack development career path",
+      "Start your own web development agency",
+      "Remote work opportunities worldwide"
+    ]
   },
   {
     id: 2,
@@ -24,7 +37,26 @@ export const courses = [
     price: "20,000 FCFA",
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["SEO", "Social Media", "Content Marketing", "Google Ads", "Analytics"]
+    features: ["SEO", "Social Media", "Content Marketing", "Google Ads", "Analytics"],
+    about: "Master the art and science of digital marketing in this comprehensive course. Learn to create effective online marketing campaigns, analyze performance data, and drive business growth through various digital channels and platforms.",
+    learns: [
+      "Search Engine Optimization (SEO) techniques and best practices",
+      "Social media marketing strategies across multiple platforms",
+      "Content creation and marketing funnel development",
+      "Google Ads and PPC campaign management",
+      "Web analytics and performance tracking with Google Analytics",
+      "Email marketing automation and campaign optimization",
+      "Conversion rate optimization and A/B testing"
+    ],
+    opportunities: [
+      "Digital Marketing Specialist positions",
+      "Social Media Manager roles",
+      "SEO/SEM Specialist careers",
+      "Content Marketing Manager opportunities",
+      "Digital Marketing Agency positions",
+      "Freelance digital marketing consulting",
+      "E-commerce marketing management"
+    ]
   },
   {
     id: 3,
@@ -35,7 +67,26 @@ export const courses = [
     price: "15,000 FCFA",
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["Adobe Photoshop", "Illustrator", "Branding", "UI/UX", "Print Design"]
+    features: ["Adobe Photoshop", "Illustrator", "Branding", "UI/UX", "Print Design"],
+    about: "Unleash your creativity and learn professional graphic design skills. This course covers everything from basic design principles to advanced techniques in Adobe Creative Suite, preparing you for a successful career in visual communication.",
+    learns: [
+      "Adobe Photoshop for photo editing and digital art",
+      "Adobe Illustrator for vector graphics and logo design",
+      "Brand identity development and style guide creation",
+      "UI/UX design principles and prototyping",
+      "Print design for brochures, flyers, and publications",
+      "Color theory and typography fundamentals",
+      "Design thinking and creative problem solving"
+    ],
+    opportunities: [
+      "Graphic Designer positions in agencies and companies",
+      "Brand Identity Specialist roles",
+      "UI/UX Designer career paths",
+      "Freelance design projects and consulting",
+      "Print and publication design opportunities",
+      "Marketing and advertising agency positions",
+      "Motion graphics and multimedia design"
+    ]
   },
   {
     id: 4,
@@ -46,7 +97,26 @@ export const courses = [
     price: "25,000 FCFA",
     level: "Advanced",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["SPSS", "STATA", "Excel", "Data Visualization", "Statistics"]
+    features: ["SPSS", "STATA", "Excel", "Data Visualization", "Statistics"],
+    about: "Dive into the world of data analysis and statistical computing. This course provides comprehensive training in data manipulation, statistical analysis, and visualization using industry-standard tools and methodologies.",
+    learns: [
+      "Statistical analysis using SPSS and STATA software",
+      "Advanced Excel functions for data manipulation",
+      "Data cleaning and preprocessing techniques",
+      "Statistical modeling and hypothesis testing",
+      "Data visualization with charts and dashboards",
+      "Descriptive and inferential statistics",
+      "Report writing and data interpretation"
+    ],
+    opportunities: [
+      "Data Analyst positions across various industries",
+      "Research Analyst roles in academic and corporate settings",
+      "Business Intelligence Analyst careers",
+      "Market Research Analyst opportunities",
+      "Government and NGO research positions",
+      "Healthcare data analysis roles",
+      "Financial data analysis positions"
+    ]
   },
   {
     id: 5,
@@ -57,9 +127,27 @@ export const courses = [
     price: "50,000 FCFA",
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["React Native", "Mongo DB", "Firebase", "API Integration", "App Store","Node.js","Express.js"]
+    features: ["React Native", "Mongo DB", "Firebase", "API Integration", "App Store", "Node.js", "Express.js"],
+    about: "Learn to build powerful cross-platform mobile applications using React Native. This comprehensive course covers everything from basic app development to advanced features like database integration, authentication, and app store deployment.",
+    learns: [
+      "Cross-platform app development with React Native",
+      "Backend development with Node.js and Express.js",
+      "Database management with MongoDB and Firebase",
+      "RESTful API development and integration",
+      "User authentication and authorization systems",
+      "Mobile app UI/UX design principles",
+      "App store deployment for iOS and Android"
+    ],
+    opportunities: [
+      "Mobile App Developer positions",
+      "Full-stack Developer roles with mobile expertise",
+      "Freelance app development projects",
+      "Startup app development opportunities",
+      "Cross-platform development specialist roles",
+      "Mobile tech lead positions",
+      "App consulting and maintenance services"
+    ]
   },
-
   {
     id: 6,
     title: "Computer Studies for Secretariat Duties",
@@ -71,10 +159,20 @@ export const courses = [
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     features: ["Microsoft Office", "Typing Skills", "Data Entry", "Email Management", "Basic IT"],
     about: "This course caters to both beginners and advanced learners, aiming to bridge the gap in IT proficiency needed in today's office environments. It focuses on delivering concise computer training that spans from basic to advanced levels, ensuring participants are well-versed in critical tools and practices pertinent to modern secretariat duties and office administration.",
-    learns: ["Trainees in this course will attain proficiency in the Microsoft Office Suite, encompassing Excel for data management and spreadsheet analysis, Word for crafting professional documents, Access for handling databases, PowerPoint for designing impactful presentations, and Publisher for creating polished publications and marketing materials. Additionally, the course emphasizes developing a professional typing speed, augmenting efficiency in data entry and document preparation. Students will also cultivate excellent IT skills broadly applicable in office settings, alongside learning specific secretariat duties and office administration techniques crucial for effective coordination and management in professional environments."],
-    opportunities: ["Upon completing the Computer Studies for Secretariat Duties course, you unlock a spectrum of career opportunities. You become a prime candidate for administrative roles such as office administrator, secretary, clerk/cashier, or executive assistant, where your computer literacy and secretarial skills are invaluable. There's potential for your involvement in data management tasks leveraging your Excel and Access competencies. Your skill set also positions you to provide technical support in office environments. In Cameroon and beyond, such qualifications bolster your employability in businesses, institutions, companies, governmental offices, and NGOs craving adept computer users. Furthermore, armed with these skills, you have prospects for freelance work encompassing typing services, document preparation, and presentation design. This course serves as a roadmap for your career advancement, arming you with qualifications that can precipitate promotions or superior job prospects within administrative echelons."],
-
-    
+    learns: [
+      "Trainees in this course will attain proficiency in the Microsoft Office Suite, encompassing Excel for data management and spreadsheet analysis, Word for crafting professional documents, Access for handling databases, PowerPoint for designing impactful presentations, and Publisher for creating polished publications and marketing materials.",
+      "Additionally, the course emphasizes developing a professional typing speed, augmenting efficiency in data entry and document preparation.",
+      "Students will also cultivate excellent IT skills broadly applicable in office settings, alongside learning specific secretariat duties and office administration techniques crucial for effective coordination and management in professional environments."
+    ],
+    opportunities: [
+      "Upon completing the Computer Studies for Secretariat Duties course, you unlock a spectrum of career opportunities.",
+      "You become a prime candidate for administrative roles such as office administrator, secretary, clerk/cashier, or executive assistant, where your computer literacy and secretarial skills are invaluable.",
+      "There's potential for your involvement in data management tasks leveraging your Excel and Access competencies.",
+      "Your skill set also positions you to provide technical support in office environments.",
+      "In Cameroon and beyond, such qualifications bolster your employability in businesses, institutions, companies, governmental offices, and NGOs craving adept computer users.",
+      "Furthermore, armed with these skills, you have prospects for freelance work encompassing typing services, document preparation, and presentation design.",
+      "This course serves as a roadmap for your career advancement, arming you with qualifications that can precipitate promotions or superior job prospects within administrative echelons."
+    ]
   },
   {
     id: 7,
@@ -85,7 +183,26 @@ export const courses = [
     price: "30,000 FCFA",
     level: "Advanced",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["Laravel", "mySql", "PHP", "API Development", "Authentication"]
+    features: ["Laravel", "MySQL", "PHP", "API Development", "Authentication"],
+    about: "Master server-side development with PHP and Laravel framework. This course covers backend programming, database design, API development, and deployment strategies to build robust and scalable web applications.",
+    learns: [
+      "PHP programming fundamentals and advanced concepts",
+      "Laravel framework and MVC architecture",
+      "MySQL database design and management",
+      "RESTful API development and documentation",
+      "User authentication and authorization systems",
+      "Server deployment and maintenance",
+      "Security best practices and performance optimization"
+    ],
+    opportunities: [
+      "Back-end Developer positions",
+      "Full-stack Developer roles",
+      "API Developer opportunities",
+      "Laravel Developer specialist positions",
+      "Technical Lead roles in web development",
+      "Freelance backend development projects",
+      "Startup technical co-founder opportunities"
+    ]
   },
   {
     id: 8,
@@ -96,8 +213,26 @@ export const courses = [
     price: "30,000 FCFA",
     level: "Advanced",
     image: "https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    // image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["Power BI", "Tableau", "Data Warehousing", "ETL Processes", "Predictive Analytics"]
+    features: ["Power BI", "Tableau", "Data Warehousing", "ETL Processes", "Predictive Analytics"],
+    about: "Transform raw data into actionable business insights. This course teaches you how to use powerful BI tools to analyze data, create interactive dashboards, and support data-driven decision making in organizations.",
+    learns: [
+      "Data visualization with Power BI and Tableau",
+      "Data warehousing concepts and implementation",
+      "ETL (Extract, Transform, Load) processes",
+      "Dashboard design and interactive reporting",
+      "Predictive analytics and data modeling",
+      "Business performance metrics and KPI tracking",
+      "Data storytelling and presentation skills"
+    ],
+    opportunities: [
+      "Business Intelligence Analyst roles",
+      "Data Analyst positions with BI specialization",
+      "BI Consultant opportunities",
+      "Data Visualization Specialist careers",
+      "Corporate strategy and planning roles",
+      "Management reporting positions",
+      "BI tool administration and development"
+    ]
   },
   {
     id: 9,
@@ -108,72 +243,92 @@ export const courses = [
     price: "15,000 FCFA",
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["Wireframing", "Prototyping", "User Research", "Usability Testing", "Design Systems"]
+    features: ["Wireframing", "Prototyping", "User Research", "Usability Testing", "Design Systems"],
+    about: "Learn to create intuitive and engaging user experiences. This course covers the entire UX design process from user research and wireframing to prototyping and usability testing, using industry-standard tools and methodologies.",
+    learns: [
+      "User research methods and persona development",
+      "Wireframing and information architecture",
+      "Interactive prototyping with modern design tools",
+      "Usability testing and user feedback analysis",
+      "Design systems and component libraries",
+      "Accessibility and inclusive design principles",
+      "Collaboration with developers and stakeholders"
+    ],
+    opportunities: [
+      "UI/UX Designer positions",
+      "Product Designer roles",
+      "UX Researcher opportunities",
+      "Interaction Designer careers",
+      "Design Lead positions",
+      "Freelance UX consulting",
+      "Startup design team roles"
+    ]
   },
   {
-    id: 9,
-    title: "Basic Catography",
-    description: "User interface and user experience design principles",
+    id: 10,
+    title: "Basic Cartography",
+    description: "Fundamentals of map making and geographic information systems",
     duration: "3 months",
     tutor: "Ashanga Boris Ngwa",
     price: "25,000 FCFA",
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-    features: ["Cartography and GIS", "Secretarial duties ", "Cartography and GIS"]
+    features: ["Cartography and GIS", "Map Design", "Spatial Analysis", "Geographic Data"],
+    about: "Explore the art and science of map making. This course introduces you to cartographic principles, geographic information systems, and spatial data analysis for creating accurate and informative maps.",
+    learns: [
+      "Cartographic design principles and map composition",
+      "Geographic Information Systems (GIS) fundamentals",
+      "Spatial data collection and management",
+      "Map projection and coordinate systems",
+      "Thematic mapping and data visualization",
+      "Digital cartography tools and software",
+      "Field data collection techniques"
+    ],
+    opportunities: [
+      "Cartographer positions",
+      "GIS Technician roles",
+      "Urban planning assistant opportunities",
+      "Environmental mapping careers",
+      "Surveying and mapping technician positions",
+      "Government mapping agency roles",
+      "Real estate and property mapping"
+    ]
   },
-{
-  id: 9,
-  title: "Topography and Remote Sensing",
-  description: "Master the principles of land measurement, mapping, and satellite imagery analysis for environmental monitoring and spatial data management.",
-  duration: "4 months",
-  tutor: "Ashanga Boris Ngwa",
-  price: "40,000 FCFA",
-  level: "Intermediate",
-  image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-  // image: "https://images.unsplash.com/photo-1540959733332-0b10d1c24339?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-  features: [
-    "Land Surveying Techniques",
-    "GPS Data Collection",
-    "Satellite Imagery Analysis",
-    "GIS Mapping",
-    "Topographic Data Processing",
-    "Remote Sensing Applications"
-  ]
-}
-
+  {
+    id: 11,
+    title: "Topography and Remote Sensing",
+    description: "Master the principles of land measurement, mapping, and satellite imagery analysis for environmental monitoring and spatial data management.",
+    duration: "4 months",
+    tutor: "Ashanga Boris Ngwa",
+    price: "40,000 FCFA",
+    level: "Intermediate",
+    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+    features: [
+      "Land Surveying Techniques",
+      "GPS Data Collection",
+      "Satellite Imagery Analysis",
+      "GIS Mapping",
+      "Topographic Data Processing",
+      "Remote Sensing Applications"
+    ],
+    about: "Gain expertise in topographic surveying and remote sensing technologies. This comprehensive course covers land measurement techniques, GPS data collection, satellite imagery interpretation, and spatial data analysis for various applications in environmental monitoring and land management.",
+    learns: [
+      "Land surveying techniques and equipment operation",
+      "GPS and GNSS data collection and processing",
+      "Satellite imagery acquisition and interpretation",
+      "Digital elevation modeling and terrain analysis",
+      "Remote sensing applications in environmental monitoring",
+      "GIS-based spatial analysis and mapping",
+      "Topographic data quality control and accuracy assessment"
+    ],
+    opportunities: [
+      "Topographic Surveyor positions",
+      "Remote Sensing Analyst roles",
+      "GIS Specialist opportunities",
+      "Environmental Monitoring Technician careers",
+      "Urban and Regional Planning positions",
+      "Civil Engineering support roles",
+      "Natural resource management opportunities"
+    ]
+  }
 ];
-
-// export const tutors = [
-//   {
-//     id: 1,
-//     name: "John Smith",
-//     specialization: "Web Development",
-//     experience: "8 years",
-//     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-//     bio: "Full-stack developer with extensive experience in modern web technologies."
-//   },
-//   {
-//     id: 2,
-//     name: "Sarah Johnson",
-//     specialization: "Digital Marketing",
-//     experience: "6 years",
-//     image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-//     bio: "Digital marketing expert specializing in SEO and social media strategies."
-//   },
-//   {
-//     id: 3,
-//     name: "Mike Chen",
-//     specialization: "Graphic Design",
-//     experience: "7 years",
-//     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-//     bio: "Award-winning graphic designer with expertise in branding and UI/UX."
-//   },
-//   {
-//     id: 4,
-//     name: "Dr. Emily Brown",
-//     specialization: "Data Science",
-//     experience: "10 years",
-//     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-//     bio: "PhD in Computer Science with focus on machine learning and data analytics."
-//   }
-// ];
