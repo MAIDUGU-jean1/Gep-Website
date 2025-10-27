@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <header style={{
       background: 'var(--bg-secondary)',
-      padding: '1rem 0',
+      padding: '0.5rem 0',
       position: 'fixed',
       width: '100%',
       top: 0,
@@ -23,38 +23,48 @@ const Header = () => {
       <div className="container">
         <nav style={{
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.5rem'
         }}>
+          {/* Logo and Title Row */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '10px'
+            gap: '10px',
+            justifyContent: 'center',
+            width: '100%'
           }}>
-            <img src={Logo} alt="Not found" size={32} color="var(--primary-color)"
+            <img src={Logo} alt="Gep Protech Academy" 
               style={{
-                width: '100px',
-                height: '100px',
+                width: '60px', // Reduced size
+                height: '60px', // Reduced size
                 borderRadius: '50%',
                 objectFit: 'cover'
               }} />
-            {/* <GraduationCap size={32} color="var(--primary-color)" /> */}
             <h1 style={{
               color: 'var(--text-secondary)',
-              fontSize: 'clamp(1.5rem, 5vw, 2.0rem)',
-              fontWeight: 'bold'
+              fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+              fontWeight: 'bold',
+              whiteSpace: 'nowrap' // Prevent line break
             }}>
-              Gep Protech <br /> Academy
+              Gep Protech Academy
             </h1>
           </div>
           
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Now below the logo/title */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '2rem'
+            gap: '2rem',
+            justifyContent: 'center'
           }} className="mobile-hidden">
-            <nav style={{ display: 'flex', gap: '2rem' }}>
+            <nav style={{ 
+              display: 'flex', 
+              gap: '2rem',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}>
               {navItems.map((item) => (
                 <a key={item} href={`/#${item.toLowerCase()}`} style={{
                   color: 'var(--text-primary)',
@@ -62,7 +72,8 @@ const Header = () => {
                   fontWeight: '500',
                   transition: 'color 0.3s ease',
                   fontSize: 'clamp(0.9rem, 2vw, 1rem)',
-                  position: 'relative'
+                  position: 'relative',
+                  whiteSpace: 'nowrap'
                 }}>
                   {item}
                 </a>
@@ -73,19 +84,25 @@ const Header = () => {
               background: 'var(--card-bg)',
               border: 'none',
               cursor: 'pointer',
-              padding: '10px',
+              padding: '8px',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              marginLeft: '1rem'
             }}>
-              {isDark ? <Sun size={20} color="var(--primary-color)" /> : <Moon size={20} color="var(--primary-color)" />}
+              {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
             </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div style={{ display: 'none' }} className="mobile-menu">
+          <div style={{ 
+            display: 'none',
+            position: 'absolute',
+            right: '1rem',
+            top: '1rem'
+          }} className="mobile-menu">
             <button onClick={toggleTheme} style={{
               background: 'var(--card-bg)',
               border: 'none',
@@ -155,10 +172,26 @@ const Header = () => {
         @media (max-width: 768px) {
           .mobile-hidden { display: none !important; }
           .mobile-menu { display: flex !important; align-items: center; }
+          
+          /* Adjust header padding for mobile */
+          header {
+            padding: 0.75rem 0 !important;
+          }
+          
+          /* Center the logo/title on mobile */
+          nav > div:first-child {
+            justify-content: center;
+            padding: 0.5rem 0;
+          }
         }
         
         @media (min-width: 769px) {
           .mobile-menu { display: none !important; }
+        }
+
+        /* Hover effects for nav items */
+        a:hover {
+          color: var(--primary-color) !important;
         }
       `}</style>
     </header>

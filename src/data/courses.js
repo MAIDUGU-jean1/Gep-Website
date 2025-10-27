@@ -336,7 +336,7 @@ export const courses = [
     id: 12,
     title: "Generative AI Engineering",
     description: "Master the creation and deployment of generative AI models for text, image, and code generation using cutting-edge technologies.",
-    duration: "4 months",
+    duration: "3 months",
     tutor: "AI Engineering Team",
     price: "30,000 FCFA",
     level: "Advanced",
@@ -415,5 +415,85 @@ export const courses = [
       "Educational institution IT support",
       "Retail computer service centers"
     ]
-  }
+  },
+  {
+  id: 14,
+  title: "Cybersecurity & Ethical Hacking",
+  description: "Master cybersecurity fundamentals, ethical hacking techniques, and defense strategies to protect digital assets and combat cyber threats.",
+  duration: "4 months",
+  tutor: "Cybersecurity Experts Team",
+  price: "35,000 FCFA",
+  level: "Intermediate",
+  image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  features: [
+    "Network Security & Defense",
+    "Ethical Hacking Methodologies",
+    "Vulnerability Assessment",
+    "Penetration Testing",
+    "Cryptography & Encryption",
+    "Incident Response",
+    "Security Operations Center (SOC)"
+  ],
+  about: "Become a cybersecurity professional with hands-on training in ethical hacking, network security, and threat mitigation. This comprehensive course equips you with the skills to identify vulnerabilities, conduct penetration tests, and implement robust security measures to protect organizations from cyber attacks.",
+  learns: [
+    "Conduct comprehensive vulnerability assessments and penetration tests",
+    "Implement network security protocols and firewall configurations",
+    "Master ethical hacking techniques for authorized security testing",
+    "Understand cryptography principles and encryption methodologies",
+    "Develop incident response plans and disaster recovery strategies",
+    "Analyze malware and reverse engineer malicious code",
+    "Configure and manage Security Operations Center (SOC) tools",
+    "Apply digital forensics techniques for cyber crime investigation"
+  ],
+  opportunities: [
+    "Cybersecurity Analyst positions in various industries",
+    "Ethical Hacker/Penetration Tester roles",
+    "Information Security Specialist opportunities",
+    "Security Operations Center (SOC) Analyst",
+    "Network Security Engineer positions",
+    "Cybersecurity Consultant for businesses",
+    "Incident Response Team Member",
+    "Security Auditor and Compliance Officer"
+  ]
+},
+{
+  id: 15,
+  title: "Computer Programming - C & C++",
+  description: "Master fundamental programming concepts with C and C++, from basic syntax to advanced object-oriented programming and memory management.",
+  duration: "3 months",
+  tutor: "Software Engineering Team",
+  price: "25,000 FCFA",
+  level: "Beginner to Intermediate",
+  image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  features: [
+    "C Programming Fundamentals",
+    "C++ Object-Oriented Programming",
+    "Memory Management & Pointers",
+    "Data Structures & Algorithms",
+    "File Handling & I/O Operations",
+    "Multi-threading & Concurrency",
+    "Standard Template Library (STL)"
+  ],
+  about: "Build a strong foundation in programming with C and C++, the languages that power operating systems, game engines, and high-performance applications. This course takes you from basic programming concepts to advanced C++ features, preparing you for software development roles and further programming studies.",
+  learns: [
+    "Master C programming syntax, data types, and control structures",
+    "Understand and implement pointers, memory allocation, and management",
+    "Develop object-oriented programs using C++ classes and objects",
+    "Implement inheritance, polymorphism, and encapsulation in C++",
+    "Create and manipulate data structures like linked lists, stacks, and queues",
+    "Work with files and handle input/output operations efficiently",
+    "Utilize Standard Template Library (STL) containers and algorithms",
+    "Debug programs and handle errors using exception handling"
+  ],
+  opportunities: [
+    "Software Developer positions in various industries",
+    "Systems Programmer roles",
+    "Game Development opportunities with C++",
+    "Embedded Systems Programmer",
+    "C++ Developer for high-performance applications",
+    "Software Engineer in operating systems development",
+    "Technical Lead for C/C++ projects",
+    "Further studies in advanced programming and computer science"
+  ]
+}
 ];

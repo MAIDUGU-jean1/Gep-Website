@@ -69,6 +69,43 @@ const tutors = [
       }
     ]
   },
+    {
+    id: 4,
+    name: 'Mr Jean De Dieu Maidugu',
+    specialization: "Web Development & Full-Stack",
+    experience: "4 years",
+    image: {Jean},
+    bio: "Full-stack developer skilled in React, Node.js, and Laravel. Passionate about building innovative web solutions and sharing knowledge with others.",
+    rating: 4.9,
+    courses: ["Web Development", "React Masterclass", "Laravel Backend", "Express", "Node.js"],
+    students: 1500,
+    email: "maidugujeandedieu600@gmail.com",
+    detailedBio: "Terence is a passionate full-stack developer with extensive experience in modern web technologies. He has built numerous web applications and enjoys mentoring aspiring developers.",
+    achievements: [
+      "Built 50+ web applications",
+      "React Certified Developer",
+      "Mentored 1000+ students"
+    ],
+    teachingStyle: "Code-along sessions with real project development",
+    courseDetails: [
+      {
+        name: "React Masterclass",
+        duration: "10 weeks",
+        level: "Intermediate",
+        students: 1200,
+        rating: 4.9,
+        description: "Complete React development from basics to advanced"
+      },
+      {
+        name: "Full-Stack Development",
+        duration: "14 weeks",
+        level: "Advanced",
+        students: 800,
+        rating: 4.8,
+        description: "End-to-end web application development"
+      }
+    ]
+  },
   {
     id: 6,
     name: "Mr Ngulefac Terence",
@@ -79,7 +116,7 @@ const tutors = [
     rating: 4.9,
     courses: ["Web Development", "React Masterclass", "Laravel Backend", "Express", "Node.js"],
     students: 2500,
-    email: "maidugujeandedieu600@gmail.com",
+    email: "ngulefacterence@gmail.com",
     detailedBio: "Terence is a passionate full-stack developer with extensive experience in modern web technologies. He has built numerous web applications and enjoys mentoring aspiring developers.",
     achievements: [
       "Built 50+ web applications",
