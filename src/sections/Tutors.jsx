@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Award, Users, BookOpen, Mail } from 'lucide-react';
-import Jean from '../assets/Images/jean.jpeg';
+import Jean from '../assets/Images/jean.png';
 import Fien from '../assets/Images/fien.jpeg';
 import Elvis from '../assets/Images/elvis.jpeg';
 import Noel from '../assets/Images/Noel.jpeg';
