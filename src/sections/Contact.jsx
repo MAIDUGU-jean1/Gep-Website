@@ -6,6 +6,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    contact: '',
     courses: [], // Changed from 'course' to 'courses' array
     message: ''
   });
@@ -38,6 +39,7 @@ New Message from Gep Protech Website:
 
 *Name:* ${formData.name}
 *Email:* ${formData.email}
+*Contact:* ${formData.contact}
 *Course Interests:* ${formData.courses.length > 0 ? formData.courses.join(', ') : 'Not specified'}
 *Message:*
 ${formData.message}
@@ -60,7 +62,7 @@ Sent from Gep Protech Academic Website
     alert('Opening WhatsApp to send your message...');
     
     // Reset form
-    setFormData({ name: '', email: '', courses: [], message: '' });
+    setFormData({ name: '', email: '', contact: '', courses: [], message: '' });
   };
 
   const handleChange = (e) => {
@@ -327,6 +329,34 @@ Sent from Gep Protech Academic Website
                     transition: 'border-color 0.3s ease'
                   }}
                   placeholder="Enter your email address"
+                />
+              </div>
+              <div>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '0.5rem', 
+                  fontWeight: '500',
+                  color: 'var(--text-secondary)'
+                }}>
+                  Contact *
+                </label>
+                <input 
+                  type="contact" 
+                  name="contact"
+                  value={formData.contact}
+                  onChange={handleChange}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    border: '2px solid var(--border-color)',
+                    borderRadius: '8px',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-primary)',
+                    fontSize: '1rem',
+                    transition: 'border-color 0.3s ease'
+                  }}
+                  placeholder="Enter your whatsapp number"
                 />
               </div>
 

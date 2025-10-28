@@ -92,20 +92,23 @@ const Hero = () => {
                         Explore Courses
                     </a>
               </button>
-              <motion.button 
+              <motion.a 
                 className="btn-secondary" 
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px'
+                  gap: '8px',
+                  textDecoration: 'none',
+
                 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={openVideo}
+                href='#'
+                // onClick={openVideo}
               >
-                <Play size={20} />
-                Watch Intro
-              </motion.button>
+                {/* <Play size={20} /> */}
+                What's New
+              </motion.a>
             </div>
             
             <div style={{

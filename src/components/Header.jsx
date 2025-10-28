@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Moon, Sun, Menu, X, GraduationCap } from 'lucide-react';
+import { Moon, Sun, Menu, Bell, X, GraduationCap } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
-import Logo from '../assets/Images/Logo.jpeg'; // Adjust the path as necessary
+import Logo from '../assets/Images/logo1.png'; // Adjust the path as necessary
 
 const Header = () => {
   const { isDark, toggleTheme } = useTheme();
@@ -94,6 +94,21 @@ const Header = () => {
             }}>
               {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
             </button>
+
+            <button style={{
+              background: 'var(--card-bg)',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease',
+              marginLeft: '1rem',
+            }}>
+              <Bell size={18} color="var(--primary-color)" />
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -109,12 +124,29 @@ const Header = () => {
               cursor: 'pointer',
               padding: '8px',
               borderRadius: '50%',
-              marginRight: '1rem',
+              marginRight: '19rem',
               display: 'flex',
+              float: 'left',
               alignItems: 'center',
               justifyContent: 'center'
             }}>
               {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
+            </button>
+
+            <button style={{
+              background: 'var(--card-bg)',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              // marginBottom: '3rem',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease',
+              marginLeft: '1rem',
+            }}>
+              <Bell size={18} color="var(--primary-color)" />
             </button>
             
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{
