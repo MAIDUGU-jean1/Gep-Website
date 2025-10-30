@@ -10,7 +10,10 @@ import Gallery from './sections/Gallery';
 import Contact from './sections/Contact';
 import { useTheme } from './hooks/useTheme';
 import Achievements from './sections/Achievement';
-import TutorProfile from './pages/TutorProfile'; // Import the new profile component
+import TutorProfile from './pages/TutorProfile';
+import Blog from '../src/pages/Blog'; // Add this import
+import BlogPost from './pages/BlogPost'; // We'll create this next
+import { BlogProvider } from './context/BlogContext'; // Add this import
 
 function HomePage() {
   return (
@@ -27,22 +30,25 @@ function HomePage() {
 }
 
 function App() {
-  useTheme(); // Initialize theme
+  useTheme();
 
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <main>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/tutor/:id" element={<TutorProfile />} />
-            {/* You can add more routes here later */}
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <BlogProvider> {/* Wrap with BlogProvider */}
+      <Router>
+        <div className="App">
+          <Header />
+          <main>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/tutor/:id" element={<TutorProfile />} />
+              <Route path="/blog" element={<Blog />} /> {/* Blog listing page */}
+              <Route path="/blog/:id" element={<BlogPost />} /> {/* Individual post page */}
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </BlogProvider>
   );
 }
 

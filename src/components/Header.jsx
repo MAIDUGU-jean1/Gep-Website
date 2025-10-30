@@ -144,7 +144,7 @@ const Header = () => {
               // marginBottom: '3rem',
               justifyContent: 'center',
               transition: 'all 0.3s ease',
-              marginLeft: '1rem',
+              marginLeft: '10px', // put the vlaue in pixels
             }}>
               <Bell size={18} color="var(--primary-color)" />
             </button>
