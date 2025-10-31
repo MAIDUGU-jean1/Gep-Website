@@ -1,23 +1,37 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, User, FileText, ArrowLeft, ArrowRight, Play, Image, Download } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, User, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Play, Image as ImageIcon } from 'lucide-react';
 import { useBlog } from '../context/BlogContext';
 import { Link } from 'react-router-dom';
 
 const Blog = () => {
   const { posts, loading } = useBlog();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [direction, setDirection] = useState(0);
 
-  const getFileIcon = (fileType) => {
-    switch (fileType) {
-      case 'pdf':
-        return <FileText size={16} />;
-      case 'video':
-        return <Play size={16} />;
-      case 'image':
-        return <Image size={16} />;
-      default:
-        return <FileText size={16} />;
+  // Auto-slide functionality
+  useEffect(() => {
+    if (posts.length > 0) {
+      const timer = setInterval(() => {
+        nextSlide();
+      }, 5000); // Change slide every 5 seconds
+      return () => clearInterval(timer);
     }
+  }, [currentSlide, posts.length]);
+
+  const nextSlide = () => {
+    setDirection(1);
+    setCurrentSlide((prev) => (prev === posts.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setDirection(-1);
+    setCurrentSlide((prev) => (prev === 0 ? posts.length - 1 : prev - 1));
+  };
+
+  const goToSlide = (index) => {
+    setDirection(index > currentSlide ? 1 : -1);
+    setCurrentSlide(index);
   };
 
   if (loading) {
@@ -42,6 +56,21 @@ const Blog = () => {
       </div>
     );
   }
+
+  const sliderVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0
+    }),
+    center: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction) => ({
+      x: direction < 0 ? 300 : -300,
+      opacity: 0
+    })
+  };
 
   return (
     <section style={{
@@ -112,231 +141,242 @@ const Blog = () => {
           </motion.div>
         </motion.div>
 
-        {/* Blog Posts Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-          gap: '2.5rem',
-          marginTop: '4rem'
-        }}>
-          {posts.map((post, index) => (
-            <motion.article
-              key={post.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              style={{
-                background: 'var(--card-bg)',
-                borderRadius: '20px',
-                overflow: 'hidden',
-                border: '2px solid var(--border-color)',
-                transition: 'all 0.3s ease',
-                position: 'relative'
-              }}
-              whileHover={{ 
-                y: -8,
-                boxShadow: '0 25px 50px rgba(0,0,0,0.15)',
-                borderColor: 'var(--primary-color)'
-              }}
-            >
-              {/* Category Badge */}
-              <div style={{
-                position: 'absolute',
-                top: '1.5rem',
-                left: '1.5rem',
-                zIndex: 2
-              }}>
-                <span style={{
-                  background: 'var(--primary-color)',
-                  color: 'white',
-                  padding: '0.5rem 1.2rem',
-                  borderRadius: '25px',
-                  fontSize: '0.8rem',
-                  fontWeight: '600',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
-                }}>
-                  {post.category}
-                </span>
-              </div>
-
-              {/* Featured Image */}
-              <div style={{
-                height: '250px',
-                background: `linear-gradient(135deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 100%), url(${post.image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                position: 'relative'
-              }} />
-
-              {/* Content */}
-              <div style={{ padding: '2rem' }}>
-                {/* Meta Information */}
-                <div style={{
+        {/* Main Slider - Shows ALL Posts */}
+        {posts.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            style={{
+              position: 'relative',
+              maxWidth: '1200px',
+              margin: '0 auto 4rem auto',
+              borderRadius: '20px',
+              overflow: 'hidden',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+              height: '600px'
+            }}
+          >
+            <AnimatePresence custom={direction} mode="wait">
+              <motion.div
+                key={currentSlide}
+                custom={direction}
+                variants={sliderVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 }
+                }}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: `linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 100%), url(${posts[currentSlide]?.image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
                   display: 'flex',
-                  alignItems: 'center',
-                  gap: '1.5rem',
-                  marginBottom: '1.2rem',
-                  fontSize: '0.9rem',
-                  color: 'var(--text-secondary)'
+                  alignItems: 'flex-end',
+                  padding: '3rem'
+                }}
+              >
+                <div style={{
+                  color: 'white',
+                  maxWidth: '600px',
+                  textAlign: 'left'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <User size={16} />
-                    <span style={{ fontWeight: '500' }}>{post.author}</span>
+                  <span style={{
+                    background: 'var(--primary-color)',
+                    color: 'white',
+                    padding: '0.5rem 1.2rem',
+                    borderRadius: '25px',
+                    fontSize: '0.8rem',
+                    fontWeight: '600',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    marginBottom: '1rem',
+                    display: 'inline-block'
+                  }}>
+                    {posts[currentSlide]?.category}
+                  </span>
+                  
+                  <h2 style={{
+                    fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                    marginBottom: '1rem',
+                    lineHeight: '1.2',
+                    fontWeight: '700'
+                  }}>
+                    {posts[currentSlide]?.title}
+                  </h2>
+                  
+                  <p style={{
+                    fontSize: '1.1rem',
+                    marginBottom: '1.5rem',
+                    opacity: 0.9,
+                    lineHeight: '1.6'
+                  }}>
+                    {posts[currentSlide]?.excerpt}
+                  </p>
+                  
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '2rem',
+                    marginBottom: '2rem',
+                    flexWrap: 'wrap'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <User size={18} />
+                      <span>{posts[currentSlide]?.author}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Calendar size={18} />
+                      <span>{new Date(posts[currentSlide]?.date).toLocaleDateString()}</span>
+                    </div>
+                    
+                    {/* Show media counts */}
+                    {posts[currentSlide]?.files && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        {posts[currentSlide].files.filter(f => f.type === 'video').length > 0 && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Play size={16} />
+                            <span>{posts[currentSlide].files.filter(f => f.type === 'video').length} video(s)</span>
+                          </div>
+                        )}
+                        {posts[currentSlide].files.filter(f => f.type === 'image').length > 0 && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <ImageIcon size={16} />
+                            <span>{posts[currentSlide].files.filter(f => f.type === 'image').length} image(s)</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Calendar size={16} />
-                    <span>{new Date(post.date).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'short', 
-                      day: 'numeric' 
-                    })}</span>
+                  
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem'
+                  }}>
+                    <Link 
+                      to={`/blog/${posts[currentSlide]?.id}`}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        background: 'var(--primary-color)',
+                        color: 'white',
+                        padding: '1rem 2rem',
+                        borderRadius: '10px',
+                        textDecoration: 'none',
+                        fontWeight: '600',
+                        transition: 'all 0.3s ease'
+                      }}
+                      whileHover={{ 
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 10px 25px rgba(0,0,0,0.3)'
+                      }}
+                    >
+                      View Gallery & Details
+                      <ArrowRight size={18} />
+                    </Link>
+                    
+                    <span style={{
+                      fontSize: '0.9rem',
+                      opacity: 0.8
+                    }}>
+                      {currentSlide + 1} / {posts.length}
+                    </span>
                   </div>
                 </div>
-                
-                {/* Title */}
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  marginBottom: '1rem',
-                  color: 'var(--text-secondary)',
-                  lineHeight: '1.4',
-                  fontWeight: '600'
-                }}>
-                  {post.title}
-                </h3>
-                
-                {/* Excerpt */}
-                <p style={{
-                  color: 'var(--text-primary)',
-                  marginBottom: '1.5rem',
-                  lineHeight: '1.6',
-                  opacity: 0.8,
-                  fontSize: '1rem'
-                }}>
-                  {post.excerpt}
-                </p>
-                
-                {/* Files Preview */}
-                {post.files && post.files.length > 0 && (
-                  <div style={{ 
-                    marginBottom: '2rem',
-                    background: 'var(--bg-primary)',
-                    padding: '1.2rem',
-                    borderRadius: '12px',
-                    border: '1px solid var(--border-color)'
-                  }}>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      marginBottom: '1rem',
-                      fontSize: '0.9rem',
-                      color: 'var(--text-secondary)',
-                      fontWeight: '600'
-                    }}>
-                      <FileText size={18} />
-                      <span>Attachments ({post.files.length})</span>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                      {post.files.slice(0, 3).map((file, fileIndex) => (
-                        <div
-                          key={fileIndex}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.8rem',
-                            padding: '0.8rem',
-                            background: 'var(--card-bg)',
-                            borderRadius: '8px',
-                            border: '1px solid var(--border-color)',
-                            transition: 'all 0.3s ease'
-                          }}
-                          whileHover={{ 
-                            background: 'var(--primary-color)',
-                            color: 'white'
-                          }}
-                        >
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: '32px',
-                            height: '32px',
-                            borderRadius: '6px',
-                            background: 'var(--bg-primary)',
-                            color: 'var(--primary-color)',
-                            flexShrink: 0
-                          }}>
-                            {getFileIcon(file.type)}
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{
-                              fontSize: '0.9rem',
-                              fontWeight: '500',
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis'
-                            }}>
-                              {file.name}
-                            </div>
-                            <div style={{
-                              fontSize: '0.75rem',
-                              opacity: 0.7,
-                              marginTop: '2px'
-                            }}>
-                              {file.size}
-                            </div>
-                          </div>
-                          <Download size={16} style={{ opacity: 0.6, flexShrink: 0 }} />
-                        </div>
-                      ))}
-                      {post.files.length > 3 && (
-                        <div style={{
-                          textAlign: 'center',
-                          fontSize: '0.8rem',
-                          color: 'var(--text-secondary)',
-                          padding: '0.5rem',
-                          opacity: 0.7
-                        }}>
-                          +{post.files.length - 3} more files
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Read More Button */}
-                <Link 
-                  to={`/blog/${post.id}`}
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={prevSlide}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '20px',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255,255,255,0.9)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '50px',
+                height: '50px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s ease',
+                zIndex: 10
+              }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <ChevronLeft size={24} color="var(--text-secondary)" />
+            </button>
+            
+            <button
+              onClick={nextSlide}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '20px',
+                transform: 'translateY(-50%)',
+                background: 'rgba(255,255,255,0.9)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '50px',
+                height: '50px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s ease',
+                zIndex: 10
+              }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <ChevronRight size={24} color="var(--text-secondary)" />
+            </button>
+
+            {/* Dots Indicator */}
+            <div style={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: '10px',
+              zIndex: 10
+            }}>
+              {posts.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
                   style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    width: '100%',
-                    justifyContent: 'center',
-                    textDecoration: 'none',
-                    background: 'linear-gradient(135deg, var(--primary-color), var(--accent-color))',
-                    color: 'white',
-                    padding: '1rem 2rem',
-                    borderRadius: '12px',
-                    fontWeight: '600',
-                    fontSize: '1rem',
-                    transition: 'all 0.3s ease',
+                    width: '12px',
+                    height: '12px',
+                    borderRadius: '50%',
                     border: 'none',
-                    cursor: 'pointer'
+                    background: index === currentSlide ? 'var(--primary-color)' : 'rgba(255,255,255,0.5)',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
                   }}
-                  whileHover={{ 
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
-                  }}
-                >
-                  Read Full Story
-                  <ArrowRight size={18} />
-                </Link>
-              </div>
-            </motion.article>
-          ))}
-        </div>
+                  whileHover={{ scale: 1.2 }}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Empty State */}
         {posts.length === 0 && !loading && (

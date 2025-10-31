@@ -495,5 +495,45 @@ export const courses = [
     "Technical Lead for C/C++ projects",
     "Further studies in advanced programming and computer science"
   ]
+},
+{
+  id: 17,
+  title: "Network Security & Cyber Defense",
+  description: "Specialize in protecting network infrastructures from cyber threats, implementing security protocols, and defending against network-based attacks.",
+  duration: "3 months",
+  tutor: "Cybersecurity Experts Team",
+  price: "35,000 FCFA",
+  level: "Advanced",
+  image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  features: [
+    "Network Vulnerability Assessment",
+    "Firewall Configuration & Management",
+    "Intrusion Detection & Prevention Systems",
+    "VPN & Secure Remote Access",
+    "Network Monitoring & Log Analysis",
+    "Security Protocol Implementation",
+    "Incident Response & Recovery"
+  ],
+  about: "Dive deep into network security principles and practices. Learn to protect organizational networks from various cyber threats, implement robust security measures, and respond effectively to security incidents in enterprise environments.",
+  learns: [
+    "Conduct comprehensive network vulnerability assessments",
+    "Configure and manage enterprise-grade firewalls",
+    "Implement and monitor intrusion detection/prevention systems",
+    "Set up secure VPN connections and remote access solutions",
+    "Analyze network traffic and security logs for threats",
+    "Implement security protocols like SSL/TLS, IPsec, and SSH",
+    "Develop incident response plans for network security breaches",
+    "Harden network infrastructure against common attacks"
+  ],
+  opportunities: [
+    "Network Security Specialist positions",
+    "Security Operations Center (SOC) Analyst",
+    "Network Security Engineer roles",
+    "Information Security Analyst opportunities",
+    "Cybersecurity Consultant for network security",
+    "Security Administrator positions",
+    "Network Defense Specialist roles",
+    "Advanced roles in cybersecurity management"
+  ]
 }
 ];

@@ -20,6 +20,7 @@ const Contact = () => {
     "Cybersecurity",
     "Digital Marketing",
     "Software Engineering",
+    "Computer Networking",
     "Network Administration",
     "Database Management",
     "UI/UX Design",

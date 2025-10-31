@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, User, FileText, ArrowLeft, Download, Play, Image, File, Video, Archive, ExternalLink } from 'lucide-react';
+import { Calendar, User, ArrowLeft, ChevronLeft, ChevronRight, Play, X, Image as ImageIcon } from 'lucide-react';
 import { useBlog } from '../context/BlogContext';
 
 const BlogPost = () => {
   const { id } = useParams();
   const { getPostById } = useBlog();
   const post = getPostById(id);
-  const [activeVideo, setActiveVideo] = useState(null);
+  const [activeMedia, setActiveMedia] = useState(null);
+  const [mediaIndex, setMediaIndex] = useState(0);
+  const [mediaDirection, setMediaDirection] = useState(0);
 
   if (!post) {
     return (
@@ -61,45 +63,37 @@ const BlogPost = () => {
     );
   }
 
-  const getFileIcon = (fileType) => {
-    switch (fileType) {
-      case 'pdf':
-        return <FileText size={24} />;
-      case 'video':
-        return <Play size={24} />;
-      case 'image':
-        return <Image size={24} />;
-      case 'archive':
-        return <Archive size={24} />;
-      default:
-        return <File size={24} />;
-    }
+  // Filter only images and videos
+  const mediaFiles = post.files?.filter(file => file.type === 'image' || file.type === 'video') || [];
+
+  const nextMedia = () => {
+    setMediaDirection(1);
+    setMediaIndex((prev) => (prev === mediaFiles.length - 1 ? 0 : prev + 1));
   };
 
-  const getFileTypeColor = (fileType) => {
-    switch (fileType) {
-      case 'pdf':
-        return '#FF6B6B';
-      case 'video':
-        return '#4ECDC4';
-      case 'image':
-        return '#45B7D1';
-      case 'archive':
-        return '#96CEB4';
-      default:
-        return '#FFEAA7';
-    }
+  const prevMedia = () => {
+    setMediaDirection(-1);
+    setMediaIndex((prev) => (prev === 0 ? mediaFiles.length - 1 : prev - 1));
   };
 
-  const handleFileClick = (file) => {
-    if (file.type === 'video') {
-      setActiveVideo(file.url);
-    } else if (file.type === 'image') {
-      window.open(file.url, '_blank');
-    } else {
-      // For other file types, simulate download
-      window.open(file.url || '#', '_blank');
-    }
+  const openMedia = (index) => {
+    setMediaIndex(index);
+    setActiveMedia(mediaFiles[index]);
+  };
+
+  const mediaVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 100 : -100,
+      opacity: 0
+    }),
+    center: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction) => ({
+      x: direction < 0 ? 100 : -100,
+      opacity: 0
+    })
   };
 
   return (
@@ -148,157 +142,151 @@ const BlogPost = () => {
           transition={{ duration: 0.6 }}
           style={{
             maxWidth: '1000px',
-            margin: '0 auto',
-            background: 'var(--card-bg)',
-            borderRadius: '20px',
-            overflow: 'hidden',
-            border: '2px solid var(--border-color)'
+            margin: '0 auto'
           }}
         >
-          {/* Featured Image */}
-          <div style={{
-            height: '400px',
-            background: `linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%), url(${post.image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            position: 'relative'
-          }}>
+          {/* Post Header */}
+          <header style={{ marginBottom: '3rem' }}>
+            <span style={{
+              background: 'var(--primary-color)',
+              color: 'white',
+              padding: '0.6rem 1.2rem',
+              borderRadius: '25px',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+              marginBottom: '1.5rem',
+              display: 'inline-block'
+            }}>
+              {post.category}
+            </span>
+            
+            <h1 style={{
+              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              color: 'var(--text-secondary)',
+              marginBottom: '1.5rem',
+              lineHeight: '1.2',
+              fontWeight: '700'
+            }}>
+              {post.title}
+            </h1>
+            
             <div style={{
-              position: 'absolute',
-              top: '2rem',
-              left: '2rem',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem'
+              alignItems: 'center',
+              gap: '2rem',
+              flexWrap: 'wrap',
+              color: 'var(--text-secondary)',
+              fontSize: '1rem',
+              padding: '1.5rem',
+              background: 'var(--card-bg)',
+              borderRadius: '12px',
+              border: '1px solid var(--border-color)'
             }}>
-              <span style={{
-                background: 'var(--primary-color)',
-                color: 'white',
-                padding: '0.6rem 1.2rem',
-                borderRadius: '25px',
-                fontSize: '0.9rem',
-                fontWeight: '600',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px'
-              }}>
-                {post.category}
-              </span>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div style={{ padding: '3rem' }}>
-            {/* Post Header */}
-            <header style={{ marginBottom: '2.5rem' }}>
-              <h1 style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                color: 'var(--text-secondary)',
-                marginBottom: '1.5rem',
-                lineHeight: '1.2',
-                fontWeight: '700'
-              }}>
-                {post.title}
-              </h1>
-              
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2rem',
-                flexWrap: 'wrap',
-                color: 'var(--text-secondary)',
-                fontSize: '1rem',
-                padding: '1.5rem',
-                background: 'var(--bg-primary)',
-                borderRadius: '12px',
-                border: '1px solid var(--border-color)'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                  <User size={20} />
-                  <span style={{ fontWeight: '600' }}>By {post.author}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                  <Calendar size={20} />
-                  <span>{new Date(post.date).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}</span>
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                <User size={20} />
+                <span style={{ fontWeight: '600' }}>By {post.author}</span>
               </div>
-            </header>
-
-            {/* Post Content */}
-            <div style={{
-              color: 'var(--text-primary)',
-              lineHeight: '1.8',
-              fontSize: '1.1rem',
-              marginBottom: '3rem'
-            }}>
-              {post.content.split('\n\n').map((paragraph, index) => (
-                <motion.p 
-                  key={index} 
-                  style={{ marginBottom: '1.5rem' }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  {paragraph.startsWith('## ') ? (
-                    <strong style={{
-                      display: 'block',
-                      fontSize: '1.3rem',
-                      color: 'var(--text-secondary)',
-                      margin: '2rem 0 1rem 0',
-                      fontWeight: '600'
-                    }}>
-                      {paragraph.replace('## ', '')}
-                    </strong>
-                  ) : (
-                    paragraph
-                  )}
-                </motion.p>
-              ))}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                <Calendar size={20} />
+                <span>{new Date(post.date).toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}</span>
+              </div>
             </div>
+          </header>
 
-            {/* Video Player Modal */}
-            {activeVideo && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                style={{
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'rgba(0,0,0,0.9)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 1000,
-                  padding: '2rem'
-                }}
-                onClick={() => setActiveVideo(null)}
-              >
+          {/* Media Gallery Slider */}
+          {mediaFiles.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              style={{
+                position: 'relative',
+                marginBottom: '3rem',
+                borderRadius: '15px',
+                overflow: 'hidden',
+                background: 'var(--card-bg)',
+                border: '2px solid var(--border-color)',
+                height: '400px'
+              }}
+            >
+              <AnimatePresence custom={mediaDirection} mode="wait">
                 <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  style={{
-                    position: 'relative',
-                    maxWidth: '800px',
-                    width: '100%',
-                    background: 'black',
-                    borderRadius: '10px',
-                    overflow: 'hidden'
+                  key={mediaIndex}
+                  custom={mediaDirection}
+                  variants={mediaVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 }
                   }}
-                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'relative',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => openMedia(mediaIndex)}
                 >
+                  {mediaFiles[mediaIndex].type === 'video' ? (
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      background: `linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%), url(${mediaFiles[mediaIndex].thumbnail || mediaFiles[mediaIndex].url})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <div style={{
+                        background: 'rgba(255,255,255,0.9)',
+                        borderRadius: '50%',
+                        width: '80px',
+                        height: '80px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease'
+                      }}
+                      whileHover={{ scale: 1.1 }}
+                      >
+                        <Play size={32} color="var(--primary-color)" />
+                      </div>
+                    </div>
+                  ) : (
+                    <img 
+                      src={mediaFiles[mediaIndex].url} 
+                      alt={mediaFiles[mediaIndex].name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  )}
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Navigation Arrows */}
+              {mediaFiles.length > 1 && (
+                <>
                   <button
-                    onClick={() => setActiveVideo(null)}
+                    onClick={prevMedia}
                     style={{
                       position: 'absolute',
-                      top: '1rem',
-                      right: '1rem',
-                      background: 'rgba(255,255,255,0.2)',
+                      top: '50%',
+                      left: '15px',
+                      transform: 'translateY(-50%)',
+                      background: 'rgba(255,255,255,0.9)',
                       border: 'none',
                       borderRadius: '50%',
                       width: '40px',
@@ -307,246 +295,244 @@ const BlogPost = () => {
                       alignItems: 'center',
                       justifyContent: 'center',
                       cursor: 'pointer',
-                      color: 'white',
-                      zIndex: 1001
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
+                      transition: 'all 0.3s ease',
+                      zIndex: 10
                     }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                   >
-                    ×
+                    <ChevronLeft size={20} color="var(--text-secondary)" />
                   </button>
+                  
+                  <button
+                    onClick={nextMedia}
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      right: '15px',
+                      transform: 'translateY(-50%)',
+                      background: 'rgba(255,255,255,0.9)',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '40px',
+                      height: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
+                      transition: 'all 0.3s ease',
+                      zIndex: 10
+                    }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <ChevronRight size={20} color="var(--text-secondary)" />
+                  </button>
+                </>
+              )}
+
+              {/* Media Counter */}
+              <div style={{
+                position: 'absolute',
+                bottom: '15px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: 'rgba(0,0,0,0.7)',
+                color: 'white',
+                padding: '0.5rem 1rem',
+                borderRadius: '20px',
+                fontSize: '0.9rem',
+                fontWeight: '500'
+              }}>
+                {mediaIndex + 1} / {mediaFiles.length}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Post Content */}
+          <div style={{
+            color: 'var(--text-primary)',
+            lineHeight: '1.8',
+            fontSize: '1.1rem',
+            marginBottom: '3rem'
+          }}>
+            {post.content.split('\n\n').map((paragraph, index) => (
+              <motion.p 
+                key={index} 
+                style={{ marginBottom: '1.5rem' }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                {paragraph.startsWith('## ') ? (
+                  <strong style={{
+                    display: 'block',
+                    fontSize: '1.3rem',
+                    color: 'var(--text-secondary)',
+                    margin: '2rem 0 1rem 0',
+                    fontWeight: '600'
+                  }}>
+                    {paragraph.replace('## ', '')}
+                  </strong>
+                ) : (
+                  paragraph
+                )}
+              </motion.p>
+            ))}
+          </div>
+
+          {/* Media Modal */}
+          {activeMedia && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'rgba(0,0,0,0.95)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1000,
+                padding: '2rem'
+              }}
+              onClick={() => setActiveMedia(null)}
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                style={{
+                  position: 'relative',
+                  maxWidth: '90%',
+                  maxHeight: '90%',
+                  background: 'black',
+                  borderRadius: '10px',
+                  overflow: 'hidden'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setActiveMedia(null)}
+                  style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: 'rgba(255,255,255,0.2)',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: 'white',
+                    zIndex: 1001
+                  }}
+                >
+                  <X size={20} />
+                </button>
+
+                {activeMedia.type === 'video' ? (
                   <video
                     controls
                     autoPlay
                     style={{
                       width: '100%',
                       height: 'auto',
+                      maxHeight: '80vh',
                       display: 'block'
                     }}
                   >
-                    <source src={activeVideo} type="video/mp4" />
+                    <source src={activeMedia.url} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
-                </motion.div>
-              </motion.div>
-            )}
+                ) : (
+                  <img 
+                    src={activeMedia.url} 
+                    alt={activeMedia.name}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      maxHeight: '80vh',
+                      objectFit: 'contain'
+                    }}
+                  />
+                )}
 
-            {/* Attached Files Section */}
-            {post.files && post.files.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                style={{
-                  background: 'var(--bg-primary)',
-                  padding: '2.5rem',
-                  borderRadius: '15px',
-                  border: '2px solid var(--border-color)',
-                  marginBottom: '3rem'
-                }}
-              >
-                <h3 style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '2rem',
-                  color: 'var(--text-secondary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '1rem'
-                }}>
-                  <FileText size={28} />
-                  Attached Files ({post.files.length})
-                </h3>
-                
-                <div style={{ display: 'grid', gap: '1rem' }}>
-                  {post.files.map((file, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                {/* Navigation in Modal */}
+                {mediaFiles.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevMedia}
                       style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '1rem',
+                        transform: 'translateY(-50%)',
+                        background: 'rgba(255,255,255,0.9)',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '50px',
+                        height: '50px',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '1.5rem',
-                        background: 'var(--card-bg)',
-                        borderRadius: '12px',
-                        border: '2px solid var(--border-color)',
-                        cursor: file.type === 'video' || file.type === 'image' ? 'pointer' : 'default',
-                        transition: 'all 0.3s ease',
-                        position: 'relative',
-                        overflow: 'hidden'
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
+                        zIndex: 1001
                       }}
-                      whileHover={{ 
-                        transform: 'translateY(-3px)',
-                        borderColor: getFileTypeColor(file.type),
-                        boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
-                      }}
-                      onClick={() => handleFileClick(file)}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: 1 }}>
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '60px',
-                          height: '60px',
-                          borderRadius: '12px',
-                          background: getFileTypeColor(file.type),
-                          color: 'white',
-                          flexShrink: 0
-                        }}>
-                          {getFileIcon(file.type)}
-                        </div>
-                        
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <h4 style={{
-                            fontSize: '1.1rem',
-                            fontWeight: '600',
-                            color: 'var(--text-secondary)',
-                            marginBottom: '0.3rem',
-                            wordBreak: 'break-word'
-                          }}>
-                            {file.name}
-                          </h4>
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '1rem',
-                            fontSize: '0.9rem',
-                            color: 'var(--text-primary)',
-                            opacity: 0.7
-                          }}>
-                            <span style={{ textTransform: 'uppercase', fontWeight: '500' }}>
-                              {file.type}
-                            </span>
-                            <span>•</span>
-                            <span>{file.size}</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        {file.type === 'video' && (
-                          <button
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.5rem',
-                              background: 'var(--primary-color)',
-                              color: 'white',
-                              border: 'none',
-                              padding: '0.8rem 1.2rem',
-                              borderRadius: '8px',
-                              cursor: 'pointer',
-                              fontWeight: '500',
-                              transition: 'all 0.3s ease'
-                            }}
-                            whileHover={{ transform: 'scale(1.05)' }}
-                          >
-                            <Play size={18} />
-                            Play
-                          </button>
-                        )}
-                        
-                        <button
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            background: 'var(--bg-primary)',
-                            color: 'var(--text-secondary)',
-                            border: '1px solid var(--border-color)',
-                            padding: '0.8rem 1.2rem',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            fontWeight: '500',
-                            transition: 'all 0.3s ease'
-                          }}
-                          whileHover={{ 
-                            background: 'var(--primary-color)',
-                            color: 'white'
-                          }}
-                        >
-                          <Download size={18} />
-                          Download
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
+                      <ChevronLeft size={24} color="var(--text-secondary)" />
+                    </button>
+                    
+                    <button
+                      onClick={nextMedia}
+                      style={{
+                        position: 'absolute',
+                        top: '50%',
+                        right: '1rem',
+                        transform: 'translateY(-50%)',
+                        background: 'rgba(255,255,255,0.9)',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '50px',
+                        height: '50px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
+                        zIndex: 1001
+                      }}
+                    >
+                      <ChevronRight size={24} color="var(--text-secondary)" />
+                    </button>
+                  </>
+                )}
+
+                {/* Media Info */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: '1rem',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(0,0,0,0.7)',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '20px',
+                  fontSize: '0.9rem'
+                }}>
+                  {activeMedia.name} ({mediaIndex + 1}/{mediaFiles.length})
                 </div>
               </motion.div>
-            )}
-
-            {/* Call to Action */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              style={{
-                textAlign: 'center',
-                padding: '3rem',
-                background: 'linear-gradient(135deg, var(--primary-color), var(--accent-color))',
-                borderRadius: '15px',
-                color: 'white'
-              }}
-            >
-              <h3 style={{
-                fontSize: '1.8rem',
-                marginBottom: '1rem'
-              }}>
-                Interested in Our Programs?
-              </h3>
-              <p style={{
-                marginBottom: '2rem',
-                fontSize: '1.1rem',
-                opacity: 0.9
-              }}>
-                Explore our courses and start your journey in technology today.
-              </p>
-              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <Link 
-                  to="" 
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    background: 'white',
-                    color: 'var(--primary-color)',
-                    padding: '1rem 2rem',
-                    borderRadius: '10px',
-                    textDecoration: 'none',
-                    fontWeight: '600',
-                    transition: 'all 0.3s ease'
-                  }}
-                  whileHover={{ transform: 'translateY(-2px)' }}
-                >
-                  View Courses
-                  <ExternalLink size={18} />
-                </Link>
-                <Link 
-                  to="/contact" 
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    background: 'transparent',
-                    color: 'white',
-                    padding: '1rem 2rem',
-                    borderRadius: '10px',
-                    textDecoration: 'none',
-                    fontWeight: '600',
-                    border: '2px solid white',
-                    transition: 'all 0.3s ease'
-                  }}
-                  whileHover={{ 
-                    background: 'white',
-                    color: 'var(--primary-color)'
-                  }}
-                >
-                  Contact Us
-                </Link>
-              </div>
             </motion.div>
-          </div>
+          )}
         </motion.article>
       </div>
     </section>
