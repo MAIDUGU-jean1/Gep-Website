@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const BlogContext = createContext();
@@ -13,6 +14,18 @@ export const useBlog = () => {
 export const BlogProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const fetchPosts = async () => {
+  try {
+    // Simulate fetching posts from an API
+    const response = await axios.get('http://127.0.0.1:8000/api/blog');
+    console.log(response.data);
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    } finally {
+      setLoading(false);
+    }
+} ;
 
   useEffect(() => {
     // Sample blog posts with different file types
@@ -159,6 +172,7 @@ These improvements ensure our students learn in an environment that matches indu
         ]
       }
     ];
+
     
     // Simulate API loading
     setTimeout(() => {
@@ -176,6 +190,7 @@ These improvements ensure our students learn in an environment that matches indu
     loading,
     getPostById
   };
+  fetchPosts();
 
   return (
     <BlogContext.Provider value={value}>
