@@ -1,55 +1,76 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, User, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Play, Image as ImageIcon } from 'lucide-react';
+import { Calendar, User, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Play, Image as ImageIcon, File } from 'lucide-react';
 import { useBlog } from '../context/BlogContext';
 import { Link } from 'react-router-dom';
+import './css/Blog.css';
+import { formatDate } from '../utils/dateFormatter';
 
 const Blog = () => {
   const { posts, loading } = useBlog();
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [direction, setDirection] = useState(0);
+  const [currentFileSlides, setCurrentFileSlides] = useState({});
 
-  // Auto-slide functionality
+  const fileUrl = import.meta.env.VITE_FILE_API_URL;
+
+
+  // Initialize and manage file slides for each post
   useEffect(() => {
     if (posts.length > 0) {
-      const timer = setInterval(() => {
-        nextSlide();
-      }, 5000); // Change slide every 5 seconds
-      return () => clearInterval(timer);
+      const initialSlides = {};
+      posts.forEach((post, index) => {
+        if (post.files && post.files.length > 0) {
+          initialSlides[post.id] = 0;
+        }
+      });
+      setCurrentFileSlides(initialSlides);
     }
-  }, [currentSlide, posts.length]);
+  }, [posts]);
 
-  const nextSlide = () => {
-    setDirection(1);
-    setCurrentSlide((prev) => (prev === posts.length - 1 ? 0 : prev + 1));
+  // Auto-slide functionality for each post's files
+  useEffect(() => {
+    if (Object.keys(currentFileSlides).length > 0) {
+      const timers = posts.map(post => {
+        if (post.files && post.files.length > 1) {
+          return setInterval(() => {
+            setCurrentFileSlides(prev => ({
+              ...prev,
+              [post.id]: (prev[post.id] + 1) % post.files.length
+            }));
+          }, 5000); // Change file every 5 seconds
+        }
+        return null;
+      });
+
+      return () => timers.forEach(timer => timer && clearInterval(timer));
+    }
+  }, [currentFileSlides, posts]);
+
+  const nextFile = (postId, fileCount) => {
+    setCurrentFileSlides(prev => ({
+      ...prev,
+      [postId]: (prev[postId] + 1) % fileCount
+    }));
   };
 
-  const prevSlide = () => {
-    setDirection(-1);
-    setCurrentSlide((prev) => (prev === 0 ? posts.length - 1 : prev - 1));
+  const prevFile = (postId, fileCount) => {
+    setCurrentFileSlides(prev => ({
+      ...prev,
+      [postId]: (prev[postId] - 1 + fileCount) % fileCount
+    }));
   };
 
-  const goToSlide = (index) => {
-    setDirection(index > currentSlide ? 1 : -1);
-    setCurrentSlide(index);
+  const goToFile = (postId, index) => {
+    setCurrentFileSlides(prev => ({
+      ...prev,
+      [postId]: index
+    }));
   };
 
   if (loading) {
     return (
-      <div style={{
-        padding: 'clamp(6rem, 10vw, 10rem) 0 4rem 0',
-        background: 'var(--bg-primary)',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
+      <div className="blog-loading">
         <div className="container">
-          <div style={{ 
-            textAlign: 'center',
-            color: 'var(--text-primary)',
-            fontSize: '1.2rem'
-          }}>
+          <div className="blog-loading-text">
             Loading latest updates...
           </div>
         </div>
@@ -57,7 +78,7 @@ const Blog = () => {
     );
   }
 
-  const sliderVariants = {
+  const fileVariants = {
     enter: (direction) => ({
       x: direction > 0 ? 300 : -300,
       opacity: 0
@@ -73,39 +94,18 @@ const Blog = () => {
   };
 
   return (
-    <section style={{
-      padding: 'clamp(6rem, 10vw, 10rem) 0 4rem 0',
-      background: 'var(--bg-primary)',
-      minHeight: '100vh'
-    }}>
+    <section className="blog-section">
       <div className="container">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          style={{ marginBottom: '3rem' }}
+          className="blog-header"
         >
           <Link 
             to="/"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              color: 'var(--text-secondary)',
-              textDecoration: 'none',
-              marginBottom: '2rem',
-              fontWeight: '500',
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              background: 'var(--card-bg)',
-              border: '1px solid var(--border-color)',
-              transition: 'all 0.3s ease'
-            }}
-            whileHover={{ 
-              background: 'var(--primary-color)',
-              color: 'white'
-            }}
+            className="blog-back-button"
           >
             <ArrowLeft size={20} />
             Back to Home
@@ -115,266 +115,184 @@ const Blog = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            style={{ textAlign: 'center' }}
+            className="blog-title-section"
           >
-            <h1 style={{
-              fontSize: 'clamp(2.5rem, 5vw, 3.5rem)',
-              color: 'var(--text-secondary)',
-              marginBottom: '1rem',
-              background: 'linear-gradient(135deg, var(--primary-color), var(--accent-color))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}>
+            <h1 className="blog-main-title">
               Latest Updates
             </h1>
-            <p style={{
-              fontSize: '1.2rem',
-              color: 'var(--text-primary)',
-              opacity: 0.8,
-              maxWidth: '600px',
-              margin: '0 auto',
-              lineHeight: '1.6'
-            }}>
+            <p className="blog-subtitle">
               Stay informed with the latest news, announcements, and developments from Gep Protech Academy
             </p>
           </motion.div>
         </motion.div>
 
-        {/* Main Slider - Shows ALL Posts */}
+        {/* Posts Grid */}
         {posts.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            style={{
-              position: 'relative',
-              maxWidth: '1200px',
-              margin: '0 auto 4rem auto',
-              borderRadius: '20px',
-              overflow: 'hidden',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-              height: '600px'
-            }}
+            className="blog-posts-grid"
           >
-            <AnimatePresence custom={direction} mode="wait">
+            {posts.map((post, index) => (
               <motion.div
-                key={currentSlide}
-                custom={direction}
-                variants={sliderVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 300, damping: 30 },
-                  opacity: { duration: 0.2 }
-                }}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: `linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 100%), url(${posts[currentSlide]?.image})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  padding: '3rem'
-                }}
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.1, delay: index * 0.1 }}
+                className="blog-post-card"
               >
-                <div style={{
-                  color: 'white',
-                  maxWidth: '600px',
-                  textAlign: 'left'
-                }}>
-                  <span style={{
-                    background: 'var(--primary-color)',
-                    color: 'white',
-                    padding: '0.5rem 1.2rem',
-                    borderRadius: '25px',
-                    fontSize: '0.8rem',
-                    fontWeight: '600',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                    marginBottom: '1rem',
-                    display: 'inline-block'
-                  }}>
-                    {posts[currentSlide]?.category}
-                  </span>
-                  
-                  <h2 style={{
-                    fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
-                    marginBottom: '1rem',
-                    lineHeight: '1.2',
-                    fontWeight: '700'
-                  }}>
-                    {posts[currentSlide]?.title}
-                  </h2>
-                  
-                  <p style={{
-                    fontSize: '1.1rem',
-                    marginBottom: '1.5rem',
-                    opacity: 0.9,
-                    lineHeight: '1.6'
-                  }}>
-                    {posts[currentSlide]?.excerpt}
-                  </p>
-                  
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '2rem',
-                    marginBottom: '2rem',
-                    flexWrap: 'wrap'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <User size={18} />
-                      <span>{posts[currentSlide]?.author}</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <Calendar size={18} />
-                      <span>{new Date(posts[currentSlide]?.date).toLocaleDateString()}</span>
-                    </div>
-                    
-                    {/* Show media counts */}
-                    {posts[currentSlide]?.files && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        {posts[currentSlide].files.filter(f => f.type === 'video').length > 0 && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <Play size={16} />
-                            <span>{posts[currentSlide].files.filter(f => f.type === 'video').length} video(s)</span>
+                {/* File Slider Section */}
+                {post.files && post.files.length > 0 ? (
+                  <div className="blog-file-slider">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentFileSlides[post.id] || 0}
+                        variants={fileVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{
+                          x: { type: "spring", stiffness: 300, damping: 30 },
+                          opacity: { duration: 0.2 }
+                        }}
+                        className="blog-slide-container"
+                      >
+                        {['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp', 'tiff'].includes(
+                          post.files[currentFileSlides[post.id]]?.filetype?.toLowerCase()
+                        ) ? (
+                          <img 
+                            src={`${fileUrl}/${post.files[currentFileSlides[post.id]]?.filepath}`} 
+                            alt={post.title}
+                            className="blog-slide-image"
+                          />
+                        ) : ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv', 'm4v', '3gp'].includes(
+                          post.files[currentFileSlides[post.id]]?.filetype?.toLowerCase()
+                        ) ? (
+                          <video 
+                            controls
+                            className="blog-slide-video"
+                          >
+                            <source 
+                              src={`${fileUrl}/${post.files[currentFileSlides[post.id]]?.filepath}`} 
+                              type={`video/${post.files[currentFileSlides[post.id]]?.filetype}`}
+                            />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          <div className="blog-unknown-placeholder">
+                            <File size={48} />
+                            <span>Unsupported File Type</span>
+                            <small>{post.files[currentFileSlides[post.id]]?.filetype}</small>
                           </div>
                         )}
-                        {posts[currentSlide].files.filter(f => f.type === 'image').length > 0 && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <ImageIcon size={16} />
-                            <span>{posts[currentSlide].files.filter(f => f.type === 'image').length} image(s)</span>
+                      </motion.div>
+                    </AnimatePresence>
+
+                    {/* File Navigation Arrows */}
+                    {post.files.length > 1 && (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            prevFile(post.id, post.files.length);
+                          }}
+                          className="blog-slide-arrow blog-slide-arrow-left"
+                        >
+                          <ChevronLeft size={18} />
+                        </button>
+                        
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            nextFile(post.id, post.files.length);
+                          }}
+                          className="blog-slide-arrow blog-slide-arrow-right"
+                        >
+                          <ChevronRight size={18} />
+                        </button>
+                      </>
+                    )}
+
+                    {/* File Dots Indicator */}
+                    {post.files.length > 1 && (
+                      <div className="blog-slide-dots">
+                        {post.files.map((_, fileIndex) => (
+                          <button
+                            key={fileIndex}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              goToFile(post.id, fileIndex);
+                            }}
+                            className={`blog-slide-dot ${fileIndex === currentFileSlides[post.id] ? 'blog-slide-dot-active' : ''}`}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Category Badge */}
+                    <span className="blog-category-badge">
+                      {post.category}
+                    </span>
+                  </div>
+                ) : (
+                  // Fallback when no files
+                  <div className="blog-no-media">
+                    No Media
+                  </div>
+                )}
+
+                {/* Content Section - Separate from images */}
+                <div className="blog-post-content">
+                  <h3 className="blog-post-title">
+                    {post.title}
+                  </h3>
+                  
+                  <p className="blog-post-excerpt">
+                    {post.excerpt}
+                  </p>
+                  
+                  <div className="blog-post-meta">
+                    <div className="blog-meta-info">
+                      <div className="blog-meta-item">
+                        <User size={16} />
+                        <span>{post.admin.first_name} {post.admin.last_name}</span>
+                      </div>
+                      <div className="blog-meta-item">
+                        <Calendar size={16} />
+                        <span>{formatDate(post.created_at)}</span>
+                      </div>
+                    </div>
+
+                    {/* Media Count Badges */}
+                    {post.files && (
+                      <div className="blog-media-counts">
+                        {post.files.filter(f => f.type === 'video').length > 0 && (
+                          <div className="blog-media-badge">
+                            <Play size={12} />
+                            <span>{post.files.filter(f => f.type === 'video').length}</span>
+                          </div>
+                        )}
+                        {post.files.filter(f => f.type === 'image').length > 0 && (
+                          <div className="blog-media-badge">
+                            <ImageIcon size={12} />
+                            <span>{post.files.filter(f => f.type === 'image').length}</span>
                           </div>
                         )}
                       </div>
                     )}
                   </div>
                   
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem'
-                  }}>
-                    <Link 
-                      to={`/blog/${posts[currentSlide]?.id}`}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: 'var(--primary-color)',
-                        color: 'white',
-                        padding: '1rem 2rem',
-                        borderRadius: '10px',
-                        textDecoration: 'none',
-                        fontWeight: '600',
-                        transition: 'all 0.3s ease'
-                      }}
-                      whileHover={{ 
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 10px 25px rgba(0,0,0,0.3)'
-                      }}
-                    >
-                      View Gallery & Details
-                      <ArrowRight size={18} />
-                    </Link>
-                    
-                    <span style={{
-                      fontSize: '0.9rem',
-                      opacity: 0.8
-                    }}>
-                      {currentSlide + 1} / {posts.length}
-                    </span>
-                  </div>
+                  <Link 
+                    to={`/blog/${post.id}`}
+                    className="blog-details-button"
+                  >
+                    View Details
+                    <ArrowRight size={16} />
+                  </Link>
                 </div>
               </motion.div>
-            </AnimatePresence>
-
-            {/* Navigation Arrows */}
-            <button
-              onClick={prevSlide}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '20px',
-                transform: 'translateY(-50%)',
-                background: 'rgba(255,255,255,0.9)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '50px',
-                height: '50px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
-                transition: 'all 0.3s ease',
-                zIndex: 10
-              }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <ChevronLeft size={24} color="var(--text-secondary)" />
-            </button>
-            
-            <button
-              onClick={nextSlide}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '20px',
-                transform: 'translateY(-50%)',
-                background: 'rgba(255,255,255,0.9)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '50px',
-                height: '50px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
-                transition: 'all 0.3s ease',
-                zIndex: 10
-              }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <ChevronRight size={24} color="var(--text-secondary)" />
-            </button>
-
-            {/* Dots Indicator */}
-            <div style={{
-              position: 'absolute',
-              bottom: '20px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex',
-              gap: '10px',
-              zIndex: 10
-            }}>
-              {posts.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  style={{
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
-                    border: 'none',
-                    background: index === currentSlide ? 'var(--primary-color)' : 'rgba(255,255,255,0.5)',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease'
-                  }}
-                  whileHover={{ scale: 1.2 }}
-                />
-              ))}
-            </div>
+            ))}
           </motion.div>
         )}
 
@@ -384,21 +302,13 @@ const Blog = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            style={{
-              textAlign: 'center',
-              padding: '4rem 2rem',
-              color: 'var(--text-primary)'
-            }}
+            className="blog-empty-state"
           >
-            <div style={{ fontSize: '4rem', marginBottom: '1rem', opacity: 0.5 }}>📝</div>
-            <h3 style={{ 
-              fontSize: '1.5rem', 
-              marginBottom: '1rem',
-              color: 'var(--text-secondary)'
-            }}>
+            <div className="blog-empty-icon">📝</div>
+            <h3 className="blog-empty-title">
               No updates yet
             </h3>
-            <p style={{ opacity: 0.7 }}>
+            <p className="blog-empty-text">
               Check back later for the latest news and announcements.
             </p>
           </motion.div>

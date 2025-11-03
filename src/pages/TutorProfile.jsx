@@ -196,7 +196,7 @@ const TutorProfile = () => {
             fontSize: '1rem',
             padding: '0.5rem 1rem',
             borderRadius: '8px',
-            border: '1px solid var(--border-color)'
+            // border: '1px solid var(--border-color)'
           }}
           whileHover={{ 
             backgroundColor: 'var(--bg-secondary)',
