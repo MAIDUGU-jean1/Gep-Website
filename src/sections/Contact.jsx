@@ -12,7 +12,8 @@ const Contact = () => {
   });
 
   const coursesList = [
-    "Web Development",
+    "BackEnd Web Development",
+    "FrontEnd Web Development",
     "Data Analysis",
     "Graphic Design",
     "Computer Studies",
