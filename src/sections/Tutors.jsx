@@ -102,6 +102,7 @@ const tutors = [
     bio: "IT Technician, installs, maintains, and repairs computer systems and networks.",
     students: 1500,
     email: '',
+    courses: ['networking']
 
   }
 

@@ -48,7 +48,28 @@ const Header = () => {
               fontWeight: 'bold',
               whiteSpace: 'nowrap' // Prevent line break
             }}>
-              Gep Protech Academy
+              Gep Protech Academy <br/>
+        <a href='http://www.student.gepprotech.com'
+          target='_blank'
+            style={{textDecoration:'none'}}
+          >
+          <button
+              style={{
+              background: 'var(--primary)',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease',
+              marginLeft: '1rem',
+              }}
+            >
+              Go to Student
+            </button>
+        </a>
             </h1>
           </div>
           
@@ -107,8 +128,42 @@ const Header = () => {
               transition: 'all 0.3s ease',
               marginLeft: '1rem',
             }}>
-              <Bell size={18} color="var(--primary-color)" />
+              <a href='/blog'>
+                <Bell size={18} color="var(--primary-color)" />
+              </a>
+              <span style={{
+                  width:"8px",
+                  height:"8px",
+                  borderRadius:'10px',
+                  backgroundColor:'red',
+                  position:'relative',
+                  right:'8px',
+                  bottom:'2px'
+                }}>
+                  
+                </span>
             </button>
+          <a href='http://www.student.gepprotech.com'
+          target='_blank'
+            style={{textDecoration:'none'}}
+          >
+          <button
+              style={{
+              background: 'var(--primary)',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease',
+              marginLeft: '1rem',
+              }}
+            >
+              Go to Student
+            </button>
+          </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -118,20 +173,6 @@ const Header = () => {
             right: '1rem',
             top: '1rem'
           }} className="mobile-menu">
-            <button onClick={toggleTheme} style={{
-              background: 'var(--card-bg)',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px',
-              borderRadius: '50%',
-              marginRight: '19rem',
-              display: 'flex',
-              float: 'left',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
-            </button>
 
             <button style={{
               background: 'var(--card-bg)',
@@ -146,8 +187,22 @@ const Header = () => {
               transition: 'all 0.3s ease',
               marginLeft: '10px', // put the vlaue in pixels
             }}>
-              <Bell size={18} color="var(--primary-color)" />
+              <a href='/blog'>
+                <Bell size={18} color="var(--primary-color)" />
+              </a>
+              <span style={{
+                width:"8px",
+                height:"8px",
+                borderRadius:'10px',
+                backgroundColor:'red',
+                position:'relative',
+                right:'8px',
+                bottom:'2px'
+              }}>
+                
+              </span>
             </button>
+            
             
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{
               background: 'var(--card-bg)',
@@ -194,7 +249,19 @@ const Header = () => {
                 >
                   {item}
                 </a>
+                
               ))}
+              <button onClick={toggleTheme} style={{
+              background: 'var(--card-bg)',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              marginRight: '19rem',
+          
+            }}>
+              {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
+            </button>
             </nav>
           </div>
         )}
