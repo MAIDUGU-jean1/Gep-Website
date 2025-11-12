@@ -11,26 +11,27 @@ const Contact = () => {
     message: ''
   });
 
-  const coursesList = [
-    "BackEnd Web Development",
-    "FrontEnd Web Development",
-    "Data Analysis",
-    "Graphic Design",
-    "Computer Studies",
-    "Mobile App Development",
-    "Cybersecurity",
-    "Digital Marketing",
-    "Software Engineering",
-    "Computer Networking",
-    "Network Administration",
-    "Database Management",
-    "UI/UX Design",
-    "Cloud Computing",
-    "Artificial Intelligence",
-    "Machine Learning",
-    "Project Management",
-    "Software/Hardware Maintenance",
-  ];
+    const coursesList = [
+      "BackEnd Web Development",
+    "FrontEnd Back End Web Development",
+      "Cartography and GIS",
+      "Computer Networking",
+      "Computer Programming",
+      "Computer Studies for Secretaries Duties",
+      "Cybersecurity",
+      "Database Management",
+      "Data Analysis",
+      "Digital Marketing",
+      "Front End Web Development",
+      "Generative AI Engineering",
+      "Graphic Design",
+      "Mobile App Development",
+      "Network Administration",
+      "Software Engineering",
+      "Software/Hardware Maintenance",
+      "Topography and Remote Sensing",
+      "UI/UX Design"
+    ];
 
   const handleSubmit = (e) => {
     e.preventDefault();

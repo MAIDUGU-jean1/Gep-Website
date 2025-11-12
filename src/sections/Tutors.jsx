@@ -8,6 +8,7 @@ import Noel from '../assets/Images/Noel.jpeg';
 import { image } from 'framer-motion/client';
 import Terence from '../../src/assets/Images/Terence.jpeg';
 import Geo from '../../src/assets/Images/geo.jpeg';
+import rene from '../assets/Images/rene.jpeg';
 
 import { useNavigate } from 'react-router-dom'; // Add this import
 
@@ -91,6 +92,18 @@ const tutors = [
     students: 2500,
     email: ""
   },
+
+  {
+    id: 8,
+    name: "Mr. RENE CHIXK",
+    specialization: "Networking, Software/Hardware Engineering",
+    experience: "7 years",
+    image: rene,
+    bio: "IT Technician, installs, maintains, and repairs computer systems and networks.",
+    students: 1500,
+    email: '',
+
+  }
 
 
 ];

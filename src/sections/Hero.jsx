@@ -97,7 +97,7 @@ const Hero = () => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '4px',
                   textDecoration: 'none',
 
                 }}
@@ -114,7 +114,7 @@ const Hero = () => {
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-              gap: '2rem',
+              gap: '1rem',
             }}>
               {[
                 { icon: Users, number: '2K+', label: 'Students Trained' },
