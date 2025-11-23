@@ -41,7 +41,8 @@ const Header = () => {
                 width: '60px', // Reduced size
                 height: '60px', // Reduced size
                 borderRadius: '50%',
-                objectFit: 'cover'
+                objectFit: 'cover',
+                marginRight: '20px'
               }} />
             <h1 style={{
               color: 'var(--text-secondary)',
@@ -50,7 +51,7 @@ const Header = () => {
               whiteSpace: 'nowrap' // Prevent line break
             }}>
               Gep Protech Academy <br/>
-            
+        <div style={{display:'flex', flexDirection:'row',gap:'-20px', marginLeft:'-20px'}}>
         <a href='http://www.student.gepprotech.com'
           target='_blank'
             style={{textDecoration:'none'}}
@@ -84,7 +85,7 @@ const Header = () => {
               background: 'var(--primary)',
               border: 'none',
               cursor: 'pointer',
-              // padding: '8px',
+              padding: '8px',
               // borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
@@ -99,6 +100,7 @@ const Header = () => {
           </button>
           
         </a>
+        </div>
         
             </h1>
           </div>
@@ -223,6 +225,7 @@ const Header = () => {
               background: 'var(--card-bg)',
               border: 'none',
               cursor: 'pointer',
+              marginTop: '2rem',
               padding: '8px',
               borderRadius: '5px',
               display: 'flex',

@@ -504,7 +504,7 @@ export const courses = [
   tutor: "Cybersecurity Experts Team",
   price: "35,000 FCFA",
   level: "Advanced",
-  image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
   features: [
     "Network Vulnerability Assessment",
     "Firewall Configuration & Management",
@@ -536,44 +536,5 @@ export const courses = [
     "Advanced roles in cybersecurity management"
   ]
 },
-{
-  id: 18,
-  title: "Cloud Networking & Infrastructure",
-  description: "Learn to design, implement, and manage network infrastructures in cloud environments using major cloud platforms.",
-  duration: "3 months",
-  tutor: "Cloud Engineering Team",
-  price: "30,000 FCFA",
-  level: "Intermediate to Advanced",
-  image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-  features: [
-    "Cloud Network Architecture",
-    "Virtual Private Cloud (VPC) Configuration",
-    "Load Balancing & Auto-scaling",
-    "Cloud Security Groups & NACLs",
-    "Hybrid Cloud Connectivity",
-    "Content Delivery Networks (CDN)",
-    "Network Monitoring in Cloud"
-  ],
-  about: "Master the art of networking in cloud environments. This course covers cloud-specific networking concepts, virtual network configurations, and best practices for building scalable and secure cloud infrastructures on platforms like AWS, Azure, and Google Cloud.",
-  learns: [
-    "Design and implement Virtual Private Cloud (VPC) architectures",
-    "Configure cloud load balancers and auto-scaling groups",
-    "Implement cloud security groups and network access control lists",
-    "Set up hybrid cloud connections and VPN gateways",
-    "Configure and optimize Content Delivery Networks (CDNs)",
-    "Monitor cloud network performance and costs",
-    "Implement disaster recovery and backup strategies in cloud",
-    "Troubleshoot cloud network connectivity issues"
-  ],
-  opportunities: [
-    "Cloud Network Engineer positions",
-    "Cloud Infrastructure Specialist roles",
-    "DevOps Engineer with networking focus",
-    "Cloud Solutions Architect opportunities",
-    "Network Administrator for cloud environments",
-    "Cloud Support Engineer positions",
-    "Infrastructure as Code (IaC) Specialist roles",
-    "Multi-cloud Network Administrator"
-  ]
-}
+
 ];

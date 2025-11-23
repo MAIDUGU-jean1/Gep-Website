@@ -26,8 +26,7 @@ const achievementsData = {
       description: 'Honoring outstanding student achievements and project showcases',
       date: '2024-01-15',
       videoUrl: award,
-    //   videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-      thumbnail: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+      thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       awards: ['Best Web App', 'Most Creative Design', 'Technical Excellence']
     },
     {
