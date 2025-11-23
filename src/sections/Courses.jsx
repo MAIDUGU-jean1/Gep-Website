@@ -19,6 +19,20 @@ const Courses = () => {
 
   const categories = ['All', 'Tech', 'Design', 'Business', 'Development'];
 
+  // Helper to parse price strings like "25,000 FCFA" -> 25000
+  const parsePrice = (priceStr) => {
+    if (!priceStr && priceStr !== 0) return 0;
+    const digits = String(priceStr).replace(/[^\d]/g, '');
+    const num = Number(digits);
+    return Number.isNaN(num) ? 0 : num;
+  };
+
+  // Format number to localized string with currency suffix
+  const formatPrice = (amount) => {
+    if (typeof amount !== 'number') amount = Number(amount) || 0;
+    return amount.toLocaleString() + ' FCFA';
+  };
+
   // Filter courses based on active category
   const filteredCourses = activeCategory === 'All' 
     ? courses 
@@ -249,6 +263,7 @@ const Courses = () => {
                   onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                   onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                 />
+                {/* Level Badge (top-right) */}
                 <div style={{
                   position: 'absolute',
                   top: '1rem',
@@ -261,6 +276,24 @@ const Courses = () => {
                   fontWeight: '600'
                 }}>
                   {course.level}
+                </div>
+
+                {/* Discount Badge (top-left) */}
+                <div style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  left: '1rem',
+                  background: 'linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.95) 100%)',
+                  color: 'var(--text-primary)',
+                  padding: '6px 10px',
+                  borderRadius: '8px',
+                  fontSize: '0.8rem',
+                  fontWeight: '700',
+                  boxShadow: '0 6px 18px rgba(0,0,0,0.12)',
+                  border: '1px solid rgba(0,0,0,0.06)'
+                }}>
+                  <span style={{ color: 'var(--secondary-color)', marginRight: '6px' }}>30% OFF</span>
+                  <small style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Limited</small>
                 </div>
               </div>
 
@@ -486,13 +519,26 @@ const Courses = () => {
                   justifyContent: 'space-between',
                   alignItems: 'center'
                 }}>
-                  <div style={{
-                    fontSize: '1.5rem',
-                    fontWeight: 'bold',
-                    color: 'var(--primary-color)'
-                  }}>
-                    {course.price}
-                  </div>
+                  {/* Compute and display original (struck-through) + discounted price */}
+                  {(() => {
+                    const original = parsePrice(course.price);
+                    const discounted = Math.round(original * 0.7); // 30% off => pay 70%
+                    return (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <span style={{
+                          textDecoration: 'line-through',
+                          color: 'red',
+                          fontSize: '0.95rem',
+                          fontWeight: '700'
+                        }}>{formatPrice(original)}</span>
+                        <span style={{
+                          fontSize: '1.35rem',
+                          fontWeight: '800',
+                          color: 'var(--primary-color)'
+                        }}>{formatPrice(discounted)}</span>
+                      </div>
+                    );
+                  })()}
                   <motion.a 
                     className="btn-primary" 
                     style={{ 
