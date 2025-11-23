@@ -105,110 +105,7 @@ Sent from Gep Protech Academic Website
           gap: '4rem',
           alignItems: 'start'
         }} className="enroll-grid">
-          {/* Enrollment Information */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h3 style={{ fontSize: '2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
-              Enrollment Process
-            </h3>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {[
-                {
-                  icon: GraduationCap,
-                  title: 'Simple Registration',
-                  info: 'Fill out our enrollment form and we\'ll guide you through the rest of the process'
-                },
-                {
-                  icon: Users,
-                  title: 'Personal Consultation',
-                  info: 'Get personalized guidance on choosing the right course for your career goals'
-                },
-                {
-                  icon: Clock,
-                  title: 'Flexible Scheduling',
-                  info: 'Choose from morning, afternoon, or weekend classes to fit your schedule'
-                },
-                {
-                  icon: MapPin,
-                  title: 'Campus Location',
-                  info: 'ENS Street Bambili, Near Psalms one city'
-                }
-              ].map((item, index) => (
-                <div key={index} style={{
-                  display: 'flex',
-                  gap: '1rem',
-                  alignItems: 'start'
-                }}>
-                  <div style={{
-                    background: 'var(--primary-color)',
-                    padding: '12px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    color: 'white'
-                  }}>
-                    <item.icon size={24} />
-                  </div>
-                  <div>
-                    <h4 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
-                      {item.title}
-                    </h4>
-                    <p style={{ whiteSpace: 'pre-line', opacity: 0.8, lineHeight: '1.6' }}>{item.info}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Benefits */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true }}
-              style={{
-                marginTop: '2rem',
-                padding: '2rem',
-                background: 'var(--card-bg)',
-                borderRadius: '15px',
-                border: '2px solid var(--border-color)'
-              }}
-            >
-              <h4 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>
-                Why Enroll With Us?
-              </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {[
-                  'Industry-recognized certifications',
-                  'Hands-on practical training',
-                  'Job placement assistance',
-                  'Flexible payment plans',
-                  'Modern equipment and facilities',
-                  'Experienced instructors',
-                  'Career development support',
-                  'Lifetime access to learning resources'
-                ].map((feature, index) => (
-                  <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{
-                      width: '8px',
-                      height: '8px',
-                      background: 'var(--primary-color)',
-                      borderRadius: '50%'
-                    }}></div>
-                    <span style={{ opacity: 0.8 }}>{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-          
-          {/* Enrollment Form */}
+          {/* Enrollment Form - Now comes first on mobile */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -218,8 +115,10 @@ Sent from Gep Protech Academic Website
               background: 'var(--card-bg)',
               padding: '2.5rem',
               borderRadius: '15px',
-              border: '2px solid var(--border-color)'
+              border: '2px solid var(--border-color)',
+              order: 1 // Form comes first on mobile
             }}
+            className="enroll-form"
           >
             <h3 style={{ fontSize: '2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
               Start Your Enrollment
@@ -413,6 +312,113 @@ Sent from Gep Protech Academic Website
               </button>
             </form>
           </motion.div>
+
+          {/* Enrollment Information - Now comes second on mobile */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            style={{
+              order: 2 // Information comes second on mobile
+            }}
+            className="enroll-info"
+          >
+            <h3 style={{ fontSize: '2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
+              Enrollment Process
+            </h3>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              {[
+                {
+                  icon: GraduationCap,
+                  title: 'Simple Registration',
+                  info: 'Fill out our enrollment form and we\'ll guide you through the rest of the process'
+                },
+                {
+                  icon: Users,
+                  title: 'Personal Consultation',
+                  info: 'Get personalized guidance on choosing the right course for your career goals'
+                },
+                {
+                  icon: Clock,
+                  title: 'Flexible Scheduling',
+                  info: 'Choose from morning, afternoon, or weekend classes to fit your schedule'
+                },
+                {
+                  icon: MapPin,
+                  title: 'Campus Location',
+                  info: 'ENS Street Bambili, Near Psalms one city'
+                }
+              ].map((item, index) => (
+                <div key={index} style={{
+                  display: 'flex',
+                  gap: '1rem',
+                  alignItems: 'start'
+                }}>
+                  <div style={{
+                    background: 'var(--primary-color)',
+                    padding: '12px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    color: 'white'
+                  }}>
+                    <item.icon size={24} />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
+                      {item.title}
+                    </h4>
+                    <p style={{ whiteSpace: 'pre-line', opacity: 0.8, lineHeight: '1.6' }}>{item.info}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Benefits */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+              style={{
+                marginTop: '2rem',
+                padding: '2rem',
+                background: 'var(--card-bg)',
+                borderRadius: '15px',
+                border: '2px solid var(--border-color)'
+              }}
+            >
+              <h4 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+                Why Enroll With Us?
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {[
+                  'Industry-recognized certifications',
+                  'Hands-on practical training',
+                  'Job placement assistance',
+                  'Flexible payment plans',
+                  'Modern equipment and facilities',
+                  'Experienced instructors',
+                  'Career development support',
+                  'Lifetime access to learning resources'
+                ].map((feature, index) => (
+                  <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{
+                      width: '8px',
+                      height: '8px',
+                      background: 'var(--primary-color)',
+                      borderRadius: '50%'
+                    }}></div>
+                    <span style={{ opacity: 0.8 }}>{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
 
@@ -420,6 +426,22 @@ Sent from Gep Protech Academic Website
         @media (min-width: 768px) {
           .enroll-grid {
             grid-template-columns: 1fr 1fr !important;
+          }
+          .enroll-form {
+            order: 2 !important; /* Form on right side on desktop */
+          }
+          .enroll-info {
+            order: 1 !important; /* Info on left side on desktop */
+          }
+        }
+
+        /* Mobile view - form comes first */
+        @media (max-width: 767px) {
+          .enroll-form {
+            order: 1 !important; /* Form first on mobile */
+          }
+          .enroll-info {
+            order: 2 !important; /* Info second on mobile */
           }
         }
 

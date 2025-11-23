@@ -56,12 +56,12 @@ const Contact = () => {
                 {
                   icon: Mail,
                   title: 'Email Us',
-                  info: 'ej.bnes@gmail.com'
+                  info: 'info@gepprotech.com'
                 },
                 {
                   icon: Clock,
                   title: 'Office Hours',
-                  info: 'Monday - Friday: (unStable)\nSaturday: 9:00 AM - 6:00 PM'
+                  info: 'Monday - Friday \nSaturday: 9:00 AM - 6:00 PM'
                 }
               ].map((item, index) => (
                 <div key={index} style={{

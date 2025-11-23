@@ -50,6 +50,7 @@ const Header = () => {
               whiteSpace: 'nowrap' // Prevent line break
             }}>
               Gep Protech Academy <br/>
+            
         <a href='http://www.student.gepprotech.com'
           target='_blank'
             style={{textDecoration:'none'}}
@@ -66,13 +67,39 @@ const Header = () => {
               justifyContent: 'center',
               transition: 'all 0.3s ease',
               marginLeft: '1rem',
-              fontSize: '1.5rem',
+              // fontSize: '1.5rem',
               color: isDark ? 'white' : 'black',
               }}
             >
               GeP Student
-            </button>
+          </button>
+          
         </a>
+          <a href='#'
+          target='_blank'
+            style={{textDecoration:'none'}}
+          >
+          <button
+              style={{
+              background: 'var(--primary)',
+              border: 'none',
+              cursor: 'pointer',
+              // padding: '8px',
+              // borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease',
+              marginLeft: '1rem',
+              // fontSize: '1.5rem',
+              color: isDark ? 'white' : 'black',
+              }}
+            >
+              GeP E-Learning
+          </button>
+          
+        </a>
+        
             </h1>
           </div>
           
@@ -173,6 +200,7 @@ const Header = () => {
               justifyContent: 'center',
               transition: 'all 0.3s ease',
               marginLeft: '10px', // put the vlaue in pixels
+              marginTop: '2.5rem'
             }}>
               <a href='/blog'>
                 <Bell size={18} color="var(--primary-color)" />
