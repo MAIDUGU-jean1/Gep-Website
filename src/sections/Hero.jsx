@@ -81,12 +81,29 @@ const Hero = () => {
               Get hands-on experience and launch your career in tech, design, and business.
             </p>
             
-            <div style={{
+            <div className='enrol-grid' style={{
               display: 'flex',
               gap: '1rem',
               flexWrap: 'wrap',
               marginBottom: '3rem'
             }}>
+               <motion.a 
+                className="btn-secondary" 
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  textDecoration: 'none',
+                  // color:'var(--text-secondary)',
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href='#enroll'
+                // onClick={openVideo}
+              >
+                {/* <Play size={20} /> */}
+                Enroll Now 
+              </motion.a>
               <button className="btn-primary">
                     <a href="#courses" style={{ color: 'white', textDecoration: 'none' }}>
                         Explore Courses
@@ -99,9 +116,9 @@ const Hero = () => {
                   alignItems: 'center',
                   gap: '4px',
                   textDecoration: 'none',
-
+                  margin: '0',
                 }}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, color: 'white'  }}
                 whileTap={{ scale: 0.95 }}
                 href='/blog'
                 // onClick={openVideo}
@@ -402,6 +419,14 @@ const Hero = () => {
         @media (min-width: 769px) {
           .hero-grid {
             grid-template-columns: 1fr 1fr !important;
+          }
+          .enrol-grid{
+            flex-wrap: nowrap !important;
+          }
+          .mobile-center {
+            text-align: left !important;
+          }
+        }
           }
           .mobile-order-1 { order: 2 !important; }
           .mobile-order-2 { order: 1 !important; }
