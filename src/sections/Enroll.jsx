@@ -8,7 +8,10 @@ const Enroll = () => {
     email: '',
     contact: '',
     courses: [],
-    message: ''
+    message: '',
+    education: '',
+    educationOther: '',
+    occupation: ''
   });
 
   const coursesList = [
@@ -44,6 +47,9 @@ New Enrollment Request from Gep Protech Website:
 *Message:*
 ${formData.message}
 
+*Educational Qualification:* ${formData.education === 'Other' ? formData.educationOther || 'Other' : (formData.education || 'Not specified')}
+*Current Occupation:* ${formData.occupation || 'Not specified'}
+
 ---
 Sent from Gep Protech Academic Website
     `.trim();
@@ -62,7 +68,7 @@ Sent from Gep Protech Academic Website
     alert('Opening WhatsApp to start your enrollment process...');
     
     // Reset form
-    setFormData({ name: '', email: '', contact: '', courses: [], message: '' });
+    setFormData({ name: '', email: '', contact: '', courses: [], message: '', education: '', educationOther: '', occupation: '' });
   };
 
   const handleChange = (e) => {
@@ -80,6 +86,7 @@ Sent from Gep Protech Academic Website
     });
   };
 
+ 
   return (
     <section id="enroll" style={{
       padding: 'clamp(4rem, 8vw, 8rem) 0',
@@ -211,6 +218,104 @@ Sent from Gep Protech Academic Website
                     transition: 'border-color 0.3s ease'
                   }}
                   placeholder="Enter your whatsapp number"
+                />
+              </div>
+
+              {/* Educational Qualification */}
+              <div>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '0.5rem', 
+                  fontWeight: '500',
+                  color: 'var(--text-secondary)'
+                }}>
+                  Educational Qualification
+                </label>
+                <select
+                  name="education"
+                  value={formData.education}
+                  onChange={handleChange}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    border: '2px solid var(--border-color)',
+                    borderRadius: '8px',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-primary)',
+                    fontSize: '1rem'
+                  }}
+                >
+                  <option value="">Select qualification</option>
+                  <option value="No formal education">No formal education</option>
+                  <option value="Advanced level">Advanced level</option>
+                  <option value="HND">HND</option>
+                  <option value="University Student">University Student</option>
+                  <option value="Bachelor's degree">Bachelor's degree</option>
+
+                  <option value="Master's degree">Master's degree</option>
+                  <option value="PhD">PhD</option>
+                  <option value="Other">Other: Specify</option>
+                </select>
+              </div>
+
+              {/* If Other selected, show specify input */}
+              {formData.education === 'Other' && (
+                <div>
+                  <label style={{ 
+                    display: 'block', 
+                    marginBottom: '0.5rem', 
+                    fontWeight: '500',
+                    color: 'var(--text-secondary)'
+                  }}>
+                    Please specify
+                  </label>
+                  <input
+                    type="text"
+                    name="educationOther"
+                    value={formData.educationOther}
+                    onChange={handleChange}
+                    style={{
+                      width: '100%',
+                      padding: '1rem',
+                      border: '2px solid var(--border-color)',
+                      borderRadius: '8px',
+                      background: 'var(--bg-primary)',
+                      color: 'var(--text-primary)',
+                      fontSize: '1rem',
+                      transition: 'border-color 0.3s ease'
+                    }}
+                    placeholder="Specify your qualification"
+                  />
+                </div>
+              )}
+
+              {/* Current Occupation */}
+              <div>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '0.5rem', 
+                  fontWeight: '500',
+                  color: 'var(--text-secondary)'
+                }}>
+                  Current Occupation
+                </label>
+                <input 
+                  type="text" 
+                  name="occupation"
+                  value={formData.occupation}
+                  onChange={handleChange}
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    border: '2px solid var(--border-color)',
+                    borderRadius: '8px',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-primary)',
+                    fontSize: '1rem',
+                    transition: 'border-color 0.3s ease'
+                  }}
+                  placeholder="e.g., Student, Unemployed, Software Engineer"
                 />
               </div>
 

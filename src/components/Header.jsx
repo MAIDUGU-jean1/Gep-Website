@@ -51,7 +51,7 @@ const Header = () => {
               whiteSpace: 'nowrap' // Prevent line break
             }}>
               Gep Protech Academy <br/>
-        <div style={{display:'flex', flexDirection:'row',gap:'-20px', marginLeft:'-20px'}}>
+        <div style={{display:'flex', flexDirection:'row', marginLeft:'-40px'}}>
         <a href='http://www.student.gepprotech.com'
           target='_blank'
             style={{textDecoration:'none'}}
