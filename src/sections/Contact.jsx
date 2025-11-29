@@ -27,7 +27,7 @@ const Contact = () => {
           gridTemplateColumns: '1fr',
           gap: '4rem',
           alignItems: 'start',
-          maxWidth: '800px',
+          maxWidth: '80%',
           margin: '0 auto'
         }} className="contact-grid">
           {/* Contact Information */}
@@ -104,10 +104,15 @@ const Contact = () => {
               background: 'linear-gradient(135deg, #25D366, #128C7E)',
               borderRadius: '15px',
               color: 'white',
-              textAlign: 'center'
+              textAlign: 'center',
+              height: '100%',
+              display: 'flex',
+              // justifyContent: 'space-around',
+              flexDirection: 'column',
+              justifyContent: 'center',
             }}
           >
-            <h4 style={{ fontSize: '1.3rem', marginBottom: '1rem' }}>
+            <h4 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
               Quick WhatsApp Message
             </h4>
             <p style={{ marginBottom: '1.5rem', opacity: 0.9 }}>
@@ -125,7 +130,7 @@ const Contact = () => {
                 fontWeight: '600',
                 cursor: 'pointer',
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: 'end',
                 justifyContent: 'center',
                 gap: '8px',
                 width: '100%'

@@ -16,21 +16,23 @@ const Hero = () => {
   };
 
   return (
-    <section id="home" style={{
+    <section id="home" className='home' style={{
       minHeight: '100vh',
       background: 'linear-gradient(135deg, var(--bg-primary) 0%, var(--primary-color) 100%)',
       display: 'flex',
       alignItems: 'center',
       position: 'relative',
       paddingTop: '80px',
+      marginTop: '5rem',
       overflow: 'hidden'
     }}>
-      <div className="container">
+      <div className="container" style={{ width: '100%'}}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr',
           gap: '3rem',
-          alignItems: 'center'
+          alignItems: 'center',
+          width: 'inherit'
         }} className="hero-grid">
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
@@ -46,14 +48,15 @@ const Hero = () => {
               marginBottom: '1rem',
               flexWrap: 'wrap'
             }}>
-              <div style={{
+              <div className='text' style={{
                 background: 'var(--primary-color)',
                 color: 'white',
                 padding: '8px 20px',
                 borderRadius: '25px',
                 fontSize: '0.9rem',
                 fontWeight: '600',
-                display: 'inline-block'
+                display: 'inline-block',
+                // marginTop: '2rem'
               }}>
                 Professional Training
               </div>
@@ -416,8 +419,18 @@ const Hero = () => {
       </AnimatePresence>
 
       <style>{`
+
+        @media (max-width: 990px) {
+      .home {
+        margin-top: 9rem !important; /* Higher margin for mobile */
+      }
+    }
+
+
+
         @media (min-width: 769px) {
           .hero-grid {
+            // margin-top: 3rem
             grid-template-columns: 1fr 1fr !important;
           }
           .enrol-grid{
@@ -426,6 +439,13 @@ const Hero = () => {
           .mobile-center {
             text-align: left !important;
           }
+
+          .home{
+            margin-top: 10rem 
+          }
+
+
+          
         }
           }
           .mobile-order-1 { order: 2 !important; }
