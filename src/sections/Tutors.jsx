@@ -100,9 +100,10 @@ const tutors = [
     experience: "7 years",
     image: rene,
     bio: "IT Technician, installs, maintains, and repairs computer systems and networks.",
+    rating: 4.7,
     students: 1500,
     email: '',
-    courses: ['networking']
+    courses: ['Networking', 'Hardware Maintenance', 'Software Maintenance']
 
   }
 
