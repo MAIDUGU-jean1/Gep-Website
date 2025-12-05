@@ -208,11 +208,7 @@ const Courses = () => {
                 <div className="level-badge">
                   {course.level}
                 </div>
-
-                <div className="discount-badge">
-                  <span className="discount-text">30% OFF</span>
-                  <small className="discount-subtext">Limited</small>
-                </div>
+                {/* discount removed */}
               </div>
 
               {/* Course Info */}
@@ -254,30 +250,25 @@ const Courses = () => {
                       </motion.span>
                     ))}
                     {course.features.length > 3 && (
-                      <span className="more-skills">
-                        +{course.features.length - 3} more
-                      </span>
+                      <span className="more-skills">+{course.features.length - 3} more</span>
                     )}
                   </div>
-                </div>
 
                 {/* Price Section */}
                 <div className="price-section">
                   {(() => {
                     const original = parsePrice(course.price);
-                    const discounted = Math.round((original + 10000) * 0.7);
+                    const newPrice = original + 10000; // add 10k to original
                     return (
                       <div className="price-display">
-                        <span className="original-price">
-                          {formatPrice(original + 10000)}
-                        </span>
-                        <span className="discounted-price">
-                          {formatPrice(discounted)}
+                        <span className="price">
+                          {formatPrice(newPrice)}
                         </span>
                       </div>
                     );
                   })()}
                 </div>
+              </div>
 
                 {/* Course Actions */}
                 <div className="course-actions">
@@ -425,19 +416,9 @@ const Courses = () => {
                         <div className="modal-price-info">
                           {(() => {
                             const original = parsePrice(selectedCourse.price);
-                            const discounted = Math.round((original + 10000) * 0.7);
+                            const newPrice = original + 10000;
                             return (
-                              <>
-                                <span className="modal-original-price">
-                                  {formatPrice(original + 10000)}
-                                </span>
-                                <span className="modal-discounted-price">
-                                  {formatPrice(discounted)}
-                                </span>
-                                <div className="modal-discount-badge">
-                                  30% OFF
-                                </div>
-                              </>
+                              <span className="modal-price">{formatPrice(newPrice)}</span>
                             );
                           })()}
                         </div>
