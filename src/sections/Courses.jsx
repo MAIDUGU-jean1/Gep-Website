@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { courses } from '../data/courses';
-import { Clock, Users, Star, BookOpen, ChevronDown, ChevronUp, Target, Award, Briefcase } from 'lucide-react';
+import { Clock, Users, BookOpen, Target, Briefcase, X } from 'lucide-react';
+import './styles/Courses.css'
+
 
 const Courses = () => {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [expandedCourses, setExpandedCourses] = useState({});
-  const [activeTabs, setActiveTabs] = useState({});
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [activeTab, setActiveTab] = useState('about');
 
   // Define course categories and their mappings
   const courseCategories = {
@@ -19,7 +21,22 @@ const Courses = () => {
 
   const categories = ['All', 'Tech', 'Design', 'Business', 'Development'];
 
-  // Helper to parse price strings like "25,000 FCFA" -> 25000
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    if (selectedCourse) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [selectedCourse]);
+
   const parsePrice = (priceStr) => {
     if (!priceStr && priceStr !== 0) return 0;
     const digits = String(priceStr).replace(/[^\d]/g, '');
@@ -27,71 +44,47 @@ const Courses = () => {
     return Number.isNaN(num) ? 0 : num;
   };
 
-  // Format number to localized string with currency suffix
   const formatPrice = (amount) => {
     if (typeof amount !== 'number') amount = Number(amount) || 0;
     return amount.toLocaleString() + ' FCFA';
   };
 
-  // Filter courses based on active category
   const filteredCourses = activeCategory === 'All' 
     ? courses 
     : courses.filter(course => 
         courseCategories[activeCategory]?.includes(course.title)
       );
 
-  // Toggle expanded state for individual courses
-  const toggleCourseExpansion = (courseId) => {
-    setExpandedCourses(prev => ({
-      ...prev,
-      [courseId]: !prev[courseId]
-    }));
-    
-    // Set default tab to 'about' when expanding
-    if (!expandedCourses[courseId]) {
-      setActiveTabs(prev => ({
-        ...prev,
-        [courseId]: 'about'
-      }));
-    }
+  const openCourseModal = (course) => {
+    setSelectedCourse(course);
+    setActiveTab('about');
   };
 
-  // Set active tab for a course
-  const setActiveTab = (courseId, tab) => {
-    setActiveTabs(prev => ({
-      ...prev,
-      [courseId]: tab
-    }));
+  const closeCourseModal = () => {
+    setSelectedCourse(null);
   };
 
-  // Tab content configuration
   const getTabContent = (course, tab) => {
     const tabContent = {
       about: (
         <div>
-          <p style={{ fontSize: '0.8rem', lineHeight: '1.6', marginBottom: '0.5rem' }}>
+          <p className="tab-content-text">
             {course.detailedDescription || course.description}
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Clock size={14} />
-              <span style={{ fontSize: '0.8rem' }}>{course.about}</span>
+          <div className="tab-about-details">
+            <div className="tab-detail-item">
+              <Clock size={18} />
+              <span>{course.about}</span>
             </div>
-            
           </div>
         </div>
       ),
       
       learn: (
         <div>
-          <ul style={{
-            paddingLeft: '1rem',
-            margin: 0,
-            fontSize: '0.8rem',
-            lineHeight: '1.6'
-          }}>
+          <ul className="tab-list">
             {course.learns.map((learn, idx) => (
-              <li key={idx} style={{ marginBottom: '0.3rem' }}>
+              <li key={idx} className="tab-list-item">
                 {learn}
               </li>
             ))}
@@ -101,18 +94,12 @@ const Courses = () => {
       
       opportunities: (
         <div>
-          <p style={{ fontSize: '0.8rem', lineHeight: '1.6', marginBottom: '0.5rem' }}>
-            {/* Upon completion of this course, you'll be prepared for: */}
+          <p className="tab-content-text">
+            Upon completion of this course, you'll be prepared for:
           </p>
-          <ul style={{
-            paddingLeft: '1rem',
-            margin: 0,
-            fontSize: '0.8rem',
-            lineHeight: '1.6',
-            // listStyle: 'none'
-          }}>
+          <ul className="tab-list">
             {course.opportunities?.map((opportunity, idx) => (
-              <li key={idx} style={{ marginBottom: '0.3rem' }}>
+              <li key={idx} className="tab-list-item">
                 {opportunity}
               </li>
             )) || [
@@ -121,7 +108,7 @@ const Courses = () => {
               "Real-world project portfolio",
               "Networking with professionals"
             ].map((opportunity, idx) => (
-              <li key={idx} style={{ marginBottom: '0.3rem' }}>
+              <li key={idx} className="tab-list-item">
                 {opportunity}
               </li>
             ))}
@@ -134,17 +121,14 @@ const Courses = () => {
   };
 
   return (
-    <section id="courses" style={{
-      padding: 'clamp(4rem, 8vw, 8rem) 0',
-      background: 'linear-gradient(135deg, var(--bg-primary) 0%, var(--primary-color) 20%, var(--bg-primary) 100%)'
-    }}>
-      <div className="container">
+    <section id="courses" className="courses-section">
+      <div className="courses-container">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          style={{ textAlign: 'center', marginBottom: '4rem' }}
+          className="courses-header"
         >
           <h2 className="section-title">Our Courses</h2>
           <p className="section-subtitle">
@@ -159,13 +143,7 @@ const Courses = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            marginBottom: '3rem'
-          }}
+          className="category-filters"
         >
           {categories.map(category => (
             <motion.button
@@ -173,17 +151,7 @@ const Courses = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setActiveCategory(category)}
-              style={{
-                padding: '0.8rem 1.5rem',
-                border: `2px solid ${activeCategory === category ? 'var(--primary-color)' : 'var(--border-color)'}`,
-                background: activeCategory === category ? 'var(--primary-color)' : 'transparent',
-                color: activeCategory === category ? 'white' : 'var(--text-primary)',
-                borderRadius: '25px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                fontWeight: '500',
-                fontSize: '0.9rem'
-              }}
+              className={`category-button ${activeCategory === category ? 'active' : ''}`}
             >
               {category} {category !== 'All' && `(${courseCategories[category]?.length || 0})`}
             </motion.button>
@@ -195,18 +163,12 @@ const Courses = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{
-              textAlign: 'center',
-              padding: '3rem',
-              background: 'var(--card-bg)',
-              borderRadius: '15px',
-              border: '2px solid var(--border-color)'
-            }}
+            className="no-courses-message"
           >
-            <h3 style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+            <h3>
               No courses found in {activeCategory} category
             </h3>
-            <p style={{ opacity: 0.8, marginBottom: '2rem' }}>
+            <p>
               We're constantly adding new courses. Please check back later or browse other categories.
             </p>
             <button 
@@ -219,11 +181,7 @@ const Courses = () => {
         )}
 
         {/* Courses Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-          gap: '2rem'
-        }}>
+        <div className="courses-grid">
           {filteredCourses.map((course, index) => (
             <motion.div
               key={course.id}
@@ -231,14 +189,7 @@ const Courses = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              style={{
-                background: 'var(--card-bg)',
-                borderRadius: '15px',
-                overflow: 'hidden',
-                border: '2px solid var(--border-color)',
-                transition: 'all 0.3s ease',
-                position: 'relative'
-              }}
+              className="course-card"
               whileHover={{ 
                 y: -10,
                 borderColor: 'var(--primary-color)',
@@ -246,313 +197,105 @@ const Courses = () => {
               }}
             >
               {/* Course Image */}
-              <div style={{
-                height: '200px',
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
+              <div className="course-image-container">
                 <img 
                   src={course.image} 
                   alt={course.title}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: 'transform 0.3s ease'
-                  }}
+                  className="course-image"
                   onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                   onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                 />
-                {/* Level Badge (top-right) */}
-                <div style={{
-                  position: 'absolute',
-                  top: '1rem',
-                  right: '1rem',
-                  background: 'var(--primary-color)',
-                  color: 'white',
-                  padding: '5px 10px',
-                  borderRadius: '5px',
-                  fontSize: '0.8rem',
-                  fontWeight: '600'
-                }}>
+                <div className="level-badge">
                   {course.level}
                 </div>
 
-                {/* Discount Badge (top-left) */}
-                <div style={{
-                  position: 'absolute',
-                  top: '1rem',
-                  left: '1rem',
-                  background: 'linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.95) 100%)',
-                  color: 'var(--text-primary)',
-                  padding: '6px 10px',
-                  borderRadius: '8px',
-                  fontSize: '0.8rem',
-                  fontWeight: '700',
-                  boxShadow: '0 6px 18px rgba(0,0,0,0.12)',
-                  border: '1px solid rgba(0,0,0,0.06)'
-                }}>
-                  <span style={{ color: 'var(--secondary-color)', marginRight: '6px' }}>30% OFF</span>
-                  <small style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Limited</small>
+                <div className="discount-badge">
+                  <span className="discount-text">30% OFF</span>
+                  <small className="discount-subtext">Limited</small>
                 </div>
               </div>
 
               {/* Course Info */}
-              <div style={{ padding: '1.5rem' }}>
-                <h3 style={{
-                  fontSize: '1.3rem',
-                  marginBottom: '0.5rem',
-                  color: 'var(--text-secondary)',
-                  fontWeight: '600'
-                }}>
+              <div className="course-info">
+                <h3 className="course-title">
                   {course.title}
                 </h3>
                 
-                {/* Course Description with Read More */}
-                <div style={{ marginBottom: '1rem' }}>
-                  <p style={{ 
-                    opacity: 0.8,
-                    lineHeight: '1.5',
-                    marginBottom: '0.5rem',
-                    fontSize: '0.9rem'
-                  }}>
+                <div className="course-description">
+                  <p>
                     {course.description}
                   </p>
-                  
-                  {/* Expanded Course Details with Tabs */}
-                  <AnimatePresence>
-                    {expandedCourses[course.id] && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        style={{ overflow: 'hidden' }}
-                      >
-                        <div style={{
-                          padding: '1rem',
-                          background: 'var(--bg-primary)',
-                          borderRadius: '8px',
-                          marginTop: '0.5rem',
-                          border: '1px solid var(--border-color)'
-                        }}>
-                          {/* Tab Navigation */}
-                          <div style={{
-                            display: 'flex',
-                            gap: '0.5rem',
-                            marginBottom: '1rem',
-                            borderBottom: '1px solid var(--border-color)',
-                            paddingBottom: '0.5rem'
-                          }}>
-                            {[
-                              { key: 'about', label: 'About', icon: BookOpen },
-                              { key: 'learn', label: 'What You\'ll Learn', icon: Target },
-                              { key: 'opportunities', label: 'Opportunities', icon: Briefcase }
-                            ].map((tab) => (
-                              <motion.button
-                                key={tab.key}
-                                onClick={() => setActiveTab(course.id, tab.key)}
-                                style={{
-                                  backgroundColor: activeTabs[course.id] === tab.key 
-                                    ? 'var(--primary-color)' 
-                                    : 'var(--bg-secondary)',
-                                  color: activeTabs[course.id] === tab.key 
-                                    ? 'var(--primary)' 
-                                    : 'var(--text-primary)',
-                                  border: `1px solid ${
-                                    activeTabs[course.id] === tab.key 
-                                      ? 'var(--primary-color)' 
-                                      : 'var(--border-color)'
-                                  }`,
-                                  padding: '0.5rem 0.8rem',
-                                  borderRadius: '8px',
-                                  fontSize: '0.7rem',
-                                  fontWeight: '500',
-                                  cursor: 'pointer',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                  transition: 'all 0.3s ease',
-                                  flex: 1,
-                                  justifyContent: 'center',
-                                  boxShadow: activeTabs[course.id] === tab.key 
-                                    ? '0 2px 8px rgba(var(--primary-color-rgb), 0.3)'
-                                    : 'none'
-                                }}
-                                whileHover={{ 
-                                  backgroundColor: activeTabs[course.id] === tab.key 
-                                    ? 'var(--primary-color)'
-                                    : 'var(--hover-color)',
-                                  borderColor: 'var(--primary-color)',
-                                  transform: 'translateY(-1px)',
-                                  boxShadow: '0 4px 12px rgba(var(--primary-color-rgb), 0.2)'
-                                }}
-                                whileTap={{ scale: 0.98 }}
-                              >
-                                <tab.icon 
-                                  size={12} 
-                                  color={activeTabs[course.id] === tab.key ? 'white' : 'var(--primary-color)'} 
-                                />
-                                {tab.label}
-                              </motion.button>
-                            ))}
-                          </div>
-
-                          {/* Tab Content */}
-                          <AnimatePresence mode="wait">
-                            <motion.div
-                              key={activeTabs[course.id]}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -10 }}
-                              transition={{ duration: 0.2 }}
-                              style={{
-                                minHeight: '120px',
-                                padding: '0.5rem 0'
-                              }}
-                            >
-                              {getTabContent(course, activeTabs[course.id])}
-                            </motion.div>
-                          </AnimatePresence>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Read More Button */}
-                  <motion.button
-                    onClick={() => toggleCourseExpansion(course.id)}
-                    style={{
-                      background: 'transparent',
-                      color: 'var(--primary-color)',
-                      border: 'none',
-                      padding: '0.5rem 0',
-                      fontSize: '0.8rem',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      transition: 'all 0.3s ease'
-                    }}
-                    whileHover={{ 
-                      color: 'var(--secondary-color)',
-                      transform: 'translateX(4px)'
-                    }}
-                  >
-                    {expandedCourses[course.id] ? 'Show Less' : 'Course Details'}
-                    {expandedCourses[course.id] ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                  </motion.button>
                 </div>
 
-                {/* Course Details */}
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '1.5rem',
-                  fontSize: '0.9rem',
-                  opacity: 0.7
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <div className="course-details">
+                  <div className="course-detail-item">
                     <Clock size={16} />
                     <span>{course.duration}</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <div className="course-detail-item">
                     <Users size={16} />
                     <span>{course.tutor}</span>
                   </div>
                 </div>
 
-                {/* Quick Features Preview */}
-                <div style={{ marginBottom: '1.5rem' }}>
-                  <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '5px', 
-                    marginBottom: '0.5rem',
-                    fontSize: '0.9rem',
-                    fontWeight: '600'
-                  }}>
+                <div className="key-skills">
+                  <div className="key-skills-header">
                     <BookOpen size={16} />
                     <span>Key Skills:</span>
                   </div>
-                  <div style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '0.5rem'
-                  }}>
+                  <div className="skills-tags">
                     {course.features.slice(0, 3).map((feature, idx) => (
                       <motion.span 
                         key={idx}
                         whileHover={{ scale: 1.05 }}
-                        style={{
-                          background: 'var(--primary-color)',
-                          color: 'white',
-                          padding: '2px 8px',
-                          borderRadius: '12px',
-                          fontSize: '0.7rem',
-                          fontWeight: '500'
-                        }}
+                        className="skill-tag"
                       >
                         {feature}
                       </motion.span>
                     ))}
                     {course.features.length > 3 && (
-                      <span style={{
-                        background: 'var(--border-color)',
-                        color: 'var(--text-primary)',
-                        padding: '2px 8px',
-                        borderRadius: '12px',
-                        fontSize: '0.7rem',
-                        fontWeight: '500'
-                      }}>
+                      <span className="more-skills">
                         +{course.features.length - 3} more
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* Price and Enroll */}
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  {/* Compute and display original (struck-through) + discounted price */}
+                {/* Price Section */}
+                <div className="price-section">
                   {(() => {
                     const original = parsePrice(course.price);
-                    const discounted = Math.round(original * 0.7); // 30% off => pay 70%
+                    const discounted = Math.round((original + 10000) * 0.7);
                     return (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        <span style={{
-                          textDecoration: 'line-through',
-                          color: 'red',
-                          fontSize: '0.95rem',
-                          fontWeight: '700'
-                        }}>{formatPrice(original)}</span>
-                        <span style={{
-                          fontSize: '1.35rem',
-                          fontWeight: '800',
-                          color: 'var(--primary-color)'
-                        }}>{formatPrice(discounted)}</span>
+                      <div className="price-display">
+                        <span className="original-price">
+                          {formatPrice(original + 10000)}
+                        </span>
+                        <span className="discounted-price">
+                          {formatPrice(discounted)}
+                        </span>
                       </div>
                     );
                   })()}
-                  <motion.a 
-                    className="btn-primary" 
-                    style={{ 
-                      padding: '8px 20px', 
-                      fontSize: '0.9rem',
+                </div>
+
+                {/* Course Actions */}
+                <div className="course-actions">
+                  <motion.button
+                    onClick={() => openCourseModal(course)}
+                    className="course-details-button"
+                    whileHover={{ 
                       background: 'var(--primary-color)',
                       color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      transition: 'all 0.3s ease',
-                      textDecoration: 'none',
+                      transform: 'translateY(-2px)'
                     }}
+                  >
+                    <BookOpen size={16} />
+                    Course Details
+                  </motion.button>
+                  
+                  <motion.a 
+                    className="btn-primary enroll-button"
                     whileHover={{ 
                       scale: 1.05,
                       background: 'var(--secondary-color)',
@@ -569,21 +312,178 @@ const Courses = () => {
           ))}
         </div>
 
+        {/* Course Details Modal */}
+        <AnimatePresence>
+          {selectedCourse && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={closeCourseModal}
+                className="modal-backdrop"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="modal-content"
+                >
+                  <div className="modal-scrollable">
+                    <div className="modal-header">
+                      <button
+                        onClick={closeCourseModal}
+                        className="modal-close-button"
+                        whileHover={{ 
+                          background: 'var(--primary-color)',
+                          borderColor: 'var(--primary-color)'
+                        }}
+                      >
+                        <X size={20} color="var(--text-primary)" />
+                      </button>
+                      
+                      <div className="modal-header-content">
+                        <div className="modal-course-image">
+                          <img 
+                            src={selectedCourse.image} 
+                            alt={selectedCourse.title}
+                          />
+                        </div>
+                        
+                        <div className="modal-header-info">
+                          <h3 className="modal-course-title">
+                            {selectedCourse.title}
+                          </h3>
+                          
+                          <div className="modal-course-meta">
+                            <div className="course-detail-item">
+                              <Clock size={16} />
+                              <span>{selectedCourse.duration}</span>
+                            </div>
+                            <div className="course-detail-item">
+                              <Users size={16} />
+                              <span>{selectedCourse.tutor}</span>
+                            </div>
+                            <div className="level-badge">
+                              {selectedCourse.level}
+                            </div>
+                          </div>
+                          
+                          <p className="course-description">
+                            {selectedCourse.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="modal-body">
+                      <div className="modal-tabs">
+                        {[
+                          { key: 'about', label: 'About Course', icon: BookOpen },
+                          { key: 'learn', label: 'What You\'ll Learn', icon: Target },
+                          { key: 'opportunities', label: 'Opportunities', icon: Briefcase }
+                        ].map((tab) => (
+                          <motion.button
+                            key={tab.key}
+                            onClick={() => setActiveTab(tab.key)}
+                            className={`modal-tab-button ${activeTab === tab.key ? 'active' : ''}`}
+                            whileHover={{ 
+                              backgroundColor: activeTab === tab.key 
+                                ? 'var(--primary-color)'
+                                : 'var(--hover-color)'
+                            }}
+                          >
+                            <tab.icon size={16} />
+                            {tab.label}
+                          </motion.button>
+                        ))}
+                      </div>
+
+                      <div className="tab-content">
+                        {getTabContent(selectedCourse, activeTab)}
+                      </div>
+
+                      <div className="modal-features">
+                        <h4 className="modal-features-title">
+                          Course Features:
+                        </h4>
+                        <div className="modal-features-list">
+                          {selectedCourse.features.map((feature, idx) => (
+                            <motion.span 
+                              key={idx}
+                              whileHover={{ scale: 1.05 }}
+                              className="modal-feature-tag"
+                            >
+                              {feature}
+                            </motion.span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="modal-price-section">
+                        <div className="modal-price-info">
+                          {(() => {
+                            const original = parsePrice(selectedCourse.price);
+                            const discounted = Math.round((original + 10000) * 0.7);
+                            return (
+                              <>
+                                <span className="modal-original-price">
+                                  {formatPrice(original + 10000)}
+                                </span>
+                                <span className="modal-discounted-price">
+                                  {formatPrice(discounted)}
+                                </span>
+                                <div className="modal-discount-badge">
+                                  30% OFF
+                                </div>
+                              </>
+                            );
+                          })()}
+                        </div>
+                        
+                        <div className="modal-actions">
+                          <motion.button
+                            onClick={closeCourseModal}
+                            className="modal-close-action"
+                            whileHover={{ 
+                              background: 'var(--hover-color)',
+                              transform: 'translateY(-2px)'
+                            }}
+                          >
+                            Close
+                          </motion.button>
+                          
+                          <motion.a 
+                            className="btn-primary modal-enroll-button"
+                            whileHover={{ 
+                              scale: 1.05,
+                              background: 'var(--secondary-color)',
+                              boxShadow: '0 4px 12px rgba(var(--primary-color-rgb), 0.3)'
+                            }}
+                            whileTap={{ scale: 0.95 }}
+                            href='/#contact'
+                          >
+                            Enroll Now
+                          </motion.a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+
         {/* Show active category info */}
         {activeCategory !== 'All' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{
-              textAlign: 'center',
-              marginTop: '3rem',
-              padding: '1.5rem',
-              background: 'var(--card-bg)',
-              borderRadius: '10px',
-              border: '2px solid var(--primary-color)'
-            }}
+            className="active-category-info"
           >
-            <p style={{ opacity: 0.8 }}>
+            <p>
               Showing {filteredCourses.length} course{filteredCourses.length !== 1 ? 's' : ''} in <strong>{activeCategory}</strong> category
             </p>
           </motion.div>
