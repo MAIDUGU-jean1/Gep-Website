@@ -383,6 +383,7 @@
 
 .modal-body {
   padding: 2rem;
+  background-color: white;
 }
 
 .modal-tabs {
@@ -410,7 +411,7 @@
 
 .modal-tab-button.active {
   background: var(--primary-color);
-  color: white;
+  /* color: white; */
 }
 
 .modal-tab-button:hover {
