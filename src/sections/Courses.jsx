@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { courses } from '../data/courses';
+import { Clock, Users, BookOpen, Target, Briefcase, X } from 'lucide-react';
+import './styles/Courses.css'
+
 import { Clock, Users, BookOpen, Target, Briefcase, X } from 'lucide-react';
 import './styles/Courses.css'
 
@@ -218,9 +222,13 @@ const Courses = () => {
               {/* Course Info */}
               <div className="course-info">
                 <h3 className="course-title">
+              <div className="course-info">
+                <h3 className="course-title">
                   {course.title}
                 </h3>
                 
+                <div className="course-description">
+                  <p>
                 <div className="course-description">
                   <p>
                     {course.description}
@@ -229,9 +237,12 @@ const Courses = () => {
 
                 <div className="course-details">
                   <div className="course-detail-item">
+                <div className="course-details">
+                  <div className="course-detail-item">
                     <Clock size={16} />
                     <span>{course.duration}</span>
                   </div>
+                  <div className="course-detail-item">
                   <div className="course-detail-item">
                     <Users size={16} />
                     <span>{course.tutor}</span>
@@ -240,9 +251,12 @@ const Courses = () => {
 
                 <div className="key-skills">
                   <div className="key-skills-header">
+                <div className="key-skills">
+                  <div className="key-skills-header">
                     <BookOpen size={16} />
                     <span>Key Skills:</span>
                   </div>
+                  <div className="skills-tags">
                   <div className="skills-tags">
                     {course.features.slice(0, 3).map((feature, idx) => (
                       <motion.span 
@@ -259,7 +273,6 @@ const Courses = () => {
                       </span>
                     )}
                   </div>
-                </div>
 
                 {/* Price Section */}
                 <div className="price-section">
@@ -287,6 +300,15 @@ const Courses = () => {
                     whileHover={{ 
                       background: 'var(--primary-color)',
                       color: 'white',
+                      transform: 'translateY(-2px)'
+                    }}
+                  >
+                    <BookOpen size={16} />
+                    Course Details
+                  </motion.button>
+                  
+                  <motion.a 
+                    className="btn-primary enroll-button"
                       transform: 'translateY(-2px)'
                     }}
                   >
@@ -482,7 +504,9 @@ const Courses = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="active-category-info"
+            className="active-category-info"
           >
+            <p>
             <p>
               Showing {filteredCourses.length} course{filteredCourses.length !== 1 ? 's' : ''} in <strong>{activeCategory}</strong> category
             </p>
