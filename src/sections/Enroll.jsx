@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Clock, Users, GraduationCap } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Phone, MapPin, Clock, Users, GraduationCap, CheckCircle } from 'lucide-react';
+import emailjs from '@emailjs/browser'; // Install with: npm install @emailjs/browser
 
 const Enroll = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,10 @@ const Enroll = () => {
     educationOther: '',
     occupation: ''
   });
+
+  const [loading, setLoading] = useState(false);
+  const [showGroupPopup, setShowGroupPopup] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const coursesList = [
     "BackEnd Web Development",
@@ -33,11 +38,58 @@ const Enroll = () => {
     "UI/UX Design"
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     
-    // Create WhatsApp message
-    const whatsappMessage = `
+    try {
+      // 1. First send email to info@gepprotech.com
+      const emailMessage = `
+New Enrollment Request from Gep Protech Website:
+
+Student Details:
+---------------
+Name: ${formData.name}
+Email: ${formData.email}
+Contact: ${formData.contact}
+Educational Qualification: ${formData.education === 'Other' ? formData.educationOther || 'Other' : (formData.education || 'Not specified')}
+Current Occupation: ${formData.occupation || 'Not specified'}
+
+Course Interests:
+----------------
+${formData.courses.length > 0 ? formData.courses.join(', ') : 'Not specified'}
+
+Message:
+--------
+${formData.message}
+
+---
+This enrollment request was submitted from the Gep Protech Academic Website.
+      `.trim();
+
+      // Send email using EmailJS
+      const emailResult = await emailjs.send(
+        'service_pc9b9e9', // Replace with your EmailJS service ID
+        'template_dcr8suq', // Replace with your EmailJS template ID
+        {
+          to_email: 'info@gepprotech.com',
+          from_name: formData.name,
+          from_email: formData.email,
+          from_phone: formData.contact,
+          message: emailMessage,
+          qualification: formData.education === 'Other' ? formData.educationOther || 'Other' : formData.education,
+          occupation: formData.occupation,
+          courses: formData.courses.join(', '),
+          date: new Date().toLocaleString()
+        },
+        'yhRZ0bDCnRoc1YgDW' // Replace with your EmailJS public key
+      );
+
+      if (emailResult.status === 200) {
+        setEmailSent(true);
+        
+        // 2. Create WhatsApp message for student to send
+        const whatsappMessage = `
 New Enrollment Request from Gep Protech Website:
 
 *Name:* ${formData.name}
@@ -52,23 +104,39 @@ ${formData.message}
 
 ---
 Sent from Gep Protech Academic Website
-    `.trim();
+        `.trim();
 
-    // Encode message for WhatsApp URL
-    const encodedMessage = encodeURIComponent(whatsappMessage);
-    const phoneNumber = '237674386778';
-    
-    // Create WhatsApp URL
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    
-    // Open WhatsApp in new tab
-    window.open(whatsappUrl, '_blank');
-    
-    // Optional: Show confirmation message
-    alert('Opening WhatsApp to start your enrollment process...');
-    
-    // Reset form
-    setFormData({ name: '', email: '', contact: '', courses: [], message: '', education: '', educationOther: '', occupation: '' });
+        // Encode message for WhatsApp URL
+        const encodedMessage = encodeURIComponent(whatsappMessage);
+        const phoneNumber = '237674386778';
+        
+        // Create WhatsApp URL
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+        
+        // Show success message with information about both destinations
+        alert(`✅ Your enrollment request has been sent to info@gepprotech.com\n\n📱 We will now redirect you to WhatsApp to send your details to our enrollment team.\n\nYou are sending your information to:\n1. info@gepprotech.com (Already sent)\n2. WhatsApp: +237 674 386 778\n\nPlease complete the process by sending the message on WhatsApp.`);
+        
+        // Open WhatsApp in new tab
+        setTimeout(() => {
+          window.open(whatsappUrl, '_blank');
+          
+          // Show group invitation popup after a delay
+          setTimeout(() => {
+            setShowGroupPopup(true);
+          }, 1000);
+        }, 1500);
+        
+        // Reset form
+        setFormData({ name: '', email: '', contact: '', courses: [], message: '', education: '', educationOther: '', occupation: '' });
+      } else {
+        throw new Error('Failed to send email');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('❌ There was an error sending your enrollment request. Please try again or contact us directly.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -86,7 +154,12 @@ Sent from Gep Protech Academic Website
     });
   };
 
- 
+  const handleJoinGroup = () => {
+    const groupLink = 'https://chat.whatsapp.com/YOUR_GROUP_LINK'; // Replace with your actual group link
+    window.open(groupLink, '_blank');
+    setShowGroupPopup(false);
+  };
+
   return (
     <section id="enroll" style={{
       padding: 'clamp(4rem, 8vw, 8rem) 0',
@@ -131,7 +204,7 @@ Sent from Gep Protech Academic Website
               Start Your Enrollment
             </h3>
             <p style={{ marginBottom: '1.5rem', opacity: 0.8, fontSize: '0.95rem' }}>
-              Fill out the form below and we'll redirect you to WhatsApp to complete your enrollment process with our team.
+              Fill out the form below and we'll send your details to both our email and WhatsApp for faster processing.
             </p>
             
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -150,6 +223,7 @@ Sent from Gep Protech Academic Website
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                   style={{
                     width: '100%',
                     padding: '1rem',
@@ -158,7 +232,8 @@ Sent from Gep Protech Academic Website
                     background: 'var(--bg-primary)',
                     color: 'var(--text-primary)',
                     fontSize: '1rem',
-                    transition: 'border-color 0.3s ease'
+                    transition: 'border-color 0.3s ease',
+                    opacity: loading ? 0.7 : 1
                   }}
                   placeholder="Enter your full name"
                 />
@@ -179,6 +254,7 @@ Sent from Gep Protech Academic Website
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                   style={{
                     width: '100%',
                     padding: '1rem',
@@ -187,7 +263,8 @@ Sent from Gep Protech Academic Website
                     background: 'var(--bg-primary)',
                     color: 'var(--text-primary)',
                     fontSize: '1rem',
-                    transition: 'border-color 0.3s ease'
+                    transition: 'border-color 0.3s ease',
+                    opacity: loading ? 0.7 : 1
                   }}
                   placeholder="Enter your email address"
                 />
@@ -202,11 +279,12 @@ Sent from Gep Protech Academic Website
                   Contact *
                 </label>
                 <input 
-                  type="contact" 
+                  type="tel"
                   name="contact"
                   value={formData.contact}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                   style={{
                     width: '100%',
                     padding: '1rem',
@@ -215,7 +293,8 @@ Sent from Gep Protech Academic Website
                     background: 'var(--bg-primary)',
                     color: 'var(--text-primary)',
                     fontSize: '1rem',
-                    transition: 'border-color 0.3s ease'
+                    transition: 'border-color 0.3s ease',
+                    opacity: loading ? 0.7 : 1
                   }}
                   placeholder="Enter your whatsapp number"
                 />
@@ -236,6 +315,7 @@ Sent from Gep Protech Academic Website
                   value={formData.education}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                   style={{
                     width: '100%',
                     padding: '1rem',
@@ -243,7 +323,8 @@ Sent from Gep Protech Academic Website
                     borderRadius: '8px',
                     background: 'var(--bg-primary)',
                     color: 'var(--text-primary)',
-                    fontSize: '1rem'
+                    fontSize: '1rem',
+                    opacity: loading ? 0.7 : 1
                   }}
                 >
                   <option value="">Select qualification</option>
@@ -252,7 +333,6 @@ Sent from Gep Protech Academic Website
                   <option value="HND">HND</option>
                   <option value="University Student">University Student</option>
                   <option value="Bachelor's degree">Bachelor's degree</option>
-
                   <option value="Master's degree">Master's degree</option>
                   <option value="PhD">PhD</option>
                   <option value="Other">Other: Specify</option>
@@ -275,6 +355,7 @@ Sent from Gep Protech Academic Website
                     name="educationOther"
                     value={formData.educationOther}
                     onChange={handleChange}
+                    disabled={loading}
                     style={{
                       width: '100%',
                       padding: '1rem',
@@ -283,7 +364,8 @@ Sent from Gep Protech Academic Website
                       background: 'var(--bg-primary)',
                       color: 'var(--text-primary)',
                       fontSize: '1rem',
-                      transition: 'border-color 0.3s ease'
+                      transition: 'border-color 0.3s ease',
+                      opacity: loading ? 0.7 : 1
                     }}
                     placeholder="Specify your qualification"
                   />
@@ -305,6 +387,7 @@ Sent from Gep Protech Academic Website
                   name="occupation"
                   value={formData.occupation}
                   onChange={handleChange}
+                  disabled={loading}
                   style={{
                     width: '100%',
                     padding: '1rem',
@@ -313,7 +396,8 @@ Sent from Gep Protech Academic Website
                     background: 'var(--bg-primary)',
                     color: 'var(--text-primary)',
                     fontSize: '1rem',
-                    transition: 'border-color 0.3s ease'
+                    transition: 'border-color 0.3s ease',
+                    opacity: loading ? 0.7 : 1
                   }}
                   placeholder="e.g., Student, Unemployed, Software Engineer"
                 />
@@ -334,6 +418,7 @@ Sent from Gep Protech Academic Website
                   onChange={handleCourseChange}
                   multiple
                   size="5"
+                  disabled={loading}
                   style={{
                     width: '100%',
                     padding: '1rem',
@@ -341,7 +426,8 @@ Sent from Gep Protech Academic Website
                     borderRadius: '8px',
                     background: 'var(--bg-primary)',
                     color: 'var(--text-primary)',
-                    fontSize: '1rem'
+                    fontSize: '1rem',
+                    opacity: loading ? 0.7 : 1
                   }}
                 >
                   {coursesList.map((course, index) => (
@@ -385,6 +471,7 @@ Sent from Gep Protech Academic Website
                   value={formData.message}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                   rows="5"
                   style={{
                     width: '100%',
@@ -395,26 +482,64 @@ Sent from Gep Protech Academic Website
                     color: 'var(--text-primary)',
                     fontSize: '1rem',
                     resize: 'vertical',
-                    transition: 'border-color 0.3s ease'
+                    transition: 'border-color 0.3s ease',
+                    opacity: loading ? 0.7 : 1
                   }}
                   placeholder="Tell us about your educational background, career goals, and any specific requirements..."
                 ></textarea>
               </div>
 
-              <button type="submit" className="btn-primary" style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-                width: '100%',
-                marginTop: '1rem',
-                background: 'linear-gradient(135deg, #25D366, #128C7E)'
-              }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893c0-3.18-1.24-6.169-3.495-8.418"/>
-                </svg>
-                Start Enrollment via WhatsApp
+              <button 
+                type="submit" 
+                className="btn-primary" 
+                disabled={loading}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  width: '100%',
+                  marginTop: '1rem',
+                  background: 'linear-gradient(135deg, #25D366, #128C7E)',
+                  opacity: loading ? 0.7 : 1,
+                  cursor: loading ? 'not-allowed' : 'pointer'
+                }}
+              >
+                {loading ? (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white" className="spinning">
+                      <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" />
+                    </svg>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893c0-3.18-1.24-6.169-3.495-8.418"/>
+                    </svg>
+                    Start Enrollment via Email & WhatsApp
+                  </>
+                )}
               </button>
+              
+              {emailSent && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: '#25D366',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    marginTop: '0.5rem'
+                  }}
+                >
+                  <CheckCircle size={16} />
+                  Email sent successfully! Redirecting to WhatsApp...
+                </motion.div>
+              )}
             </form>
           </motion.div>
 
@@ -436,14 +561,14 @@ Sent from Gep Protech Academic Website
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               {[
                 {
-                  icon: GraduationCap,
-                  title: 'Simple Registration',
-                  info: 'Fill out our enrollment form and we\'ll guide you through the rest of the process'
+                  icon: Mail,
+                  title: 'Email Confirmation',
+                  info: 'Your details are first sent to info@gepprotech.com for official record'
                 },
                 {
                   icon: Users,
-                  title: 'Personal Consultation',
-                  info: 'Get personalized guidance on choosing the right course for your career goals'
+                  title: 'WhatsApp Follow-up',
+                  info: 'Then redirected to WhatsApp for immediate consultation with our team'
                 },
                 {
                   icon: Clock,
@@ -527,6 +652,135 @@ Sent from Gep Protech Academic Website
         </div>
       </div>
 
+      {/* Group Join Popup Modal */}
+      <AnimatePresence>
+        {showGroupPopup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowGroupPopup(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0, 0, 0, 0.5)',
+              backdropFilter: 'blur(5px)',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1rem',
+              overflowY: 'auto'
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                position: 'relative',
+                background: 'var(--card-bg)',
+                padding: '2.5rem',
+                borderRadius: '15px',
+                border: '2px solid var(--border-color)',
+                maxWidth: '500px',
+                width: '100%',
+                zIndex: 1001,
+                boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                maxHeight: 'calc(100vh - 40px)',
+                overflowY: 'auto'
+              }}
+            >
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  background: 'linear-gradient(135deg, #25D366, #128C7E)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 1.5rem auto'
+                }}>
+                  <Users size={30} color="white" />
+                </div>
+
+                <h3 style={{ 
+                  fontSize: '1.5rem', 
+                  marginBottom: '1rem', 
+                  color: 'var(--text-secondary)'
+                }}>
+                  Join Our Community!
+                </h3>
+
+                <p style={{ 
+                  color: 'var(--text-primary)', 
+                  marginBottom: '1.5rem',
+                  lineHeight: '1.6',
+                  opacity: 0.8
+                }}>
+                  Connect with fellow students, get updates, ask questions, and be part of our growing community. Click below to join our official WhatsApp group.
+                </p>
+
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '1rem' }}>
+                  <motion.button
+                    onClick={handleJoinGroup}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                      background: 'linear-gradient(135deg, #25D366, #128C7E)',
+                      color: 'white',
+                      border: 'none',
+                      padding: '1rem 2rem',
+                      borderRadius: '10px',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893c0-3.18-1.24-6.169-3.495-8.418"/>
+                    </svg>
+                    Join WhatsApp Group
+                  </motion.button>
+
+                  <motion.button
+                    onClick={() => setShowGroupPopup(false)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                      background: 'transparent',
+                      color: 'var(--text-secondary)',
+                      border: '2px solid var(--border-color)',
+                      padding: '1rem 2rem',
+                      borderRadius: '10px',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Maybe Later
+                  </motion.button>
+                </div>
+
+                <p style={{ 
+                  fontSize: '0.8rem', 
+                  color: 'var(--text-primary)', 
+                  opacity: 0.6,
+                  marginTop: '1.5rem'
+                }}>
+                  You can join our group anytime from our website
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <style>{`
         @media (min-width: 768px) {
           .enroll-grid {
@@ -558,6 +812,15 @@ Sent from Gep Protech Academic Website
         select[multiple] option:checked {
           background: var(--primary-color) linear-gradient(0deg, var(--primary-color) 0%, var(--primary-color) 100%);
           color: white;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        .spinning {
+          animation: spin 1s linear infinite;
         }
       `}</style>
     </section>
