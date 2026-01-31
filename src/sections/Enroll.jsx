@@ -200,12 +200,12 @@ Sent from Gep Protech Academic Website
             }}
             className="enroll-form"
           >
-            <h3 style={{ fontSize: '2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
+            {/* <h3 style={{ fontSize: '2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
               Start Your Enrollment
             </h3>
             <p style={{ marginBottom: '1.5rem', opacity: 0.8, fontSize: '0.95rem' }}>
               Fill out the form below and we'll send your details to both our email and WhatsApp for faster processing.
-            </p>
+            </p> */}
             
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div>
