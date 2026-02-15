@@ -7,7 +7,9 @@ const Header = () => {
   const { isDark, toggleTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navItems = ['Home', 'About', 'Courses', 'Tutors', 'Gallery', 'Achievements', 'Contact', 'Enroll'];
+  const navItems = [
+    'Home', 'About', 'Courses', 'Tutors', 'Gallery', 'Achievements', 'Contact', 'Enroll'
+  ];
 
   const headerStyle = {
     background: 'var(--bg-secondary)',
@@ -147,7 +149,7 @@ const Header = () => {
               justifyContent: 'center'
             }}>
               {navItems.map((item) => (
-                <a key={item} href={`/#${item.toLowerCase()}`} style={navLinkStyle}>
+                <a key={item} href={item === 'Enroll' ? '/enroll' : `/#${item.toLowerCase()}`} style={navLinkStyle}>
                   {item}
                 </a>
               ))}

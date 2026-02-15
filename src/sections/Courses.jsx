@@ -302,7 +302,7 @@ const Courses = () => {
                       boxShadow: '0 4px 12px rgba(var(--primary-color-rgb), 0.3)'
                     }}
                     whileTap={{ scale: 0.95 }}
-                    href='/#contact'
+                    href='/enroll'
                   >
                     Enroll Now
                   </motion.a>
@@ -462,7 +462,7 @@ const Courses = () => {
                             boxShadow: '0 4px 12px rgba(var(--primary-color-rgb), 0.3)'
                           }}
                           whileTap={{ scale: 0.95 }}
-                          href='/#contact'
+                          href='/enroll'
                         >
                           Enroll Now
                         </motion.a>
