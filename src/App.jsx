@@ -14,7 +14,7 @@ import TutorProfile from './pages/TutorProfile';
 import Blog from '../src/pages/Blog'; // Add this import
 import BlogPost from './pages/BlogPost'; // We'll create this next
 import { BlogProvider } from './context/BlogContext'; // Add this import
-import Enroll from './sections/Enroll';
+import Subscribe from './sections/Subscribe';
 import Enrollment from './pages/Enrollment';
 
 function HomePage() {
@@ -27,7 +27,7 @@ function HomePage() {
       <Gallery />
       <Achievements />
       <Contact />
-      <Enroll/>
+      <Subscribe/>
     </>
   );
 }

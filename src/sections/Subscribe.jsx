@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Clock, Users, GraduationCap, CheckCircle, ArrowRight } from 'lucide-react';
 import axios from 'axios';
 
-const Enroll = () => {
+const Subscribe = () => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterLoading, setNewsletterLoading] = useState(false);
-  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  // Inline subscriber fields (replacing popup)
+  const [subscriberName, setSubscriberName] = useState('');
+  const [subscriberCountry, setSubscriberCountry] = useState('');
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
     
-    if (!newsletterEmail.trim()) {
-      alert('Please enter a valid email address');
+    console.log('[DEBUG] Newsletter form submitted, email:', newsletterEmail);
+    
+    if (!newsletterEmail.trim() || !subscriberName.trim() || !subscriberCountry.trim()) {
+      console.log('[DEBUG] Missing required fields:', { newsletterEmail, subscriberName, subscriberCountry });
+      setErrorMessage('Please fill in all required fields');
+      setSuccessMessage('');
       return;
     }
 
@@ -25,30 +33,41 @@ const Enroll = () => {
         throw new Error('API URL is not configured');
       }
 
-      // Submit subscriber to backend
+      // Submit subscriber to backend (include name & country)
       const response = await axios.post(`${apiUrl}/newsletter-subscribe`, {
-        email: newsletterEmail
+        email: newsletterEmail,
+        name: subscriberName,
+        country: subscriberCountry
       }, {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         }
       });
-
       if (response.data && response.data.success) {
-        setNewsletterSubmitted(true);
+        console.log('Subscription successful, setting green success message');
+        setSuccessMessage('Thank you for subscribing!');
+        // Show alert on successful subscription
+        alert('Thank you for subscribing!');
+        // clear inputs
         setNewsletterEmail('');
-        
-        setTimeout(() => {
-          setNewsletterSubmitted(false);
-        }, 5000);
+        setSubscriberName('');
+        setSubscriberCountry('');
+        setErrorMessage('');
       } else {
-        throw new Error(response.data?.message || 'Failed to subscribe');
+        // API returned but without success flag - still show alert and clear
+        console.log('API response received but no success flag:', response.data);
+        alert('Thank you for subscribing!');
+        setNewsletterEmail('');
+        setSubscriberName('');
+        setSubscriberCountry('');
+        setSuccessMessage('Thank you for subscribing!');
       }
     } catch (error) {
-      console.error('Subscription error:', error);
+      console.error('[DEBUG] Subscription error caught:', error.message);
       
-      let errorMessage = 'Failed to subscribe. Please try again.';
+      // Frontend-focused error handling - generate clear user-friendly messages
+      let errorMsg = 'Failed to subscribe. Please try again.';
       
       if (error.response) {
         if (error.response.status === 422) {
@@ -62,31 +81,39 @@ const Enroll = () => {
             (emailMsg && (emailMsg.toLowerCase().includes('already') || emailMsg.toLowerCase().includes('taken'))) ||
             (generalMsg && (generalMsg.toLowerCase().includes('already') || generalMsg.toLowerCase().includes('taken')))
           ) {
-            errorMessage = 'You already subscribed.';
+            errorMsg = 'You already subscribed.';
           } else if (typeof errors === 'object') {
-            errorMessage = Object.entries(errors)
+            errorMsg = Object.entries(errors)
               .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages[0] : messages}`)
               .join('\n');
           } else {
-            errorMessage = errors;
+            errorMsg = errors;
           }
         } else {
-          errorMessage = error.response.data?.message || `Error: ${error.response.statusText}`;
+          errorMsg = error.response.data?.message || `Error: ${error.response.statusText}`;
         }
       } else if (error.request) {
-        errorMessage = 'No response from server. Please check your connection.';
+        errorMsg = 'No response from server. Please check your connection.';
       } else {
-        errorMessage = error.message;
+        errorMsg = error.message;
       }
       
-      alert(`❌ ${errorMessage}`);
+      console.log('[DEBUG] Setting error message:', errorMsg);
+      setErrorMessage(errorMsg);
+      setSuccessMessage('');
+      
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
     } finally {
       setNewsletterLoading(false);
     }
   };
 
+  // Popup removed: using inline name & country fields instead
+
   return (
-    <section id="enroll" style={{
+    <section id="subscribe" style={{
       padding: 'clamp(4rem, 8vw, 8rem) 0',
       background: 'var(--bg-primary)'
     }}>
@@ -109,7 +136,7 @@ const Enroll = () => {
           gridTemplateColumns: '1fr 1fr',
           gap: '4rem',
           alignItems: 'center'
-        }} className="enroll-grid">
+        }} className="subscribe-grid">
           {/* Left Side - Information */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -119,7 +146,7 @@ const Enroll = () => {
             style={{
               order: 1
             }}
-            className="enroll-info"
+            className="subscribe-info"
           >
             <h3 style={{ fontSize: '2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
               Why Subscribe?
@@ -262,29 +289,100 @@ const Enroll = () => {
                 Join thousands of students and professionals staying updated with the latest opportunities and insights from Gep Protech Academy.
               </p>
 
-              {newsletterSubmitted && (
+              {(successMessage || errorMessage) && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
                   style={{
-                    background: 'rgba(255, 255, 255, 0.2)',
+                    background: successMessage 
+                      ? 'rgba(34, 197, 94, 0.95)'  // Green background for success
+                      : 'rgba(239, 68, 68, 0.95)', // Red background for error
                     padding: '1rem',
                     borderRadius: '10px',
                     marginBottom: '1.5rem',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '10px',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    border: `2px solid ${successMessage ? '#22c55e' : '#ef4444'}`
                   }}
                 >
-                  <CheckCircle size={20} color="white" />
-                  <span style={{ color: 'white', fontWeight: '500' }}>
-                    Thank you for subscribing!
-                  </span>
+                  {successMessage ? (
+                    <>
+                      <CheckCircle size={20} color="white" style={{ background: '#22c55e', borderRadius: '50%', padding: '2px' }} />
+                      <span style={{ color: 'white', fontWeight: '600' }}>
+                        {successMessage}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span style={{ fontSize: '1.2rem', color: 'white' }}>⚠</span>
+                      <span style={{ color: 'white', fontWeight: '500' }}>
+                        {errorMessage}
+                      </span>
+                    </>
+                  )}
                 </motion.div>
               )}
 
               <form onSubmit={handleNewsletterSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {/* Inline name & country fields (two columns) */}
+                <div style={{ 
+                  display: 'flex', 
+                  gap: '1rem', 
+                  flexWrap: 'nowrap', 
+                  alignItems: 'stretch',
+                  width: '100%'
+                }}>
+                  <input
+                    type="text"
+                    value={subscriberName}
+                    onChange={(e) => {
+                      console.log('[DEBUG] Name input changed:', e.target.value);
+                      setSubscriberName(e.target.value);
+                    }}
+                    placeholder="Enter your name"
+                    required
+                    disabled={newsletterLoading}
+                    style={{
+                      flex: '1 1 50%',
+                      padding: '0.9rem',
+                      border: 'none',
+                      borderRadius: '10px',
+                      background: 'white',
+                      color: '#333',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s ease',
+                      opacity: newsletterLoading ? 0.7 : 1
+                    }}
+                  />
+
+                  <input
+                    type="text"
+                    value={subscriberCountry}
+                    onChange={(e) => {
+                      console.log('[DEBUG] Country input changed:', e.target.value);
+                      setSubscriberCountry(e.target.value);
+                    }}
+                    placeholder="Enter your country"
+                    required
+                    disabled={newsletterLoading}
+                    style={{
+                      flex: '1 1 50%',
+                      padding: '0.9rem',
+                      border: 'none',
+                      borderRadius: '10px',
+                      background: 'white',
+                      color: '#333',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s ease',
+                      opacity: newsletterLoading ? 0.7 : 1
+                    }}
+                  />
+
+                </div>
+
                 <div style={{
                   display: 'flex',
                   gap: '0.5rem',
@@ -294,7 +392,8 @@ const Enroll = () => {
                     type="email" 
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    disabled={newsletterLoading || newsletterSubmitted}
+                    disabled={newsletterLoading}
+                    required
                     placeholder="Enter your email address"
                     style={{
                       flex: 1,
@@ -302,7 +401,7 @@ const Enroll = () => {
                       padding: '1rem',
                       border: 'none',
                       borderRadius: '10px',
-                      background: 'rgba(255, 255, 255, 0.95)',
+                      background: 'white',
                       color: '#333',
                       fontSize: '1rem',
                       transition: 'all 0.3s ease',
@@ -311,7 +410,7 @@ const Enroll = () => {
                   />
                   <motion.button
                     type="submit"
-                    disabled={newsletterLoading || newsletterSubmitted}
+                    disabled={newsletterLoading}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     style={{
@@ -322,12 +421,12 @@ const Enroll = () => {
                       borderRadius: '10px',
                       fontSize: '1rem',
                       fontWeight: 'bold',
-                      cursor: newsletterLoading || newsletterSubmitted ? 'not-allowed' : 'pointer',
+                      cursor: newsletterLoading ? 'not-allowed' : 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
                       transition: 'all 0.3s ease',
-                      opacity: newsletterLoading || newsletterSubmitted ? 0.7 : 1
+                      opacity: newsletterLoading ? 0.7 : 1
                     }}
                   >
                     {newsletterLoading ? (
@@ -387,12 +486,14 @@ const Enroll = () => {
         </div>
       </div>
 
+      {/* Popup removed — using inline fields in the form instead */}
+
       <style>{`
         @media (max-width: 767px) {
-          .enroll-grid {
+          .subscribe-grid {
             grid-template-columns: 1fr !important;
           }
-          .enroll-info {
+          .subscribe-info {
             order: 1 !important;
           }
           .newsletter-cta {
@@ -407,16 +508,20 @@ const Enroll = () => {
 
         .spinning {
           animation: spin 1s linear infinite;
-          display: 'inline-block';
+          display: inline-block;
         }
 
         input:focus {
           outline: none;
-          box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+          box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+        }
+
+        input::placeholder {
+          color: #999;
         }
       `}</style>
     </section>
   );
 };
 
-export default Enroll;
+export default Subscribe;

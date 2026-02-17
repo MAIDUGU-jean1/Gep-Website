@@ -22,11 +22,9 @@ const Enrollment = () => {
     educationOther: '',
     occupation: '',
     
-    // Step 3: Course Selection
+    // Step 3: Course Selection & Career Goal
     courses: [],
-    
-    // Step 4: Message
-    message: '',
+    careerGoal: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -67,15 +65,15 @@ const Enrollment = () => {
     },
     {
       number: 3,
-      title: 'Courses',
+      title: 'Courses & Goals',
       icon: BookOpen,
-      description: 'Select your interests'
+      description: 'Select interests & career goals'
     },
     {
       number: 4,
-      title: 'Message',
-      icon: MessageSquare,
-      description: 'Any specific requirements?'
+      title: 'Preview',
+      icon: CheckCircle,
+      description: 'Review and submit'
     }
   ];
 
@@ -99,7 +97,7 @@ const Enrollment = () => {
         occupation: formData.occupation,
         // send courses as an array so backend validation (array) passes
         courses: formData.courses,
-        message: formData.message
+        message: formData.careerGoal
       };
 
       // Submit to database
@@ -124,8 +122,8 @@ New Enrollment Request from Gep Protech Website:
 *Email:* ${formData.email}
 *Contact:* ${formData.contact}
 *Course Interests:* ${formData.courses.length > 0 ? formData.courses.join(', ') : 'Not specified'}
-*Message:*
-${formData.message}
+*Career Goal:*
+${formData.careerGoal}
 
 *Educational Qualification:* ${formData.education === 'Other' ? formData.educationOther || 'Other' : (formData.education || 'Not specified')}
 *Current Occupation:* ${formData.occupation || 'Not specified'}
@@ -159,7 +157,7 @@ Sent from Gep Protech Academic Website
         // Reset form
         setFormData({ 
           name: '', email: '', contact: '', courses: [], 
-          message: '', education: '', educationOther: '', occupation: '' 
+          careerGoal: '', education: '', educationOther: '', occupation: '' 
         });
         setCurrentStep(1);
       } else {
@@ -216,7 +214,7 @@ Sent from Gep Protech Academic Website
   };
 
   const handleJoinGroup = () => {
-    const groupLink = 'https://chat.whatsapp.com/YOUR_GROUP_LINK';
+    const groupLink = 'https://chat.whatsapp.com/https://chat.whatsapp.com/GhT341sUq7GIfQLQexCFmN?mode=gi_t';
     window.open(groupLink, '_blank');
     setShowGroupPopup(false);
   };
@@ -240,9 +238,9 @@ Sent from Gep Protech Academic Website
       case 2:
         return formData.education && (formData.education !== 'Other' || formData.educationOther);
       case 3:
-        return formData.courses.length > 0;
+        return formData.courses.length > 0 && formData.careerGoal.trim();
       case 4:
-        return formData.message;
+        return true;
       default:
         return true;
     }
@@ -482,7 +480,7 @@ Sent from Gep Protech Academic Website
           </div>
 
           {/* Form Steps */}
-          <form onSubmit={handleSubmit} style={{ padding: '1.5rem' }}>
+          <div style={{ padding: '1.5rem' }}>
             <AnimatePresence mode="wait">
               {/* Step 1: Personal Info */}
               {currentStep === 1 && (
@@ -617,6 +615,28 @@ Sent from Gep Protech Academic Website
                       placeholder="e.g., Student, Software Engineer, etc."
                     />
                   </div>
+
+                  {/* Career Goal */}
+                  <div className="input-group">
+                    <label style={labelStyle}>
+                      <Briefcase size={16} style={{ marginRight: '0.5rem' }} />
+                      Career Goal *
+                    </label>
+                    <textarea 
+                      name="careerGoal"
+                      value={formData.careerGoal}
+                      onChange={handleChange}
+                      required
+                      disabled={loading}
+                      rows="4"
+                      style={{
+                        ...inputStyle,
+                        resize: 'vertical',
+                        minHeight: '120px'
+                      }}
+                      placeholder="Tell us about your career goals and background. Why are you interested in these courses?"
+                    />
+                  </div>
                 </motion.div>
               )}
 
@@ -700,7 +720,7 @@ Sent from Gep Protech Academic Website
                 </motion.div>
               )}
 
-              {/* Step 4: Message */}
+              {/* Step 4: Preview & Submit */}
               {currentStep === 4 && (
                 <motion.div
                   key="step4"
@@ -709,49 +729,98 @@ Sent from Gep Protech Academic Website
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="input-group">
-                    <label style={labelStyle}>
-                      <MessageSquare size={16} style={{ marginRight: '0.5rem' }} />
-                      Your Message *
-                    </label>
-                    <textarea 
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      disabled={loading}
-                      rows="6"
-                      style={{
-                        ...inputStyle,
-                        resize: 'vertical',
-                        minHeight: '150px'
-                      }}
-                      placeholder="Tell us about your goals, why you're interested in these courses, and any questions you have..."
-                    />
-                  </div>
-
                   {/* Summary Preview */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
                     style={{
-                      marginTop: '1.5rem',
-                      padding: '1rem',
+                      padding: '1.5rem',
                       background: 'var(--bg-primary)',
-                      borderRadius: '8px',
-                      border: '1px solid var(--border-color)'
+                      borderRadius: '12px',
+                      border: '2px solid var(--primary-color)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1.5rem'
                     }}
                   >
-                    <h4 style={{ marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
-                      Preview Your Enrollment:
+                    <h4 style={{ marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '1.2rem' }}>
+                      📋 Preview Your Enrollment
                     </h4>
-                    <div style={{ fontSize: '0.9rem', opacity: 0.8 }}>
-                      <p><strong>Name:</strong> {formData.name || 'Not provided'}</p>
-                      <p><strong>Email:</strong> {formData.email || 'Not provided'}</p>
-                      <p><strong>Education:</strong> {formData.education === 'Other' ? formData.educationOther : formData.education || 'Not provided'}</p>
-                      <p><strong>Courses:</strong> {formData.courses.length > 0 ? formData.courses.join(', ') : 'None selected'}</p>
+                    
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.95rem' }}>
+                      <div>
+                        <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Name</p>
+                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.name}</p>
+                      </div>
+                      <div>
+                        <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Email</p>
+                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.email}</p>
+                      </div>
+                      <div>
+                        <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>WhatsApp</p>
+                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.contact}</p>
+                      </div>
+                      <div>
+                        <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Education Level</p>
+                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>
+                          {formData.education === 'Other' ? formData.educationOther : formData.education}
+                        </p>
+                      </div>
+                      <div>
+                        <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Occupation</p>
+                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.occupation}</p>
+                      </div>
                     </div>
+
+                    <div>
+                      <p style={{ opacity: 0.7, marginBottom: '0.5rem' }}>Selected Courses</p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        {formData.courses.map((course, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              background: 'var(--primary-color)',
+                              color: 'white',
+                              padding: '0.4rem 0.9rem',
+                              borderRadius: '20px',
+                              fontSize: '0.9rem',
+                              fontWeight: '500'
+                            }}
+                          >
+                            {course}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p style={{ opacity: 0.7, marginBottom: '0.5rem' }}>Career Goal</p>
+                      <p style={{ fontWeight: 500, whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
+                        {formData.careerGoal}
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    style={{
+                      marginTop: '1.5rem',
+                      padding: '1rem',
+                      background: 'rgba(37, 211, 102, 0.1)',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(37, 211, 102, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}
+                  >
+                    <CheckCircle size={18} color="#25D366" />
+                    <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                      All information looks good? Click Submit to continue to WhatsApp.
+                    </span>
                   </motion.div>
                 </motion.div>
               )}
@@ -805,7 +874,8 @@ Sent from Gep Protech Academic Website
                 </motion.button>
               ) : (
                 <motion.button
-                  type="submit"
+                  type="button"
+                  onClick={handleSubmit}
                   disabled={loading || !isStepValid()}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -826,7 +896,7 @@ Sent from Gep Protech Academic Website
                   ) : (
                     <>
                       <CheckCircle size={18} />
-                      Complete Enrollment
+                      Submit
                     </>
                   )}
                 </motion.button>
@@ -855,7 +925,7 @@ Sent from Gep Protech Academic Website
                 Email sent! Redirecting to WhatsApp...
               </motion.div>
             )}
-          </form>
+          </div>
         </motion.div>
 
         {/* Trust Badges - Mobile Friendly */}
