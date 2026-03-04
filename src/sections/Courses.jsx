@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, Users, BookOpen, Target, Briefcase, X } from 'lucide-react';
 import { courses } from '../data/courses';
-// import './styles/Courses.css';
 import './styles/Courses.css';
 
 const Courses = () => {
@@ -10,12 +9,16 @@ const Courses = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [activeTab, setActiveTab] = useState('about');
 
-  // Define course categories and their mappings
+  // Debug: Log when modal state changes
+  useEffect(() => {
+    console.log('Modal state:', selectedCourse ? 'OPEN' : 'CLOSED', selectedCourse);
+  }, [selectedCourse]);
+
   const courseCategories = {
     'All': ['Web Development', 'Digital Marketing', 'Graphic Design', 'Data Science', 'Mobile App Development', 'Cybersecurity'],
     'Tech': ['Web Development', 'Data Science', 'Mobile App Development', 'Cybersecurity'],
     'Design': ['Graphic Design'],
-    'Business': ['Digital Marketing', 'Basic Catography'],
+    'Business': ['Digital Marketing', 'Basic Cartography'],
     'Development': ['Web Development', 'Mobile App Development']
   };
 
@@ -25,15 +28,12 @@ const Courses = () => {
   useEffect(() => {
     if (selectedCourse) {
       document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
     }
 
     return () => {
       document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
     };
   }, [selectedCourse]);
 
@@ -56,12 +56,20 @@ const Courses = () => {
       );
 
   const openCourseModal = (course) => {
+    console.log('Opening modal for course:', course.title);
     setSelectedCourse(course);
     setActiveTab('about');
   };
 
   const closeCourseModal = () => {
+    console.log('Closing modal');
     setSelectedCourse(null);
+  };
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      closeCourseModal();
+    }
   };
 
   const getTabContent = (course, tab) => {
@@ -74,7 +82,7 @@ const Courses = () => {
           <div className="tab-about-details">
             <div className="tab-detail-item">
               <Clock size={18} />
-              <span>{course.about}</span>
+              <span>{course.about || course.description}</span>
             </div>
           </div>
         </div>
@@ -83,7 +91,16 @@ const Courses = () => {
       learn: (
         <div>
           <ul className="tab-list">
-            {course.learns.map((learn, idx) => (
+            {course.learns?.map((learn, idx) => (
+              <li key={idx} className="tab-list-item">
+                {learn}
+              </li>
+            )) || [
+              "Master core concepts",
+              "Hands-on projects",
+              "Industry best practices",
+              "Real-world applications"
+            ].map((learn, idx) => (
               <li key={idx} className="tab-list-item">
                 {learn}
               </li>
@@ -193,7 +210,6 @@ const Courses = () => {
               whileHover={{ 
                 y: -10,
                 borderColor: 'var(--primary-color)',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.15)'
               }}
             >
               {/* Course Image */}
@@ -245,13 +261,12 @@ const Courses = () => {
                   </div>
                   <div className="skills-tags">
                     {course.features.slice(0, 3).map((feature, idx) => (
-                      <motion.span 
+                      <span 
                         key={idx}
-                        whileHover={{ scale: 1.05 }}
                         className="skill-tag"
                       >
                         {feature}
-                      </motion.span>
+                      </span>
                     ))}
                     {course.features.length > 3 && (
                       <span className="more-skills">
@@ -281,202 +296,178 @@ const Courses = () => {
 
                 {/* Course Actions */}
                 <div className="course-actions">
-                  <motion.button
+                  <button
                     onClick={() => openCourseModal(course)}
                     className="course-details-button"
-                    whileHover={{ 
-                      background: 'var(--primary-color)',
-                      color: 'white',
-                      transform: 'translateY(-2px)'
-                    }}
                   >
                     <BookOpen size={16} />
                     Course Details
-                  </motion.button>
+                  </button>
                   
-                  <motion.a 
+                  <a 
                     className="btn-primary enroll-button"
-                    whileHover={{ 
-                      scale: 1.05,
-                      background: 'var(--secondary-color)',
-                      boxShadow: '0 4px 12px rgba(var(--primary-color-rgb), 0.3)'
-                    }}
-                    whileTap={{ scale: 0.95 }}
                     href='/#contact'
                   >
                     Enroll Now
-                  </motion.a>
+                  </a>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Course Details Modal */}
+        {/* COURSE MODAL - SIMPLIFIED VERSION */}
         <AnimatePresence>
           {selectedCourse && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={closeCourseModal}
-                className="modal-backdrop"
+            <div className="modal-overlay">
+              <div 
+                className="modal-backdrop debug-backdrop"
+                onClick={handleBackdropClick}
               />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              <div 
+                className="modal-wrapper"
                 onClick={(e) => e.stopPropagation()}
-                className="modal-content"
               >
-                <div className="modal-scrollable">
-                  <div className="modal-header">
-                    <motion.button
-                      onClick={closeCourseModal}
-                      className="modal-close-button"
-                      whileHover={{ 
-                        background: 'var(--primary-color)',
-                        borderColor: 'var(--primary-color)'
-                      }}
-                    >
-                      <X size={20} color="var(--text-primary)" />
-                    </motion.button>
-                    
-                    <div className="modal-header-content">
-                      <div className="modal-course-image">
-                        <img 
-                          src={selectedCourse.image} 
-                          alt={selectedCourse.title}
-                        />
-                      </div>
-                      
-                      <div className="modal-header-info">
-                        <h3 className="modal-course-title">
-                          {selectedCourse.title}
-                        </h3>
-                        
-                        <div className="modal-course-meta">
-                          <div className="course-detail-item">
-                            <Clock size={16} />
-                            <span>{selectedCourse.duration}</span>
-                          </div>
-                          <div className="course-detail-item">
-                            <Users size={16} />
-                            <span>{selectedCourse.tutor}</span>
-                          </div>
-                          <div className="level-badge">
-                            {selectedCourse.level}
-                          </div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                  transition={{ type: "spring", damping: 25 }}
+                  className="modal-content debug-modal"
+                >
+                  <button
+                    onClick={closeCourseModal}
+                    className="modal-close-button debug-close"
+                  >
+                    <X size={24} />
+                  </button>
+                  
+                  <div className="modal-scrollable">
+                    <div className="modal-header">
+                      <div className="modal-header-content">
+
+
+                        {/* <div className="modal-course-image">
+                          <img 
+                            src={selectedCourse.image} 
+                            alt={selectedCourse.title}
+                          />
                         </div>
                         
-                        <p className="course-description">
-                          {selectedCourse.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                        <div className="modal-header-info">
+                          <h3 className="modal-course-title">
+                            {selectedCourse.title}
+                          </h3>
+                          
+                          <div className="modal-course-meta">
+                            <div className="course-detail-item">
+                              <Clock size={16} />
+                              <span>{selectedCourse.duration}</span>
+                            </div>
+                            <div className="course-detail-item">
+                              <Users size={16} />
+                              <span>{selectedCourse.tutor}</span>
+                            </div>
+                            <div className="level-badge">
+                              {selectedCourse.level}
+                            </div>
+                          </div>
+                          
+                          <p className="modal-course-description">
+                            {selectedCourse.description}
+                          </p>
+                        </div> */}
 
-                  <div className="modal-body">
-                    <div className="modal-tabs">
-                      {[
-                        { key: 'about', label: 'About Course', icon: BookOpen },
-                        { key: 'learn', label: 'What You\'ll Learn', icon: Target },
-                        { key: 'opportunities', label: 'Opportunities', icon: Briefcase }
-                      ].map((tab) => (
-                        <motion.button
-                          key={tab.key}
-                          onClick={() => setActiveTab(tab.key)}
-                          className={`modal-tab-button ${activeTab === tab.key ? 'active' : ''}`}
-                          whileHover={{ 
-                            backgroundColor: activeTab === tab.key 
-                              ? 'var(--primary-color)'
-                              : 'var(--hover-color)'
-                          }}
-                        >
-                          <tab.icon size={16} />
-                          {tab.label}
-                        </motion.button>
-                      ))}
-                    </div>
-
-                    <div className="tab-content">
-                      {getTabContent(selectedCourse, activeTab)}
-                    </div>
-
-                    <div className="modal-features">
-                      <h4 className="modal-features-title">
-                        Course Features:
-                      </h4>
-                      <div className="modal-features-list">
-                        {selectedCourse.features.map((feature, idx) => (
-                          <motion.span 
-                            key={idx}
-                            whileHover={{ scale: 1.05 }}
-                            className="modal-feature-tag"
-                          >
-                            {feature}
-                          </motion.span>
-                        ))}
+                          <div className="modal-tabs">
+                          {[
+                            { key: 'about', label: 'About Course', icon: BookOpen },
+                            { key: 'learn', label: 'What You\'ll Learn', icon: Target },
+                            { key: 'opportunities', label: 'Opportunities', icon: Briefcase }
+                          ].map((tab) => (
+                            <button
+                              key={tab.key}
+                              onClick={() => setActiveTab(tab.key)}
+                              className={`modal-tab-button ${activeTab === tab.key ? 'active' : ''}`}
+                            >
+                              <tab.icon size={16} />
+                              {tab.label}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="modal-price-section">
-                      <div className="modal-price-info">
-                        {(() => {
-                          const original = parsePrice(selectedCourse.price);
-                          const discounted = Math.round((original + 10000) * 0.7);
-                          return (
-                            <>
-                              <span className="modal-original-price">
-                                {formatPrice(original + 10000)}
-                              </span>
-                              <span className="modal-discounted-price">
-                                {formatPrice(discounted)}
-                              </span>
-                              <div className="modal-discount-badge">
-                                30% OFF
-                              </div>
-                            </>
-                          );
-                        })()}
-                      </div>
+                    <div className="modal-body">
                       
-                      <div className="modal-actions">
-                        <motion.button
-                          onClick={closeCourseModal}
-                          className="modal-close-action"
-                          whileHover={{ 
-                            background: 'var(--hover-color)',
-                            transform: 'translateY(-2px)'
-                          }}
-                        >
-                          Close
-                        </motion.button>
+
+                      <div className="tab-content">
+                        {getTabContent(selectedCourse, activeTab)}
+                      </div>
+
+                      <div className="modal-features">
+                        <h4 className="modal-features-title">
+                          Course Features:
+                        </h4>
+                        <div className="modal-features-list">
+                          {selectedCourse.features.map((feature, idx) => (
+                            <span 
+                              key={idx}
+                              className="modal-feature-tag"
+                            >
+                              {feature}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="modal-price-section">
+                        <div className="modal-price-info">
+                          {(() => {
+                            const original = parsePrice(selectedCourse.price);
+                            const discounted = Math.round((original + 10000) * 0.7);
+                            return (
+                              <>
+                                <span className="modal-original-price">
+                                  {formatPrice(original + 10000)}
+                                </span>
+                                <span className="modal-discounted-price">
+                                  {formatPrice(discounted)}
+                                </span>
+                                <div className="modal-discount-badge">
+                                  30% OFF
+                                </div>
+                              </>
+                            );
+                          })()}
+                        </div>
                         
-                        <motion.a 
-                          className="btn-primary modal-enroll-button"
-                          whileHover={{ 
-                            scale: 1.05,
-                            background: 'var(--secondary-color)',
-                            boxShadow: '0 4px 12px rgba(var(--primary-color-rgb), 0.3)'
-                          }}
-                          whileTap={{ scale: 0.95 }}
-                          href='/#contact'
-                        >
-                          Enroll Now
-                        </motion.a>
+                        <div className="modal-actions">
+                          <button
+                            onClick={closeCourseModal}
+                            className="modal-close-action"
+                          >
+                            Close
+                          </button>
+                          
+                          <a 
+                            className="btn-primary modal-enroll-button"
+                            href='/#contact'
+                            onClick={closeCourseModal}
+                          >
+                            Enroll Now
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            </>
+                </motion.div>
+              </div>
+            </div>
           )}
         </AnimatePresence>
 
         {/* Show active category info */}
-        {activeCategory !== 'All' && (
+        {activeCategory !== 'All' && filteredCourses.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
