@@ -14,7 +14,8 @@ import TutorProfile from './pages/TutorProfile';
 import Blog from '../src/pages/Blog'; // Add this import
 import BlogPost from './pages/BlogPost'; // We'll create this next
 import { BlogProvider } from './context/BlogContext'; // Add this import
-import Enroll from './sections/Enroll';
+import Subscribe from './sections/Subscribe';
+import Enrollment from './pages/Enrollment';
 
 function HomePage() {
   return (
@@ -26,7 +27,7 @@ function HomePage() {
       <Gallery />
       <Achievements />
       <Contact />
-      <Enroll/>
+      <Subscribe/>
     </>
   );
 }
@@ -45,6 +46,7 @@ function App() {
               <Route path="/tutor/:id" element={<TutorProfile />} />
               <Route path="/blog" element={<Blog />} /> {/* Blog listing page */}
               <Route path="/blog/:id" element={<BlogPost />} /> {/* Individual post page */}
+              <Route path="/enroll" element={<Enrollment/>}/>
             </Routes>
           </main>
           <Footer />

@@ -306,7 +306,7 @@ const Courses = () => {
                   
                   <a 
                     className="btn-primary enroll-button"
-                    href='/#contact'
+                    href='/enroll'
                   >
                     Enroll Now
                   </a>
@@ -451,7 +451,7 @@ const Courses = () => {
                           
                           <a 
                             className="btn-primary modal-enroll-button"
-                            href='/#contact'
+                            href='/enroll'
                             onClick={closeCourseModal}
                           >
                             Enroll Now

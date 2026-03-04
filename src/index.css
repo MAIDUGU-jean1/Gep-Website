@@ -6,6 +6,7 @@
 
 :root {
   --primary-color: goldenrod;
+  --primary-color-rgb: 218, 165, 32;
   --secondary-color: #1a365d;
   --accent-color: #2d3748;
   --text-light: #2d3748;
