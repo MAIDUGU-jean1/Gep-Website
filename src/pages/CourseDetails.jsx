@@ -40,10 +40,8 @@ const CourseDetails = () => {
         const handleResize = () => {
             if (window.innerWidth < 640) {
                 setItemsPerSlide(1);
-            } else if (window.innerWidth < 1024) {
-                setItemsPerSlide(2);
             } else {
-                setItemsPerSlide(3);
+                setItemsPerSlide(1);
             }
         };
 
@@ -63,10 +61,13 @@ const CourseDetails = () => {
         return () => clearInterval(interval);
     }, [isAutoPlaying, totalSlides, otherCourses.length]);
 
-    // Reset slide when items per slide changes
-    useEffect(() => {
-        setCurrentSlide(0);
-    }, [itemsPerSlide]);
+    // Handle tab click - accordion style (only one open at a time)
+    const handleTabClick = (tabKey) => {
+        setActiveTab(activeTab === tabKey ? null : tabKey);
+    };
+
+    // Get first 4 courses for static display and remaining for slider
+    const sliderCourses = otherCourses.slice(4);
 
     const goToSlide = useCallback((index) => {
         setCurrentSlide(index);
@@ -221,13 +222,13 @@ const CourseDetails = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                            <button
-                                onClick={() => navigate('/#courses')}
-                                className="back-button"
-                            >
-                                <ArrowLeft size={20} />
-                                <span>Go Back</span>
-                            </button>
+                        <button
+                            onClick={() => navigate('/#courses')}
+                            className="back-button"
+                        >
+                            <ArrowLeft size={20} />
+                            <span>Go Back</span>
+                        </button>
 
                     </motion.div>
 
@@ -327,36 +328,40 @@ const CourseDetails = () => {
                                 { key: 'learn', label: "What You'll Learn", icon: Target },
                                 { key: 'opportunities', label: 'Opportunities', icon: Briefcase }
                             ].map((tab) => (
-                                <motion.button
-                                    key={tab.key}
-                                    onClick={() => setActiveTab(tab.key)}
-                                    className={`tab-button ${activeTab === tab.key ? 'active' : ''}`}
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <tab.icon size={18} />
-                                    {tab.label}
-                                </motion.button>
+                                <motion.div key={tab.key} className="tab-item">
+                                    <motion.button
+                                        onClick={() => handleTabClick(tab.key)}
+                                        className={`tab-button ${activeTab === tab.key ? 'active' : ''}`}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
+                                        <tab.icon size={18} />
+                                        {tab.label}
+                                        <span className={`tab-arrow ${activeTab === tab.key ? 'open' : ''}`}>▼</span>
+                                    </motion.button>
+                                    <AnimatePresence>
+                                        {activeTab === tab.key && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="tab-content-wrapper"
+                                            >
+                                                <div className="tab-content">
+                                                    {getTabContent(mainCourse, tab.key)}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.div>
                             ))}
                         </div>
-
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeTab}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.3 }}
-                                className="tab-content"
-                            >
-                                {getTabContent(mainCourse, activeTab)}
-                            </motion.div>
-                        </AnimatePresence>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Other Courses Slider Section */}
+            {/* Other Courses Section */}
             <section className="other-courses-section">
                 <div className="other-courses-container">
                     <motion.div
@@ -371,124 +376,129 @@ const CourseDetails = () => {
                         </p>
                     </motion.div>
 
-                    {/* Slider */}
-                    <div
-                        className="courses-slider"
-                        onMouseEnter={() => setIsAutoPlaying(false)}
-                        onMouseLeave={() => setIsAutoPlaying(true)}
-                    >
-                        <motion.button
-                            className="slider-arrow slider-arrow-left"
-                            onClick={prevSlide}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            aria-label="Previous slide"
-                        >
-                            <ChevronLeft size={32} />
-                        </motion.button>
-
-                        <div className="slider-viewport">
+                  
+                    {/* Slider - Remaining Courses */}
+                    {sliderCourses.length > 0 && (
+                        <>
                             <div
-                                className="slider-track"
-                                style={{
-                                    transform: `translateX(-${currentSlide * (100 / itemsPerSlide)}%)`
-                                }}
+                                className="courses-slider"
+                                onMouseEnter={() => setIsAutoPlaying(false)}
+                                onMouseLeave={() => setIsAutoPlaying(true)}
                             >
-                                {otherCourses.map((course, index) => (
-                                    <motion.div
-                                        key={course.id}
-                                        className="slider-item"
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: index * 0.1 }}
+                                <motion.button
+                                    className="slider-arrow slider-arrow-left"
+                                    onClick={prevSlide}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    aria-label="Previous slide"
+                                >
+                                    <ChevronLeft size={32} />
+                                </motion.button>
+
+                                <div className="slider-viewport">
+                                    <div
+                                        className="slider-track"
+                                        style={{
+                                            transform: `translateX(-${currentSlide * 100}%)`
+                                        }}
                                     >
-                                        <div className="slider-course-card">
-                                            <div className="slider-course-image">
-                                                <img
-                                                    src={course.image}
-                                                    alt={course.title}
-                                                />
-                                                <div className="level-badge">
-                                                    {course.level}
-                                                </div>
-                                            </div>
-
-                                            <div className="slider-course-info">
-                                                <h3 className="slider-course-title">{course.title}</h3>
-                                                <p className="slider-course-description">{course.description}</p>
-
-                                                <div className="slider-course-meta">
-                                                    <div className="meta-item">
-                                                        <Clock size={14} />
-                                                        <span>{course.duration}</span>
+                                        {sliderCourses.map((course, index) => (
+                                            <motion.div
+                                                key={course.id}
+                                                className="slider-item"
+                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                transition={{ delay: index * 0.1 }}
+                                            >
+                                                <div className="slider-course-card">
+                                                    <div className="slider-course-image">
+                                                        <img
+                                                            src={course.image}
+                                                            alt={course.title}
+                                                        />
+                                                        <div className="level-badge">
+                                                            {course.level}
+                                                        </div>
                                                     </div>
-                                                    <div className="meta-item">
-                                                        <Users size={14} />
-                                                        <span>{course.tutor}</span>
+
+                                                    <div className="slider-course-info">
+                                                        <h3 className="slider-course-title">{course.title}</h3>
+                                                        <p className="slider-course-description">{course.description}</p>
+
+                                                        <div className="slider-course-meta">
+                                                            <div className="meta-item">
+                                                                <Clock size={14} />
+                                                                <span>{course.duration}</span>
+                                                            </div>
+                                                            <div className="meta-item">
+                                                                <Users size={14} />
+                                                                <span>{course.tutor}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="slider-course-features">
+                                                            {course.features.slice(0, 2).map((feature, idx) => (
+                                                                <span key={idx} className="mini-feature-tag">
+                                                                    {feature}
+                                                                </span>
+                                                            ))}
+                                                            {course.features.length > 2 && (
+                                                                <span className="more-features">+{course.features.length - 2}</span>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="slider-course-price">
+                                                            {(() => {
+                                                                const original = parsePrice(course.price);
+                                                                const discounted = Math.round((original + 10000) * 0.7);
+                                                                return (
+                                                                    <span className="slider-discounted-price">
+                                                                        {formatPrice(discounted)}
+                                                                    </span>
+                                                                );
+                                                            })()}
+                                                        </div>
+
+                                                        <motion.button
+                                                            className="view-course-btn"
+                                                            onClick={() => handleCourseClick(course.id)}
+                                                            whileHover={{ scale: 1.02 }}
+                                                            whileTap={{ scale: 0.98 }}
+                                                        >
+                                                            <BookOpen size={16} />
+                                                            View Course
+                                                        </motion.button>
                                                     </div>
                                                 </div>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </div>
 
-                                                <div className="slider-course-features">
-                                                    {course.features.slice(0, 2).map((feature, idx) => (
-                                                        <span key={idx} className="mini-feature-tag">
-                                                            {feature}
-                                                        </span>
-                                                    ))}
-                                                    {course.features.length > 2 && (
-                                                        <span className="more-features">+{course.features.length - 2}</span>
-                                                    )}
-                                                </div>
+                                <motion.button
+                                    className="slider-arrow slider-arrow-right"
+                                    onClick={nextSlide}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    aria-label="Next slide"
+                                >
+                                    <ChevronRight size={32} />
+                                </motion.button>
+                            </div>
 
-                                                <div className="slider-course-price">
-                                                    {(() => {
-                                                        const original = parsePrice(course.price);
-                                                        const discounted = Math.round((original + 10000) * 0.7);
-                                                        return (
-                                                            <span className="slider-discounted-price">
-                                                                {formatPrice(discounted)}
-                                                            </span>
-                                                        );
-                                                    })()}
-                                                </div>
-
-                                                <motion.button
-                                                    className="view-course-btn"
-                                                    onClick={() => handleCourseClick(course.id)}
-                                                    whileHover={{ scale: 1.02 }}
-                                                    whileTap={{ scale: 0.98 }}
-                                                >
-                                                    <BookOpen size={16} />
-                                                    View Course
-                                                </motion.button>
-                                            </div>
-                                        </div>
-                                    </motion.div>
+                            {/* Slide Indicators */}
+                            <div className="slider-indicators">
+                                {Array.from({ length: totalSlides }).map((_, index) => (
+                                    <button
+                                        key={index}
+                                        className={`indicator ${currentSlide === index ? 'active' : ''}`}
+                                        onClick={() => goToSlide(index)}
+                                        aria-label={`Go to slide ${index + 1}`}
+                                    />
                                 ))}
                             </div>
-                        </div>
-
-                        <motion.button
-                            className="slider-arrow slider-arrow-right"
-                            onClick={nextSlide}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            aria-label="Next slide"
-                        >
-                            <ChevronRight size={32} />
-                        </motion.button>
-                    </div>
-
-                    {/* Slide Indicators */}
-                    <div className="slider-indicators">
-                        {Array.from({ length: totalSlides }).map((_, index) => (
-                            <button
-                                key={index}
-                                className={`indicator ${currentSlide === index ? 'active' : ''}`}
-                                onClick={() => goToSlide(index)}
-                                aria-label={`Go to slide ${index + 1}`}
-                            />
-                        ))}
-                    </div>
+                        </>
+                    )}
                 </div>
             </section>
         </div>

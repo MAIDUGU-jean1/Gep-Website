@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Clock, Users, BookOpen, Target, Briefcase, X } from "lucide-react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Clock, Users, BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { courses } from "../data/courses";
@@ -10,8 +10,6 @@ const Courses = () => {
   const navigate = useNavigate();
 
   const [activeCategory, setActiveCategory] = useState("All");
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [activeTab, setActiveTab] = useState("about");
 
   /* ------------------------------------------------ */
   /* CATEGORY CONFIGURATION */
@@ -40,33 +38,6 @@ const Courses = () => {
   const categories = ["All", "Tech", "Design", "Business", "Development"];
 
   /* ------------------------------------------------ */
-  /* EFFECTS */
-  /* ------------------------------------------------ */
-
-  useEffect(() => {
-    console.log(
-      "Modal state:",
-      selectedCourse ? "OPEN" : "CLOSED",
-      selectedCourse
-    );
-  }, [selectedCourse]);
-
-  useEffect(() => {
-    if (selectedCourse) {
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-    };
-  }, [selectedCourse]);
-
-  /* ------------------------------------------------ */
   /* HELPERS */
   /* ------------------------------------------------ */
 
@@ -93,77 +64,8 @@ const Courses = () => {
     activeCategory === "All"
       ? courses
       : courses.filter((course) =>
-          courseCategories[activeCategory]?.includes(course.title)
-        );
-
-  /* ------------------------------------------------ */
-  /* MODAL HANDLERS */
-  /* ------------------------------------------------ */
-
-  const openCourseModal = (course) => {
-    setSelectedCourse(course);
-    setActiveTab("about");
-  };
-
-  const closeCourseModal = () => {
-    setSelectedCourse(null);
-  };
-
-  /* ------------------------------------------------ */
-  /* TAB CONTENT */
-  /* ------------------------------------------------ */
-
-  const getTabContent = (course, tab) => {
-    const tabContent = {
-      about: (
-        <div>
-          <p className="tab-content-text">
-            {course.detailedDescription || course.description}
-          </p>
-
-          <div className="tab-about-details">
-            <div className="tab-detail-item">
-              <Clock size={18} />
-              <span>{course.about}</span>
-            </div>
-          </div>
-        </div>
-      ),
-
-      learn: (
-        <ul className="tab-list">
-          {course.learns.map((learn, idx) => (
-            <li key={idx} className="tab-list-item">
-              {learn}
-            </li>
-          ))}
-        </ul>
-      ),
-
-      opportunities: (
-        <div>
-          <p className="tab-content-text">
-            Upon completion of this course, you'll be prepared for:
-          </p>
-
-          <ul className="tab-list">
-            {(course.opportunities || [
-              "Industry-recognized certification",
-              "Career advancement opportunities",
-              "Real-world project portfolio",
-              "Networking with professionals",
-            ]).map((opportunity, idx) => (
-              <li key={idx} className="tab-list-item">
-                {opportunity}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ),
-    };
-
-    return tabContent[tab] || tabContent.about;
-  };
+        courseCategories[activeCategory]?.includes(course.title)
+      );
 
   /* ------------------------------------------------ */
   /* COMPONENT UI */
@@ -205,9 +107,8 @@ const Courses = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setActiveCategory(category)}
-              className={`category-button ${
-                activeCategory === category ? "active" : ""
-              }`}
+              className={`category-button ${activeCategory === category ? "active" : ""
+                }`}
             >
               {category}{" "}
               {category !== "All" &&
@@ -294,7 +195,7 @@ const Courses = () => {
 
                 <div className="course-actions">
                   <motion.button
-                    onClick={() => openCourseModal(course)}
+                    onClick={() => navigate(`/course/${course.id}`)}
                     className="course-details-button"
                   >
                     <BookOpen size={16} />
@@ -312,71 +213,6 @@ const Courses = () => {
             </motion.div>
           ))}
         </div>
-
-        {/* MODAL */}
-
-        <AnimatePresence>
-          {selectedCourse && (
-            <>
-              <motion.div
-                className="modal-backdrop"
-                onClick={closeCourseModal}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              />
-
-              <motion.div
-                className="modal-content"
-                onClick={(e) => e.stopPropagation()}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-              >
-                <div className="modal-header">
-                  <button
-                    onClick={closeCourseModal}
-                    className="modal-close-button"
-                  >
-                    <X size={20} />
-                  </button>
-
-                  <h3>{selectedCourse.title}</h3>
-                </div>
-
-                <div className="modal-body">
-                  <div className="modal-tabs">
-                    {[
-                      { key: "about", label: "About", icon: BookOpen },
-                      { key: "learn", label: "What You'll Learn", icon: Target },
-                      {
-                        key: "opportunities",
-                        label: "Opportunities",
-                        icon: Briefcase,
-                      },
-                    ].map((tab) => (
-                      <button
-                        key={tab.key}
-                        onClick={() => setActiveTab(tab.key)}
-                        className={`modal-tab-button ${
-                          activeTab === tab.key ? "active" : ""
-                        }`}
-                      >
-                        <tab.icon size={16} />
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="tab-content">
-                    {getTabContent(selectedCourse, activeTab)}
-                  </div>
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-
       </div>
     </section>
   );
