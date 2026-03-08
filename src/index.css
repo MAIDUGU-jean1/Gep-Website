@@ -26,6 +26,7 @@
   --text-secondary: var(--secondary-color);
   --card-bg: var(--card-light);
   --border-color: #e2e8f0;
+  --hover-color: rgba(218, 165, 32, 0.1);
 }
 
 [data-theme="dark"] {
@@ -35,10 +36,11 @@
   --text-secondary: var(--primary-color);
   --card-bg: var(--card-dark);
   --border-color: #4a5568;
+  --hover-color: rgba(218, 165, 32, 0.2);
 }
 
 body {
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: all 0.3s ease;
@@ -96,7 +98,7 @@ body {
 }
 
 .section-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -10px;
   left: 50%;
@@ -141,7 +143,8 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {

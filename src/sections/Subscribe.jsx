@@ -14,9 +14,9 @@ const Subscribe = () => {
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
-    
+
     console.log('[DEBUG] Newsletter form submitted, email:', newsletterEmail);
-    
+
     if (!newsletterEmail.trim() || !subscriberName.trim() || !subscriberCountry.trim()) {
       console.log('[DEBUG] Missing required fields:', { newsletterEmail, subscriberName, subscriberCountry });
       setErrorMessage('Please fill in all required fields');
@@ -25,10 +25,10 @@ const Subscribe = () => {
     }
 
     setNewsletterLoading(true);
-    
+
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
-      
+
       if (!apiUrl) {
         throw new Error('API URL is not configured');
       }
@@ -65,10 +65,10 @@ const Subscribe = () => {
       }
     } catch (error) {
       console.error('[DEBUG] Subscription error caught:', error.message);
-      
+
       // Frontend-focused error handling - generate clear user-friendly messages
       let errorMsg = 'Failed to subscribe. Please try again.';
-      
+
       if (error.response) {
         if (error.response.status === 422) {
           const errors = error.response.data.errors || error.response.data.message;
@@ -97,11 +97,11 @@ const Subscribe = () => {
       } else {
         errorMsg = error.message;
       }
-      
+
       console.log('[DEBUG] Setting error message:', errorMsg);
       setErrorMessage(errorMsg);
       setSuccessMessage('');
-      
+
       setTimeout(() => {
         setErrorMessage('');
       }, 5000);
@@ -118,7 +118,7 @@ const Subscribe = () => {
       background: 'var(--bg-primary)'
     }}>
       <div className="container">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -130,12 +130,14 @@ const Subscribe = () => {
             Subscribe to our newsletter for updates, tips, and exclusive offers from Gep Protech Academy.
           </p>
         </motion.div>
-        
+
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
-          gap: '4rem',
-          alignItems: 'center'
+          gap: 'clamp(1.5rem, 4vw, 3rem)',
+          alignItems: 'center',
+          maxWidth: '1100px',
+          margin: '0 auto'
         }} className="subscribe-grid">
           {/* Left Side - Information */}
           <motion.div
@@ -151,7 +153,7 @@ const Subscribe = () => {
             <h3 style={{ fontSize: '2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
               Why Subscribe?
             </h3>
-            
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               {[
                 {
@@ -203,7 +205,7 @@ const Subscribe = () => {
             </div>
 
             {/* Benefits */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -247,7 +249,7 @@ const Subscribe = () => {
             viewport={{ once: true }}
             style={{
               background: 'linear-gradient(135deg, var(--primary-color) 0%, rgba(var(--primary-color-rgb), 0.8) 100%)',
-              padding: '3rem',
+              padding: 'clamp(1.5rem, 4vw, 2.5rem)',
               borderRadius: '20px',
               order: 2,
               boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)'
@@ -259,34 +261,34 @@ const Subscribe = () => {
               color: 'white'
             }}>
               <div style={{
-                width: '80px',
-                height: '80px',
+                width: '60px',
+                height: '60px',
                 background: 'rgba(255, 255, 255, 0.2)',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 1.5rem'
+                margin: '0 auto 1rem'
               }}>
-                <Mail size={40} color="white" />
+                <Mail size={28} color="white" />
               </div>
 
-              <h3 style={{ 
-                fontSize: '2rem', 
-                marginBottom: '1rem', 
+              <h3 style={{
+                fontSize: 'clamp(1.3rem, 3vw, 1.7rem)',
+                marginBottom: '0.75rem',
                 color: 'white',
                 fontWeight: 'bold'
               }}>
                 Subscribe Now
               </h3>
 
-              <p style={{ 
-                color: 'rgba(255, 255, 255, 0.9)', 
-                marginBottom: '2rem',
-                lineHeight: '1.6',
-                fontSize: '1.05rem'
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.9)',
+                marginBottom: '1.5rem',
+                lineHeight: '1.5',
+                fontSize: 'clamp(0.85rem, 2vw, 1rem)'
               }}>
-                Join thousands of students and professionals staying updated with the latest opportunities and insights from Gep Protech Academy.
+                Join thousands of students and professionals staying updated with the latest opportunities.
               </p>
 
               {(successMessage || errorMessage) && (
@@ -295,7 +297,7 @@ const Subscribe = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   style={{
-                    background: successMessage 
+                    background: successMessage
                       ? 'rgba(34, 197, 94, 0.95)'  // Green background for success
                       : 'rgba(239, 68, 68, 0.95)', // Red background for error
                     padding: '1rem',
@@ -326,33 +328,29 @@ const Subscribe = () => {
                 </motion.div>
               )}
 
-              <form onSubmit={handleNewsletterSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {/* Inline name & country fields (two columns) */}
-                <div style={{ 
-                  display: 'flex', 
-                  gap: '1rem', 
-                  flexWrap: 'nowrap', 
-                  alignItems: 'stretch',
-                  width: '100%'
+              <form onSubmit={handleNewsletterSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {/* Inline name & country fields (stacked on mobile, side by side on desktop) */}
+                <div style={{
+                  display: 'flex',
+                  gap: '0.75rem',
+                  flexWrap: 'wrap'
                 }}>
                   <input
                     type="text"
                     value={subscriberName}
-                    onChange={(e) => {
-                      console.log('[DEBUG] Name input changed:', e.target.value);
-                      setSubscriberName(e.target.value);
-                    }}
-                    placeholder="Enter your name"
+                    onChange={(e) => setSubscriberName(e.target.value)}
+                    placeholder="Your name"
                     required
                     disabled={newsletterLoading}
                     style={{
-                      flex: '1 1 50%',
-                      padding: '0.9rem',
+                      flex: '1 1 180px',
+                      minWidth: '140px',
+                      padding: '0.75rem 1rem',
                       border: 'none',
                       borderRadius: '10px',
                       background: 'white',
                       color: '#333',
-                      fontSize: '1rem',
+                      fontSize: '0.95rem',
                       transition: 'all 0.3s ease',
                       opacity: newsletterLoading ? 0.7 : 1
                     }}
@@ -361,26 +359,23 @@ const Subscribe = () => {
                   <input
                     type="text"
                     value={subscriberCountry}
-                    onChange={(e) => {
-                      console.log('[DEBUG] Country input changed:', e.target.value);
-                      setSubscriberCountry(e.target.value);
-                    }}
-                    placeholder="Enter your country"
+                    onChange={(e) => setSubscriberCountry(e.target.value)}
+                    placeholder="Your country"
                     required
                     disabled={newsletterLoading}
                     style={{
-                      flex: '1 1 50%',
-                      padding: '0.9rem',
+                      flex: '1 1 180px',
+                      minWidth: '140px',
+                      padding: '0.75rem 1rem',
                       border: 'none',
                       borderRadius: '10px',
                       background: 'white',
                       color: '#333',
-                      fontSize: '1rem',
+                      fontSize: '0.95rem',
                       transition: 'all 0.3s ease',
                       opacity: newsletterLoading ? 0.7 : 1
                     }}
                   />
-
                 </div>
 
                 <div style={{
@@ -388,22 +383,22 @@ const Subscribe = () => {
                   gap: '0.5rem',
                   flexWrap: 'wrap'
                 }}>
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     disabled={newsletterLoading}
                     required
-                    placeholder="Enter your email address"
+                    placeholder="Your email address"
                     style={{
                       flex: 1,
-                      minWidth: '200px',
-                      padding: '1rem',
+                      minWidth: '180px',
+                      padding: '0.75rem 1rem',
                       border: 'none',
                       borderRadius: '10px',
                       background: 'white',
                       color: '#333',
-                      fontSize: '1rem',
+                      fontSize: '0.95rem',
                       transition: 'all 0.3s ease',
                       opacity: newsletterLoading ? 0.7 : 1
                     }}
@@ -417,16 +412,17 @@ const Subscribe = () => {
                       background: 'white',
                       color: 'var(--primary-color)',
                       border: 'none',
-                      padding: '1rem 2rem',
+                      padding: '0.75rem 1.5rem',
                       borderRadius: '10px',
-                      fontSize: '1rem',
+                      fontSize: '0.95rem',
                       fontWeight: 'bold',
                       cursor: newsletterLoading ? 'not-allowed' : 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.5rem',
                       transition: 'all 0.3s ease',
-                      opacity: newsletterLoading ? 0.7 : 1
+                      opacity: newsletterLoading ? 0.7 : 1,
+                      whiteSpace: 'nowrap'
                     }}
                   >
                     {newsletterLoading ? (
@@ -434,18 +430,18 @@ const Subscribe = () => {
                     ) : (
                       <>
                         Subscribe
-                        <ArrowRight size={18} />
+                        <ArrowRight size={16} />
                       </>
                     )}
                   </motion.button>
                 </div>
 
                 <p style={{
-                  fontSize: '0.85rem',
+                  fontSize: '0.8rem',
                   color: 'rgba(255, 255, 255, 0.7)',
-                  marginTop: '1rem'
+                  marginTop: '0.5rem'
                 }}>
-                  We respect your privacy. No spam, just valuable updates.
+                  No spam, just valuable updates.
                 </p>
               </form>
 
@@ -455,28 +451,28 @@ const Subscribe = () => {
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 style={{
-                  marginTop: '2.5rem',
-                  paddingTop: '2rem',
+                  marginTop: '1.5rem',
+                  paddingTop: '1.5rem',
                   borderTop: '1px solid rgba(255, 255, 255, 0.2)',
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr',
-                  gap: '2rem',
+                  gap: '1rem',
                   textAlign: 'center'
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-                    5000+
+                  <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 'bold', marginBottom: '0.25rem' }}>
+                    50+
                   </div>
-                  <p style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                  <p style={{ fontSize: 'clamp(0.75rem, 1.5vw, 0.9rem)', color: 'rgba(255, 255, 255, 0.8)' }}>
                     Active Subscribers
                   </p>
                 </div>
                 <div>
-                  <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                  <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 'bold', marginBottom: '0.25rem' }}>
                     100%
                   </div>
-                  <p style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                  <p style={{ fontSize: 'clamp(0.75rem, 1.5vw, 0.9rem)', color: 'rgba(255, 255, 255, 0.8)' }}>
                     Value Guaranteed
                   </p>
                 </div>

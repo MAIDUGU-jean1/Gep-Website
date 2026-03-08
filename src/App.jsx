@@ -16,6 +16,7 @@ import BlogPost from './pages/BlogPost'; // We'll create this next
 import { BlogProvider } from './context/BlogContext'; // Add this import
 import Subscribe from './sections/Subscribe';
 import Enrollment from './pages/Enrollment';
+import CourseDetails from './pages/CourseDetails';
 
 function HomePage() {
   return (
@@ -47,6 +48,7 @@ function App() {
               <Route path="/blog" element={<Blog />} /> {/* Blog listing page */}
               <Route path="/blog/:id" element={<BlogPost />} /> {/* Individual post page */}
               <Route path="/enroll" element={<Enrollment/>}/>
+              <Route path="/course/:id" element={<CourseDetails />} />
             </Routes>
           </main>
           <Footer />

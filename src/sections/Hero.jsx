@@ -101,7 +101,7 @@ const Hero = () => {
                 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                href='#enroll'
+                href='/enroll'
                 // onClick={openVideo}
               >
                 {/* <Play size={20} /> */}
