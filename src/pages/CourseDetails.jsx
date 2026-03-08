@@ -308,6 +308,7 @@ const CourseDetails = () => {
                                     className="btn-primary enroll-btn"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
+                                    onClick={()=> navigate('/enroll')}
                                 >
                                     Enroll Now
                                 </motion.button>
