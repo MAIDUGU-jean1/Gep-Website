@@ -17,6 +17,7 @@ import { BlogProvider } from './context/BlogContext'; // Add this import
 import Subscribe from './sections/Subscribe';
 import Enrollment from './pages/Enrollment';
 import CourseDetails from './pages/CourseDetails';
+import DiscountCountdown from './components/DiscountCountdown';
 
 function HomePage() {
   return (
@@ -28,7 +29,7 @@ function HomePage() {
       <Gallery />
       <Achievements />
       <Contact />
-      <Subscribe/>
+      <Subscribe />
     </>
   );
 }
@@ -47,11 +48,12 @@ function App() {
               <Route path="/tutor/:id" element={<TutorProfile />} />
               <Route path="/blog" element={<Blog />} /> {/* Blog listing page */}
               <Route path="/blog/:id" element={<BlogPost />} /> {/* Individual post page */}
-              <Route path="/enroll" element={<Enrollment/>}/>
+              <Route path="/enroll" element={<Enrollment />} />
               <Route path="/course/:id" element={<CourseDetails />} />
             </Routes>
           </main>
           <Footer />
+          <DiscountCountdown />
         </div>
       </Router>
     </BlogProvider>
