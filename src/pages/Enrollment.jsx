@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Mail, Phone, MapPin, Clock, Users, GraduationCap, 
-  CheckCircle, User, Briefcase, BookOpen, ArrowRight, 
+import {
+  Mail, Phone, MapPin, Clock, Users, GraduationCap,
+  CheckCircle, User, Briefcase, BookOpen, ArrowRight,
   ArrowLeft, Award, Check, Lock, ChevronRight, Home,
   School, MessageSquare
 } from 'lucide-react';
 import axios from 'axios';
-import emailjs from '@emailjs/browser';
 
 const Enrollment = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -16,15 +15,18 @@ const Enrollment = () => {
     name: '',
     email: '',
     contact: '',
-    
+
     // Step 2: Academic Info
     education: '',
     educationOther: '',
     occupation: '',
-    
+
     // Step 3: Course Selection & Career Goal
     courses: [],
     careerGoal: '',
+
+    // Enrollment Type
+    enrollmentType: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -80,10 +82,11 @@ const Enrollment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
+
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
-      
+
       if (!apiUrl) {
         throw new Error('API URL is not configured');
       }
@@ -98,22 +101,42 @@ const Enrollment = () => {
         // send courses as an array so backend validation (array) passes
         courses: formData.courses,
         message: formData.careerGoal
+        
+
       };
 
+      // Debug: Log what's being sent
+      console.log('=== DEBUG INFO ===');
+      console.log('API URL:', apiUrl);
+      console.log('Enrollment Type:', formData.enrollmentType);
+      console.log('Form Data:', formData);
+      console.log('Enrollment Data:', enrollmentData);
+
       // Submit to database
-      const dbResult = await axios.post(`${apiUrl}/public-enrollment`, enrollmentData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
+      if (formData.enrollmentType === 'bootcamp') {
+        enrollmentData.enrollment_type = 'bootcamp';
+      } else if (formData.enrollmentType === 'enrollment') {
+        enrollmentData.enrollment_type = 'enrollment';
+      }
+
+      const endpoint = formData.enrollmentType === 'enrollment' ? 'public-enrollment' : 'bootcamp-application';
+      console.log('Endpoint:', endpoint);
+      console.log('Full URL:', `${apiUrl}/${endpoint}`);
+
+      const dbResult =
+        await axios.post(`${apiUrl}/${endpoint}`, enrollmentData, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        });
 
       if (dbResult.data && dbResult.data.success) {
         setEmailSent(true);
-        
+
         // Check if backend email notification was sent successfully
         const emailNotificationSent = dbResult.data.email_sent !== false;
-        
+
         // Create WhatsApp message
         const whatsappMessage = `
 New Enrollment Request from Gep Protech Website:
@@ -135,7 +158,7 @@ Sent from Gep Protech Academic Website
         const encodedMessage = encodeURIComponent(whatsappMessage);
         const phoneNumber = '237674386778';
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-        
+
         // Build success message with email notification status
         let successMessage = `✅ Your enrollment has been saved successfully!\n\n`;
         if (!emailNotificationSent) {
@@ -144,20 +167,21 @@ Sent from Gep Protech Academic Website
           successMessage += `📧 Admin team has been notified via email.\n\n`;
         }
         successMessage += `📱 You'll now be redirected to WhatsApp.`;
-        
+
         alert(successMessage);
-        
+
         setTimeout(() => {
           window.open(whatsappUrl, '_blank');
           setTimeout(() => {
             setShowGroupPopup(true);
           }, 1000);
         }, 1500);
-        
+
         // Reset form
-        setFormData({ 
-          name: '', email: '', contact: '', courses: [], 
-          careerGoal: '', education: '', educationOther: '', occupation: '' 
+        setFormData({
+          name: '', email: '', contact: '', courses: [],
+          careerGoal: '', education: '', educationOther: '', occupation: '',
+          enrollmentType: ''
         });
         setCurrentStep(1);
       } else {
@@ -165,34 +189,42 @@ Sent from Gep Protech Academic Website
       }
     } catch (error) {
       console.error('Error:', error);
-      
+
       // Handle axios error response
       let errorMessage = 'There was an error. Please try again.';
-      
+
+      // Debug: Log full error details to console
+      console.log('Error Details:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers
+      });
+
       if (error.response) {
         // Server responded with error status
-        if (error.response.status === 422) {
-          // Validation errors
-          const errors = error.response.data.errors || error.response.data.message;
-          if (typeof errors === 'object') {
-            errorMessage = 'Validation Error:\n' + Object.entries(errors)
-              .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages[0] : messages}`)
-              .join('\n');
-          } else {
-            errorMessage = `Validation Error: ${errors}`;
-          }
-        } else if (error.response.status === 500) {
-          errorMessage = 'Server Error: Please contact support';
-        } else {
-          errorMessage = error.response.data?.message || `Error: ${error.response.statusText}`;
+        const serverMessage = error.response.data?.message || error.response.data?.error || JSON.stringify(error.response.data);
+        const status = error.response.status;
+        const statusText = error.response.statusText;
+
+        errorMessage = `Server Error (${status} ${statusText}):\n${serverMessage}`;
+
+        // Add validation errors if present
+        if (error.response.data?.errors) {
+          errorMessage += '\n\nValidation Errors:';
+          Object.entries(error.response.data.errors).forEach(([field, messages]) => {
+            errorMessage += `\n- ${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`;
+          });
         }
       } else if (error.request) {
-        errorMessage = 'No response from server. Please check your connection.';
+        errorMessage = 'No response from server. Please check your connection.\n\n' +
+          'Make sure the API server is running at: ' + import.meta.env.VITE_API_URL;
       } else {
-        errorMessage = error.message;
+        errorMessage = 'Error: ' + error.message;
       }
-      
-      alert(`❌ ${errorMessage}`);
+
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -232,7 +264,7 @@ Sent from Gep Protech Academic Website
   };
 
   const isStepValid = () => {
-    switch(currentStep) {
+    switch (currentStep) {
       case 1:
         return formData.name && formData.email && formData.contact;
       case 2:
@@ -260,12 +292,12 @@ Sent from Gep Protech Academic Website
     }}>
       <div className="container" style={{ width: '100%' }}>
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          style={{ 
-            textAlign: 'center', 
+          style={{
+            textAlign: 'center',
             marginBottom: 'clamp(2rem, 5vw, 3rem)',
             padding: '0 1rem'
           }}
@@ -292,8 +324,69 @@ Sent from Gep Protech Academic Website
             Enroll at Gep Protech
           </h2>
           <p className="section-subtitle" style={{ maxWidth: '600px', margin: '0 auto' }}>
-            Complete the steps below to begin your journey with us. Your information is secure and will be sent to our team.
+            <a href="#" onClick={(e) => e.preventDefault()} style={{ color: 'var(--primary-color)', textDecoration: 'none', fontWeight: '600' }}>
+              Choose the section below to enroll or apply for :
+            </a>
           </p>
+          {/* Enrollment Type Radio Buttons */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '2rem',
+            marginTop: '1.5rem',
+            flexWrap: 'wrap'
+          }}>
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              cursor: 'pointer',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '10px',
+              border: formData.enrollmentType === 'bootcamp' ? '2px solid var(--primary-color)' : '2px solid var(--border-color)',
+              background: formData.enrollmentType === 'bootcamp' ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
+              transition: 'all 0.3s ease'
+            }}>
+              <input
+                type="radio"
+                name="enrollmentType"
+                value="bootcamp"
+                checked={formData.enrollmentType === 'bootcamp'}
+                onChange={handleChange}
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  accentColor: 'var(--primary-color)'
+                }}
+              />
+              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Bootcamp</span>
+            </label>
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              cursor: 'pointer',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '10px',
+              border: formData.enrollmentType === 'enrollment' ? '2px solid var(--primary-color)' : '2px solid var(--border-color)',
+              background: formData.enrollmentType === 'enrollment' ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
+              transition: 'all 0.3s ease'
+            }}>
+              <input
+                type="radio"
+                name="enrollmentType"
+                value="enrollment"
+                checked={formData.enrollmentType === 'enrollment'}
+                onChange={handleChange}
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  accentColor: 'var(--primary-color)'
+                }}
+              />
+              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Enrollment</span>
+            </label>
+          </div>
         </motion.div>
 
         {/* Progress Bar - Mobile Friendly */}
@@ -316,7 +409,7 @@ Sent from Gep Protech Academic Website
             gap: '1rem'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ 
+              <span style={{
                 background: 'var(--primary-color)',
                 color: 'white',
                 padding: '4px 12px',
@@ -327,18 +420,18 @@ Sent from Gep Protech Academic Website
                 Step {currentStep}/{steps.length}
               </span>
               <span style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>
-                {steps[currentStep-1].title}
+                {steps[currentStep - 1].title}
               </span>
             </div>
-            <span style={{ 
-              fontSize: '0.9rem', 
+            <span style={{
+              fontSize: '0.9rem',
               color: 'var(--text-primary)',
               opacity: 0.7
             }}>
               {Math.round(getProgressPercentage())}% Complete
             </span>
           </div>
-          
+
           {/* Progress Bar */}
           <div style={{
             width: '100%',
@@ -402,8 +495,8 @@ Sent from Gep Protech Academic Website
                 width: '30px',
                 height: '30px',
                 borderRadius: '50%',
-                background: index + 1 < currentStep ? 'var(--primary-color)' : 
-                          currentStep === step.number ? 'white' : 'var(--border-color)',
+                background: index + 1 < currentStep ? 'var(--primary-color)' :
+                  currentStep === step.number ? 'white' : 'var(--border-color)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -414,8 +507,8 @@ Sent from Gep Protech Academic Website
                   <step.icon size={14} color={currentStep === step.number ? 'var(--primary-color)' : 'var(--text-primary)'} />
                 )}
               </div>
-              <span style={{ 
-                fontSize: '0.7rem', 
+              <span style={{
+                fontSize: '0.7rem',
                 fontWeight: currentStep === step.number ? '600' : '400',
                 display: 'none',
                 '@media (min-width: 480px)': { display: 'block' }
@@ -461,19 +554,19 @@ Sent from Gep Protech Academic Website
                 {/* {steps[currentStep-1].icon({ size: 20 })} */}
               </div>
               <div>
-                <h3 style={{ 
-                  fontSize: '1.3rem', 
+                <h3 style={{
+                  fontSize: '1.3rem',
                   color: 'var(--text-secondary)',
                   marginBottom: '0.25rem'
                 }}>
-                  {steps[currentStep-1].title}
+                  {steps[currentStep - 1].title}
                 </h3>
-                <p style={{ 
-                  fontSize: '0.9rem', 
+                <p style={{
+                  fontSize: '0.9rem',
                   opacity: 0.7,
                   margin: 0
                 }}>
-                  {steps[currentStep-1].description}
+                  {steps[currentStep - 1].description}
                 </p>
               </div>
             </div>
@@ -497,8 +590,8 @@ Sent from Gep Protech Academic Website
                       <User size={16} style={{ marginRight: '0.5rem' }} />
                       Full Name *
                     </label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
@@ -514,8 +607,8 @@ Sent from Gep Protech Academic Website
                       <Mail size={16} style={{ marginRight: '0.5rem' }} />
                       Email Address *
                     </label>
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
@@ -531,7 +624,7 @@ Sent from Gep Protech Academic Website
                       <Phone size={16} style={{ marginRight: '0.5rem' }} />
                       WhatsApp Number *
                     </label>
-                    <input 
+                    <input
                       type="tel"
                       name="contact"
                       value={formData.contact}
@@ -605,8 +698,8 @@ Sent from Gep Protech Academic Website
                       <Briefcase size={16} style={{ marginRight: '0.5rem' }} />
                       Current Occupation
                     </label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="occupation"
                       value={formData.occupation}
                       onChange={handleChange}
@@ -622,7 +715,7 @@ Sent from Gep Protech Academic Website
                       <Briefcase size={16} style={{ marginRight: '0.5rem' }} />
                       Career Goal *
                     </label>
-                    <textarea 
+                    <textarea
                       name="careerGoal"
                       value={formData.careerGoal}
                       onChange={handleChange}
@@ -655,7 +748,7 @@ Sent from Gep Protech Academic Website
                       Select Courses of Interest * (Multiple)
                     </label>
                     <div style={{ position: 'relative' }}>
-                      <select 
+                      <select
                         name="courses"
                         value={formData.courses}
                         onChange={handleCourseChange}
@@ -682,7 +775,7 @@ Sent from Gep Protech Academic Website
                     <p style={helperTextStyle}>
                       Hold Ctrl (Cmd on Mac) to select multiple courses
                     </p>
-                    
+
                     {formData.courses.length > 0 && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -747,7 +840,7 @@ Sent from Gep Protech Academic Website
                     <h4 style={{ marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '1.2rem' }}>
                       📋 Preview Your Enrollment
                     </h4>
-                    
+
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.95rem' }}>
                       <div>
                         <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Name</p>
@@ -770,6 +863,10 @@ Sent from Gep Protech Academic Website
                       <div>
                         <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Occupation</p>
                         <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.occupation}</p>
+                      </div>
+                      <div>
+                        <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>enrollmentType</p>
+                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.enrollmentType}</p>
                       </div>
                     </div>
 
