@@ -32,7 +32,11 @@ const Enrollment = () => {
   const [loading, setLoading] = useState(false);
   const [showGroupPopup, setShowGroupPopup] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
-
+  const [notification, setNotification] = useState({
+    message: '',
+    type: '',   // 'success' | 'error'
+    visible: false
+  });
   const coursesList = [
     "BackEnd Web Development",
     "Cartography and GIS",
@@ -78,6 +82,17 @@ const Enrollment = () => {
       description: 'Review and submit'
     }
   ];
+  const showNotification = (message, type) => {
+    // Clear any existing timer
+    if (window._notifTimer) clearTimeout(window._notifTimer);
+
+    setNotification({ message, type, visible: true });
+
+    const timeout = type === 'error' ? 30 * 60 * 1000 : 6000; // 30 min for errors, 6s for success
+    window._notifTimer = setTimeout(() => {
+      setNotification(prev => ({ ...prev, visible: false }));
+    }, timeout);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,7 +116,7 @@ const Enrollment = () => {
         // send courses as an array so backend validation (array) passes
         courses: formData.courses,
         message: formData.careerGoal
-        
+
 
       };
 
@@ -168,7 +183,9 @@ Sent from Gep Protech Academic Website
         }
         successMessage += `📱 You'll now be redirected to WhatsApp.`;
 
-        alert(successMessage);
+        showNotification(successMessage, 'success');
+
+
 
         setTimeout(() => {
           window.open(whatsappUrl, '_blank');
@@ -224,7 +241,7 @@ Sent from Gep Protech Academic Website
         errorMessage = 'Error: ' + error.message;
       }
 
-      alert(errorMessage);
+      showNotification(errorMessage, 'error');
     } finally {
       setLoading(false);
     }
@@ -1185,6 +1202,54 @@ Sent from Gep Protech Academic Website
           animation: spin 1s linear infinite;
         }
       `}</style>
+      {/* Floating Notification Toast */}
+      <AnimatePresence>
+        {notification.visible && (
+          <motion.div
+            initial={{ opacity: 0, y: -40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -40, scale: 0.95 }}
+            transition={{ duration: 0.35, type: 'spring' }}
+            style={{
+              position: 'fixed',
+              top: '1.5rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 9999,
+              minWidth: '320px',
+              maxWidth: '90vw',
+              padding: '1rem 1.5rem',
+              borderRadius: '12px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.75rem',
+              background: notification.type === 'success'
+                ? 'linear-gradient(135deg, #22c55e, #16a34a)'
+                : 'linear-gradient(135deg, #ef4444, #b91c1c)',
+              color: 'white',
+              fontSize: '0.95rem',
+              lineHeight: '1.5',
+              whiteSpace: 'pre-line',
+              cursor: 'pointer'
+            }}
+            onClick={() => setNotification(prev => ({ ...prev, visible: false }))}
+            title="Click to dismiss"
+          >
+            <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>
+              {notification.type === 'success' ? '✅' : '❌'}
+            </span>
+            <span style={{ flex: 1 }}>{notification.message}</span>
+            <span style={{
+              flexShrink: 0,
+              opacity: 0.8,
+              fontSize: '1.1rem',
+              marginLeft: '0.5rem',
+              cursor: 'pointer'
+            }}>✕</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
