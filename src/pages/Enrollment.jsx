@@ -7,6 +7,7 @@ import {
   School, MessageSquare
 } from 'lucide-react';
 import axios from 'axios';
+import { useRef } from 'react';
 
 const Enrollment = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -82,79 +83,86 @@ const Enrollment = () => {
       description: 'Review and submit'
     }
   ];
+
+
+  const notifTimerRef = useRef(null);
+  const innerNotifTimerRef = useRef(null); // ✅ ADD THIS — tracks the inner 50ms timeout
+
   const showNotification = (message, type) => {
-    // Clear any existing timer
-    if (window._notifTimer) clearTimeout(window._notifTimer);
+    // Cancel any pending auto-hide timer
+    if (notifTimerRef.current) clearTimeout(notifTimerRef.current);
 
-    setNotification({ message, type, visible: true });
+    // ✅ FIX: Also cancel any pending inner flush timeout
+    if (innerNotifTimerRef.current) clearTimeout(innerNotifTimerRef.current);
 
-    const timeout = type === 'error' ? 30 * 60 * 1000 : 6000; // 30 min for errors, 6s for success
-    window._notifTimer = setTimeout(() => {
-      setNotification(prev => ({ ...prev, visible: false }));
-    }, timeout);
+    // Hide current toast first so AnimatePresence re-animates it
+    setNotification({ message: '', type: '', visible: false });
+
+    // Small delay to flush the hide before showing new toast
+    innerNotifTimerRef.current = setTimeout(() => {
+      setNotification({ message, type, visible: true });
+
+      // Auto-hide: 6s for success, 30 min for errors
+      const timeout = type === 'error' ? 30 * 60 * 1000 : 6000;
+      notifTimerRef.current = setTimeout(() => {
+        setNotification(prev => ({ ...prev, visible: false }));
+      }, timeout);
+    }, 50);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
+    // ✅ Flag to prevent catch block from firing after a successful submission
+    let submissionSucceeded = false;
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
+      if (!apiUrl) throw new Error('API URL is not configured');
 
-      if (!apiUrl) {
-        throw new Error('API URL is not configured');
-      }
-
-      // Prepare data for database submission
+      // --- Build payload for bootcamp application ---
       const enrollmentData = {
         name: formData.name,
         email: formData.email,
         contact: formData.contact,
-        education: formData.education === 'Other' ? formData.educationOther || 'Other' : formData.education,
+        education: formData.education === 'Other'
+          ? formData.educationOther || 'Other'
+          : formData.education,
         occupation: formData.occupation,
-        // send courses as an array so backend validation (array) passes
-        courses: formData.courses,
-        message: formData.careerGoal
-
-
+        courses: formData.courses,       // array — backend expects 'array' validation rule
+        message: formData.careerGoal,    // mapped to 'message' column in DB
       };
 
-      // Debug: Log what's being sent
-      console.log('=== DEBUG INFO ===');
-      console.log('API URL:', apiUrl);
-      console.log('Enrollment Type:', formData.enrollmentType);
-      console.log('Form Data:', formData);
-      console.log('Enrollment Data:', enrollmentData);
+      // --- Use bootcamp endpoint for all submissions (backend only has bootcamp controller) ---
+      const endpoint = 'bootcamp-application';
 
-      // Submit to database
-      if (formData.enrollmentType === 'bootcamp') {
-        enrollmentData.enrollment_type = 'bootcamp';
-      } else if (formData.enrollmentType === 'enrollment') {
-        enrollmentData.enrollment_type = 'enrollment';
-      }
+      console.log('📤 Sending to:', `${apiUrl}/${endpoint}`);
+      console.log('📦 Payload:', enrollmentData);
 
-      const endpoint = formData.enrollmentType === 'enrollment' ? 'public-enrollment' : 'bootcamp-application';
-      console.log('Endpoint:', endpoint);
-      console.log('Full URL:', `${apiUrl}/${endpoint}`);
+      // --- Make the API call ---
+      const dbResult = await axios.post(`${apiUrl}/${endpoint}`, enrollmentData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
 
-      const dbResult =
-        await axios.post(`${apiUrl}/${endpoint}`, enrollmentData, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        });
+      // --- Handle successful response from Laravel ---
+      if (dbResult.data && dbResult.data.message) {
 
-      if (dbResult.data && dbResult.data.success) {
-        setEmailSent(true);
+        // ✅ Mark as succeeded BEFORE anything else that could throw
+        submissionSucceeded = true;
 
-        // Check if backend email notification was sent successfully
-        const emailNotificationSent = dbResult.data.email_sent !== false;
+        // --- Build success toast message using backend response ---
+        let successMessage = dbResult.data.message || 'Bootcamp application submitted successfully!\n\n';
+        successMessage += `📧 We'll contact you soon with confirmation details.`;
 
-        // Create WhatsApp message
+        showNotification(successMessage, 'success');
+
+        // --- Build the WhatsApp pre-filled message ---
         const whatsappMessage = `
-New Enrollment Request from Gep Protech Website:
+New Bootcamp Application from Gep Protech Website:
 
 *Name:* ${formData.name}
 *Email:* ${formData.email}
@@ -168,80 +176,68 @@ ${formData.careerGoal}
 
 ---
 Sent from Gep Protech Academic Website
-        `.trim();
+      `.trim();
 
-        const encodedMessage = encodeURIComponent(whatsappMessage);
-        const phoneNumber = '237674386778';
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+        const whatsappUrl = `https://wa.me/237674386778?text=${encodeURIComponent(whatsappMessage)}`;
 
-        // Build success message with email notification status
-        let successMessage = `✅ Your enrollment has been saved successfully!\n\n`;
-        if (!emailNotificationSent) {
-          successMessage += `⚠️ Note: Admin notification email could not be sent, but your enrollment was recorded.\n\n`;
-        } else {
-          successMessage += `📧 Admin team has been notified via email.\n\n`;
-        }
-        successMessage += `📱 You'll now be redirected to WhatsApp.`;
+        // ✅ Show GREEN toast — this must fire and not be overwritten
+        setEmailSent(true);
 
-        showNotification(successMessage, 'success');
-
-
-
+        // --- Open WhatsApp after 1.5s, then show group popup after another 1s ---
         setTimeout(() => {
           window.open(whatsappUrl, '_blank');
-          setTimeout(() => {
-            setShowGroupPopup(true);
-          }, 1000);
+          setTimeout(() => setShowGroupPopup(true), 1000);
         }, 1500);
 
-        // Reset form
+        // --- Reset the form back to initial state ---
         setFormData({
-          name: '', email: '', contact: '', courses: [],
-          careerGoal: '', education: '', educationOther: '', occupation: '',
+          name: '', email: '', contact: '',
+          education: '', educationOther: '', occupation: '',
+          courses: [], careerGoal: '',
           enrollmentType: ''
         });
         setCurrentStep(1);
+
       } else {
+        // Laravel returned success:false — treat as failure
         throw new Error(dbResult.data?.message || 'Enrollment failed');
       }
+
     } catch (error) {
-      console.error('Error:', error);
 
-      // Handle axios error response
-      let errorMessage = 'There was an error. Please try again.';
+      // ✅ KEY FIX: If submission already succeeded, do NOT show error toast
+      // (catches errors from window.open, setFormData, etc. — not from the API call)
+      if (submissionSucceeded) {
+        console.warn('⚠️ Minor post-success error (ignored):', error.message);
+        return;
+      }
 
-      // Debug: Log full error details to console
-      console.log('Error Details:', {
-        message: error.message,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        headers: error.response?.headers
-      });
+      console.error('❌ Submission error:', error);
+
+      // --- Build a descriptive error message from the server response ---
+      let errorMessage = 'Something went wrong. Please try again.';
 
       if (error.response) {
-        // Server responded with error status
-        const serverMessage = error.response.data?.message || error.response.data?.error || JSON.stringify(error.response.data);
-        const status = error.response.status;
-        const statusText = error.response.statusText;
+        const { status, statusText, data } = error.response;
+        const serverMsg = data?.message || data?.error || JSON.stringify(data);
+        errorMessage = `Server Error (${status} ${statusText}):\n${serverMsg}`;
 
-        errorMessage = `Server Error (${status} ${statusText}):\n${serverMessage}`;
-
-        // Add validation errors if present
-        if (error.response.data?.errors) {
+        // Append Laravel validation errors if present
+        if (data?.errors) {
           errorMessage += '\n\nValidation Errors:';
-          Object.entries(error.response.data.errors).forEach(([field, messages]) => {
-            errorMessage += `\n- ${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`;
+          Object.entries(data.errors).forEach(([field, messages]) => {
+            errorMessage += `\n• ${field}: ${Array.isArray(messages) ? messages[0] : messages}`;
           });
         }
       } else if (error.request) {
-        errorMessage = 'No response from server. Please check your connection.\n\n' +
-          'Make sure the API server is running at: ' + import.meta.env.VITE_API_URL;
+        errorMessage = `No response from server.\nCheck that your API is running at: ${import.meta.env.VITE_API_URL}`;
       } else {
-        errorMessage = 'Error: ' + error.message;
+        errorMessage = `Error: ${error.message}`;
       }
 
+      // ✅ Show RED toast only for real errors
       showNotification(errorMessage, 'error');
+
     } finally {
       setLoading(false);
     }
@@ -269,6 +265,11 @@ Sent from Gep Protech Academic Website
   };
 
   const nextStep = () => {
+    // Validate enrollment type selection before proceeding from step 1
+    if (currentStep === 1 && !formData.enrollmentType) {
+      showNotification('Please select Bootcamp or Enrollment to continue.', 'error');
+      return;
+    }
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
     }
@@ -283,7 +284,7 @@ Sent from Gep Protech Academic Website
   const isStepValid = () => {
     switch (currentStep) {
       case 1:
-        return formData.name && formData.email && formData.contact;
+        return formData.enrollmentType && formData.name && formData.email && formData.contact;
       case 2:
         return formData.education && (formData.education !== 'Other' || formData.educationOther);
       case 3:
@@ -345,6 +346,15 @@ Sent from Gep Protech Academic Website
               Choose the section below to enroll or apply for :
             </a>
           </p>
+          <p style={{
+            textAlign: 'center',
+            marginTop: '1rem',
+            color: 'var(--text-primary)',
+            fontSize: '1rem',
+            opacity: 0.8
+          }}>
+            Complete the steps below to begin your journey with us. Your information is secure and will be sent to our team.
+          </p>
           {/* Enrollment Type Radio Buttons */}
           <div style={{
             display: 'flex',
@@ -362,8 +372,25 @@ Sent from Gep Protech Academic Website
               borderRadius: '10px',
               border: formData.enrollmentType === 'bootcamp' ? '2px solid var(--primary-color)' : '2px solid var(--border-color)',
               background: formData.enrollmentType === 'bootcamp' ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              position: 'relative'
             }}>
+              {formData.enrollmentType === 'bootcamp' && (
+                <div style={{
+                  position: 'absolute',
+                  top: '-8px',
+                  right: '-8px',
+                  width: '20px',
+                  height: '20px',
+                  background: 'var(--primary-color)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Check size={12} color="white" />
+                </div>
+              )}
               <input
                 type="radio"
                 name="enrollmentType"
@@ -387,8 +414,25 @@ Sent from Gep Protech Academic Website
               borderRadius: '10px',
               border: formData.enrollmentType === 'enrollment' ? '2px solid var(--primary-color)' : '2px solid var(--border-color)',
               background: formData.enrollmentType === 'enrollment' ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              position: 'relative'
             }}>
+              {formData.enrollmentType === 'enrollment' && (
+                <div style={{
+                  position: 'absolute',
+                  top: '-8px',
+                  right: '-8px',
+                  width: '20px',
+                  height: '20px',
+                  background: 'var(--primary-color)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Check size={12} color="white" />
+                </div>
+              )}
               <input
                 type="radio"
                 name="enrollmentType"
@@ -404,6 +448,20 @@ Sent from Gep Protech Academic Website
               <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Enrollment</span>
             </label>
           </div>
+          {/* Security message after radio buttons */}
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.5 }}
+            style={{
+              color: "red",
+              fontWeight: '500',
+              textAlign: 'center',
+              padding: '1rem',
+            }}
+          >
+            Select your enrollment type to proceed.
+          </motion.p>
         </motion.div>
 
         {/* Progress Bar - Mobile Friendly */}
@@ -1226,7 +1284,7 @@ Sent from Gep Protech Academic Website
               gap: '0.75rem',
               background: notification.type === 'success'
                 ? 'linear-gradient(135deg, #22c55e, #16a34a)'
-                : 'linear-gradient(135deg, #ef4444, #b91c1c)',
+                : 'linear-gradient(135deg, #dc2626, #b91c1c)',
               color: 'white',
               fontSize: '0.95rem',
               lineHeight: '1.5',
@@ -1309,7 +1367,7 @@ const modalBackdropStyle = {
   inset: 0,
   background: 'rgba(0, 0, 0, 0.5)',
   backdropFilter: 'blur(5px)',
-  zIndex: 1000,
+  zIndex: 10000,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
