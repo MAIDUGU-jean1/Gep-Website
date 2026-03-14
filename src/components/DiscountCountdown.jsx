@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Timer, ChevronUp, ChevronDown, Gift, Zap } from "lucide-react";
+import { Timer, Zap, X, ArrowRight, Gift } from "lucide-react";
+import { Link } from "react-router-dom";
 import "./styles/DiscountCountdown.css";
 
 // Discount end date - April 10, 2026
@@ -26,8 +27,8 @@ const getTimeRemaining = () => {
 
 const DiscountCountdown = () => {
   const [timeLeft, setTimeLeft] = useState(getTimeRemaining);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
 
   // Countdown timer
@@ -35,7 +36,7 @@ const DiscountCountdown = () => {
     const timer = setInterval(() => {
       const newTime = getTimeRemaining();
       setTimeLeft(newTime);
-      
+
       if (newTime.expired) {
         clearInterval(timer);
       }
@@ -44,17 +45,17 @@ const DiscountCountdown = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Scroll detection for expanding/collapsing
+  // Scroll detection
   useEffect(() => {
     let scrollTimeout;
 
     const handleScroll = () => {
       setHasScrolled(true);
       setIsScrolling(true);
-      
+
       // Clear previous timeout
       clearTimeout(scrollTimeout);
-      
+
       // Set scrolling to false after 1 second of no scrolling
       scrollTimeout = setTimeout(() => {
         setIsScrolling(false);
@@ -62,7 +63,7 @@ const DiscountCountdown = () => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(scrollTimeout);
@@ -74,127 +75,168 @@ const DiscountCountdown = () => {
     return null;
   }
 
-  // Determine if we should show expanded or collapsed view
-  // Expanded when scrolling, collapsed when not
-  const showExpanded = hasScrolled && isScrolling;
-
   const formatNumber = (num) => String(num).padStart(2, "0");
 
+  // Calculate progress percentage (from 32 days total)
+  const totalSeconds = 32 * 24 * 60 * 60;
+  const remainingSeconds = timeLeft.days * 24 * 60 * 60 + timeLeft.hours * 60 * 60 + timeLeft.minutes * 60 + timeLeft.seconds;
+  const progressPercent = Math.min(100, (remainingSeconds / totalSeconds) * 100);
+
   const TimeUnit = ({ value, label }) => (
-    <div className="countdown-time-unit">
-      <motion.div 
-        className="countdown-value"
+    <div className="scrolling-time-unit">
+      <motion.div
+        className="scrolling-value"
         key={value}
-        initial={{ scale: 1.1, y: -5 }}
-        animate={{ scale: 1, y: 0 }}
+        initial={{ scale: 1.1 }}
+        animate={{ scale: 1 }}
         transition={{ duration: 0.2 }}
       >
         {formatNumber(value)}
       </motion.div>
-      <div className="countdown-label">{label}</div>
+      <span className="scrolling-label">{label}</span>
     </div>
   );
 
   return (
-    <motion.div 
-      className={`discount-countdown-container ${showExpanded ? "expanded" : "collapsed"}`}
-      initial={{ x: 400, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.5 }}
-    >
-      {/* Main button/header - always visible */}
-      <motion.div 
-        className="countdown-header"
-        onClick={() => setIsExpanded(!isExpanded)}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+    <>
+      <motion.div
+        className={`discount-floating-container ${isScrolling && hasScrolled ? "scrolling-mode" : "fixed-mode"}`}
+        initial={{ x: 400, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.5 }}
       >
-        <div className="countdown-icon-wrapper">
-          {showExpanded ? <Gift className="countdown-icon" /> : <Zap className="countdown-icon" />}
-          <span className="countdown-pulse"></span>
-        </div>
-        
-        <div className="countdown-header-text">
-          {showExpanded ? (
-            <>
-              <span className="bonus-text">Bonus</span>
-              <span className="countdown-title">30% Discount Ends Soon!</span>
-            </>
-          ) : (
-            <span className="countdown-title">30% OFF</span>
-          )}
-        </div>
+        {/* Scrolling Mode - Compressed bar */}
+        {isScrolling && hasScrolled ? (
+          <motion.div
+            className="scrolling-bar"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="scrolling-content">
+              <div className="scrolling-title-section">
+                <Zap size={16} className="scrolling-icon" />
+                <span className="scrolling-title">30% Off Ends Soon!</span>
+              </div>
 
-        <div className="countdown-toggle-icon">
-          {showExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
-        </div>
+              <div className="scrolling-timer">
+                <TimeUnit value={timeLeft.days} label="Days" />
+                <span className="scrolling-sep">:</span>
+                <TimeUnit value={timeLeft.hours} label="Hrs" />
+                <span className="scrolling-sep">:</span>
+                <TimeUnit value={timeLeft.minutes} label="Min" />
+              </div>
+
+              <Link to="/enroll" className="scrolling-cta-button">
+                Apply Now
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+          </motion.div>
+        ) : (
+          /* Fixed Mode - Compact button */
+          <motion.button
+            className="fixed-discount-btn"
+            onClick={() => setShowModal(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Zap size={18} />
+            <span>30% OFF</span>
+          </motion.button>
+        )}
       </motion.div>
 
-      {/* Expanded content */}
+      {/* Modal for more information */}
       <AnimatePresence>
-        {showExpanded && (
+        {showModal && (
           <motion.div
-            className="countdown-body"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="discount-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowModal(false)}
           >
-            <div className="countdown-timer">
-              <TimeUnit value={timeLeft.days} label="Days" />
-              <div className="countdown-separator">:</div>
-              <TimeUnit value={timeLeft.hours} label="Hours" />
-              <div className="countdown-separator">:</div>
-              <TimeUnit value={timeLeft.minutes} label="Mins" />
-              <div className="countdown-separator">:</div>
-              <TimeUnit value={timeLeft.seconds} label="Secs" />
-            </div>
+            <motion.div
+              className="discount-modal"
+              initial={{ scale: 0.8, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.8, y: 50 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="modal-close-btn"
+                onClick={() => setShowModal(false)}
+              >
+                <X size={20} />
+              </button>
 
-            <div className="countdown-cta">
-              <span className="cta-text">Don't miss out!</span>
-              <a href="#courses" className="cta-button">
-                <Timer size={16} />
-                View Courses
-              </a>
-            </div>
-
-            <div className="countdown-progress">
-              <div className="progress-bar">
-                <motion.div 
-                  className="progress-fill"
-                  initial={{ width: 0 }}
-                  animate={{ 
-                    width: `${Math.min(100, ((timeLeft.days * 24 * 60 * 60 + timeLeft.hours * 60 * 60 + timeLeft.minutes * 60 + timeLeft.seconds) / (32 * 24 * 60 * 60)) * 100)}%` 
-                  }}
-                  transition={{ duration: 0.5 }}
-                />
+              <div className="modal-header">
+                <div className="modal-icon-wrapper">
+                  <Gift size={40} className="modal-gift-icon" />
+                </div>
+                <h2 className="modal-title">Limited Time Offer!</h2>
+                <p className="modal-subtitle">Get 30% off on all our courses</p>
               </div>
-              <span className="progress-text">Time remaining</span>
-            </div>
+
+              <div className="modal-timer-section">
+                <p className="timer-label">Offer ends in:</p>
+                <div className="modal-timer">
+                  <div className="modal-time-block">
+                    <span className="modal-time-value">{formatNumber(timeLeft.days)}</span>
+                    <span className="modal-time-label">Days</span>
+                  </div>
+                  <span className="modal-time-sep">:</span>
+                  <div className="modal-time-block">
+                    <span className="modal-time-value">{formatNumber(timeLeft.hours)}</span>
+                    <span className="modal-time-label">Hours</span>
+                  </div>
+                  <span className="modal-time-sep">:</span>
+                  <div className="modal-time-block">
+                    <span className="modal-time-value">{formatNumber(timeLeft.minutes)}</span>
+                    <span className="modal-time-label">Minutes</span>
+                  </div>
+                  <span className="modal-time-sep">:</span>
+                  <div className="modal-time-block">
+                    <span className="modal-time-value">{formatNumber(timeLeft.seconds)}</span>
+                    <span className="modal-time-label">Seconds</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-progress-section">
+                <div className="progress-header">
+                  <span>Time remaining</span>
+                  <span>{Math.round(progressPercent)}% left</span>
+                </div>
+                <div className="modal-progress-bar">
+                  <motion.div
+                    className="modal-progress-fill"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progressPercent}%` }}
+                    transition={{ duration: 0.5 }}
+                  />
+                </div>
+              </div>
+
+              <div className="modal-cta-section">
+                <Link to="/enroll" className="modal-apply-btn" onClick={() => setShowModal(false)}>
+                  <Timer size={18} />
+                  Apply Now
+                </Link>
+                <a href="/#courses" className="modal-courses-btn" onClick={() => setShowModal(false)}>
+                  View Courses
+                </a>
+              </div>
+
+              <p className="modal-offer-text">
+                Don't miss out on this amazing opportunity to learn new skills and advance your career!
+              </p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Collapsed compact view - shows just timer */}
-      {!showExpanded && hasScrolled && (
-        <motion.div 
-          className="countdown-compact"
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: "auto", opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-        >
-          <div className="compact-timer">
-            <span className="compact-unit">{formatNumber(timeLeft.days)}d</span>
-            <span className="compact-sep">:</span>
-            <span className="compact-unit">{formatNumber(timeLeft.hours)}h</span>
-            <span className="compact-sep">:</span>
-            <span className="compact-unit">{formatNumber(timeLeft.minutes)}m</span>
-            <span className="compact-sep">:</span>
-            <span className="compact-unit">{formatNumber(timeLeft.seconds)}s</span>
-          </div>
-        </motion.div>
-      )}
-    </motion.div>
+    </>
   );
 };
 

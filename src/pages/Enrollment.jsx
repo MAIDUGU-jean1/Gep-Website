@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Mail, Phone, MapPin, Clock, Users, GraduationCap,
@@ -38,6 +38,7 @@ const Enrollment = () => {
     type: '',   // 'success' | 'error'
     visible: false
   });
+
   const coursesList = [
     "BackEnd Web Development",
     "Cartography and GIS",
@@ -57,52 +58,37 @@ const Enrollment = () => {
     "UI/UX Design"
   ];
 
-  const steps = [
-    {
-      number: 1,
-      title: 'Personal Info',
-      icon: User,
-      description: 'Tell us about yourself'
-    },
-    {
-      number: 2,
-      title: 'Background',
-      icon: School,
-      description: 'Your education & occupation'
-    },
-    {
-      number: 3,
-      title: 'Courses & Goals',
-      icon: BookOpen,
-      description: 'Select interests & career goals'
-    },
-    {
-      number: 4,
-      title: 'Preview',
-      icon: CheckCircle,
-      description: 'Review and submit'
-    }
+  // FIX 1: Bootcamp Preview step number is now 3 (not 4) so currentStep reaches it correctly
+  const steps = formData.enrollmentType === 'bootcamp' ? [
+    { number: 1, title: 'Personal Info', icon: User, description: 'Tell us about yourself' },
+    { number: 2, title: 'Background', icon: School, description: 'Your education & occupation' },
+    { number: 3, title: 'Preview', icon: CheckCircle, description: 'Review and submit' } // ✅ was 4, now 3
+  ] : [
+    { number: 1, title: 'Personal Info', icon: User, description: 'Tell us about yourself' },
+    { number: 2, title: 'Background', icon: School, description: 'Your education & occupation' },
+    { number: 3, title: 'Courses & Goals', icon: BookOpen, description: 'Select interests & career goals' },
+    { number: 4, title: 'Preview', icon: CheckCircle, description: 'Review and submit' }
   ];
 
-
   const notifTimerRef = useRef(null);
-  const innerNotifTimerRef = useRef(null); // ✅ ADD THIS — tracks the inner 50ms timeout
+  const innerNotifTimerRef = useRef(null);
+
+  // Handle step adjustment when enrollment type changes
+  useEffect(() => {
+    if (formData.enrollmentType === 'bootcamp' && currentStep > 2) {
+      setCurrentStep(2);
+    }
+  }, [formData.enrollmentType, steps.length]);
 
   const showNotification = (message, type) => {
-    // Cancel any pending auto-hide timer
     if (notifTimerRef.current) clearTimeout(notifTimerRef.current);
-
-    // ✅ FIX: Also cancel any pending inner flush timeout
     if (innerNotifTimerRef.current) clearTimeout(innerNotifTimerRef.current);
 
-    // Hide current toast first so AnimatePresence re-animates it
     setNotification({ message: '', type: '', visible: false });
 
-    // Small delay to flush the hide before showing new toast
     innerNotifTimerRef.current = setTimeout(() => {
       setNotification({ message, type, visible: true });
 
-      // Auto-hide: 6s for success, 30 min for errors
       const timeout = type === 'error' ? 30 * 60 * 1000 : 6000;
       notifTimerRef.current = setTimeout(() => {
         setNotification(prev => ({ ...prev, visible: false }));
@@ -114,14 +100,12 @@ const Enrollment = () => {
     e.preventDefault();
     setLoading(true);
 
-    // ✅ Flag to prevent catch block from firing after a successful submission
     let submissionSucceeded = false;
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
       if (!apiUrl) throw new Error('API URL is not configured');
 
-      // --- Build payload for bootcamp application ---
       const enrollmentData = {
         name: formData.name,
         email: formData.email,
@@ -130,17 +114,15 @@ const Enrollment = () => {
           ? formData.educationOther || 'Other'
           : formData.education,
         occupation: formData.occupation,
-        courses: formData.courses,       // array — backend expects 'array' validation rule
-        message: formData.careerGoal,    // mapped to 'message' column in DB
+        courses: formData.courses,
+        message: formData.careerGoal,
       };
 
-      // --- Use bootcamp endpoint for all submissions (backend only has bootcamp controller) ---
       const endpoint = 'bootcamp-application';
 
       console.log('📤 Sending to:', `${apiUrl}/${endpoint}`);
       console.log('📦 Payload:', enrollmentData);
 
-      // --- Make the API call ---
       const dbResult = await axios.post(`${apiUrl}/${endpoint}`, enrollmentData, {
         headers: {
           'Content-Type': 'application/json',
@@ -148,26 +130,22 @@ const Enrollment = () => {
         }
       });
 
-      // --- Handle successful response from Laravel ---
       if (dbResult.data && dbResult.data.message) {
 
-        // ✅ Mark as succeeded BEFORE anything else that could throw
         submissionSucceeded = true;
 
-        // --- Build success toast message using backend response ---
         let successMessage = dbResult.data.message || 'Bootcamp application submitted successfully!\n\n';
         successMessage += `📧 We'll contact you soon with confirmation details.`;
 
         showNotification(successMessage, 'success');
 
-        // --- Build the WhatsApp pre-filled message ---
         const whatsappMessage = `
 New Bootcamp Application from Gep Protech Website:
 
 *Name:* ${formData.name}
 *Email:* ${formData.email}
 *Contact:* ${formData.contact}
-*Course Interests:* ${formData.courses.length > 0 ? formData.courses.join(', ') : 'Not specified'}
+*Course Interests:* ${formData.enrollmentType === 'bootcamp' ? 'Not required for Bootcamp' : (formData.courses.length > 0 ? formData.courses.join(', ') : 'Not specified')}
 *Career Goal:*
 ${formData.careerGoal}
 
@@ -176,20 +154,17 @@ ${formData.careerGoal}
 
 ---
 Sent from Gep Protech Academic Website
-      `.trim();
+        `.trim();
 
         const whatsappUrl = `https://wa.me/237674386778?text=${encodeURIComponent(whatsappMessage)}`;
 
-        // ✅ Show GREEN toast — this must fire and not be overwritten
         setEmailSent(true);
 
-        // --- Open WhatsApp after 1.5s, then show group popup after another 1s ---
         setTimeout(() => {
-          window.open(whatsappUrl, '_blank');
+          // window.open(whatsappUrl, '_blank');
           setTimeout(() => setShowGroupPopup(true), 1000);
         }, 1500);
 
-        // --- Reset the form back to initial state ---
         setFormData({
           name: '', email: '', contact: '',
           education: '', educationOther: '', occupation: '',
@@ -199,14 +174,11 @@ Sent from Gep Protech Academic Website
         setCurrentStep(1);
 
       } else {
-        // Laravel returned success:false — treat as failure
         throw new Error(dbResult.data?.message || 'Enrollment failed');
       }
 
     } catch (error) {
 
-      // ✅ KEY FIX: If submission already succeeded, do NOT show error toast
-      // (catches errors from window.open, setFormData, etc. — not from the API call)
       if (submissionSucceeded) {
         console.warn('⚠️ Minor post-success error (ignored):', error.message);
         return;
@@ -214,28 +186,26 @@ Sent from Gep Protech Academic Website
 
       console.error('❌ Submission error:', error);
 
-      // --- Build a descriptive error message from the server response ---
-      let errorMessage = 'Something went wrong. Please try again.';
+      let errorMessage = 'Oops! Something went wrong. Please try again.';
 
       if (error.response) {
         const { status, statusText, data } = error.response;
         const serverMsg = data?.message || data?.error || JSON.stringify(data);
-        errorMessage = `Server Error (${status} ${statusText}):\n${serverMsg}`;
+        // errorMessage = `Server Error: ${serverMsg}`;
 
-        // Append Laravel validation errors if present
         if (data?.errors) {
-          errorMessage += '\n\nValidation Errors:';
+          errorMessage += '\n\nPlease check the following:';
           Object.entries(data.errors).forEach(([field, messages]) => {
-            errorMessage += `\n• ${field}: ${Array.isArray(messages) ? messages[0] : messages}`;
+            const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+            errorMessage += `\n• ${fieldName}: ${Array.isArray(messages) ? messages[0] : messages}`;
           });
         }
       } else if (error.request) {
-        errorMessage = `No response from server.\nCheck that your API is running at: ${import.meta.env.VITE_API_URL}`;
+        errorMessage = 'Unable to connect to our servers. Please check your internet connection and try again.';
       } else {
         errorMessage = `Error: ${error.message}`;
       }
 
-      // ✅ Show RED toast only for real errors
       showNotification(errorMessage, 'error');
 
     } finally {
@@ -264,10 +234,10 @@ Sent from Gep Protech Academic Website
     setShowGroupPopup(false);
   };
 
+  // FIX 3: nextStep/prevStep are now fully sequential — no manual skipping needed
   const nextStep = () => {
-    // Validate enrollment type selection before proceeding from step 1
     if (currentStep === 1 && !formData.enrollmentType) {
-      showNotification('Please select Bootcamp or Enrollment to continue.', 'error');
+      showNotification('Please choose an enrollment type (Bootcamp or Vacational Training) to continue.', 'error');
       return;
     }
     if (currentStep < steps.length) {
@@ -282,12 +252,16 @@ Sent from Gep Protech Academic Website
   };
 
   const isStepValid = () => {
+    const isBootcamp = formData.enrollmentType === 'bootcamp';
     switch (currentStep) {
       case 1:
         return formData.enrollmentType && formData.name && formData.email && formData.contact;
       case 2:
         return formData.education && (formData.education !== 'Other' || formData.educationOther);
       case 3:
+        // For bootcamp, step 3 is Preview — always valid
+        if (isBootcamp) return true;
+        // For enrollment, step 3 is Courses & Goals — require selection + career goal
         return formData.courses.length > 0 && formData.careerGoal.trim();
       case 4:
         return true;
@@ -397,11 +371,7 @@ Sent from Gep Protech Academic Website
                 value="bootcamp"
                 checked={formData.enrollmentType === 'bootcamp'}
                 onChange={handleChange}
-                style={{
-                  width: '18px',
-                  height: '18px',
-                  accentColor: 'var(--primary-color)'
-                }}
+                style={{ width: '18px', height: '18px', accentColor: 'var(--primary-color)' }}
               />
               <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Bootcamp</span>
             </label>
@@ -439,13 +409,9 @@ Sent from Gep Protech Academic Website
                 value="enrollment"
                 checked={formData.enrollmentType === 'enrollment'}
                 onChange={handleChange}
-                style={{
-                  width: '18px',
-                  height: '18px',
-                  accentColor: 'var(--primary-color)'
-                }}
+                style={{ width: '18px', height: '18px', accentColor: 'var(--primary-color)' }}
               />
-              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Enrollment</span>
+              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Vacational Training</span>
             </label>
           </div>
           {/* Security message after radio buttons */}
@@ -464,16 +430,12 @@ Sent from Gep Protech Academic Website
           </motion.p>
         </motion.div>
 
-        {/* Progress Bar - Mobile Friendly */}
+        {/* Progress Bar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          style={{
-            maxWidth: '800px',
-            margin: '0 auto 2rem auto',
-            padding: '0 1rem'
-          }}
+          style={{ maxWidth: '800px', margin: '0 auto 2rem auto', padding: '0 1rem' }}
         >
           <div style={{
             display: 'flex',
@@ -498,22 +460,15 @@ Sent from Gep Protech Academic Website
                 {steps[currentStep - 1].title}
               </span>
             </div>
-            <span style={{
-              fontSize: '0.9rem',
-              color: 'var(--text-primary)',
-              opacity: 0.7
-            }}>
+            <span style={{ fontSize: '0.9rem', color: 'var(--text-primary)', opacity: 0.7 }}>
               {Math.round(getProgressPercentage())}% Complete
             </span>
           </div>
 
-          {/* Progress Bar */}
           <div style={{
-            width: '100%',
-            height: '8px',
+            width: '100%', height: '8px',
             background: 'var(--border-color)',
-            borderRadius: '4px',
-            overflow: 'hidden'
+            borderRadius: '4px', overflow: 'hidden'
           }}>
             <motion.div
               initial={{ width: 0 }}
@@ -528,7 +483,7 @@ Sent from Gep Protech Academic Website
           </div>
         </motion.div>
 
-        {/* Steps Navigation - Mobile Friendly */}
+        {/* Steps Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -567,14 +522,11 @@ Sent from Gep Protech Academic Website
               onClick={() => setCurrentStep(step.number)}
             >
               <div style={{
-                width: '30px',
-                height: '30px',
+                width: '30px', height: '30px',
                 borderRadius: '50%',
                 background: index + 1 < currentStep ? 'var(--primary-color)' :
                   currentStep === step.number ? 'white' : 'var(--border-color)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
               }}>
                 {index + 1 < currentStep ? (
                   <Check size={14} color="white" />
@@ -617,30 +569,18 @@ Sent from Gep Protech Academic Website
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <div style={{
-                width: '40px',
-                height: '40px',
+                width: '40px', height: '40px',
                 background: 'var(--primary-color)',
                 borderRadius: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: 'white'
               }}>
-                {/* {steps[currentStep-1].icon({ size: 20 })} */}
               </div>
               <div>
-                <h3 style={{
-                  fontSize: '1.3rem',
-                  color: 'var(--text-secondary)',
-                  marginBottom: '0.25rem'
-                }}>
+                <h3 style={{ fontSize: '1.3rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
                   {steps[currentStep - 1].title}
                 </h3>
-                <p style={{
-                  fontSize: '0.9rem',
-                  opacity: 0.7,
-                  margin: 0
-                }}>
+                <p style={{ fontSize: '0.9rem', opacity: 0.7, margin: 0 }}>
                   {steps[currentStep - 1].description}
                 </p>
               </div>
@@ -650,8 +590,11 @@ Sent from Gep Protech Academic Website
           {/* Form Steps */}
           <div style={{ padding: '1.5rem' }}>
             <AnimatePresence mode="wait">
-              {/* Step 1: Personal Info */}
-              {currentStep === 1 && (
+
+              {/* FIX 2: All panels now render based on steps[currentStep-1].title instead of hardcoded numbers */}
+
+              {/* Step: Personal Info */}
+              {steps[currentStep - 1]?.title === 'Personal Info' && (
                 <motion.div
                   key="step1"
                   initial={{ opacity: 0, x: 20 }}
@@ -709,15 +652,13 @@ Sent from Gep Protech Academic Website
                       style={inputStyle}
                       placeholder="+237 XXX XXX XXX"
                     />
-                    <p style={helperTextStyle}>
-                      We'll use this to contact you via WhatsApp
-                    </p>
+                    <p style={helperTextStyle}>We'll use this to contact you via WhatsApp</p>
                   </div>
                 </motion.div>
               )}
 
-              {/* Step 2: Academic Info */}
-              {currentStep === 2 && (
+              {/* Step: Background */}
+              {steps[currentStep - 1]?.title === 'Background' && (
                 <motion.div
                   key="step2"
                   initial={{ opacity: 0, x: 20 }}
@@ -784,7 +725,6 @@ Sent from Gep Protech Academic Website
                     />
                   </div>
 
-                  {/* Career Goal */}
                   <div className="input-group">
                     <label style={labelStyle}>
                       <Briefcase size={16} style={{ marginRight: '0.5rem' }} />
@@ -797,19 +737,15 @@ Sent from Gep Protech Academic Website
                       required
                       disabled={loading}
                       rows="4"
-                      style={{
-                        ...inputStyle,
-                        resize: 'vertical',
-                        minHeight: '120px'
-                      }}
+                      style={{ ...inputStyle, resize: 'vertical', minHeight: '120px' }}
                       placeholder="Tell us about your career goals and background. Why are you interested in these courses?"
                     />
                   </div>
                 </motion.div>
               )}
 
-              {/* Step 3: Course Selection */}
-              {currentStep === 3 && (
+              {/* Step: Courses & Goals — only renders for enrollment (bootcamp never reaches this title) */}
+              {steps[currentStep - 1]?.title === 'Courses & Goals' && (
                 <motion.div
                   key="step3"
                   initial={{ opacity: 0, x: 20 }}
@@ -830,37 +766,25 @@ Sent from Gep Protech Academic Website
                         multiple
                         size="6"
                         disabled={loading}
-                        style={{
-                          ...inputStyle,
-                          padding: '0.75rem',
-                          minHeight: '200px'
-                        }}
+                        style={{ ...inputStyle, padding: '0.75rem', minHeight: '200px' }}
                       >
                         {coursesList.map((course, index) => (
-                          <option key={index} value={course} style={{
-                            padding: '0.75rem',
-                            margin: '2px 0',
-                            borderRadius: '4px'
-                          }}>
+                          <option key={index} value={course} style={{ padding: '0.75rem', margin: '2px 0', borderRadius: '4px' }}>
                             {course}
                           </option>
                         ))}
                       </select>
                     </div>
-                    <p style={helperTextStyle}>
-                      Hold Ctrl (Cmd on Mac) to select multiple courses
-                    </p>
+                    <p style={helperTextStyle}>Hold Ctrl (Cmd on Mac) to select multiple courses</p>
 
                     {formData.courses.length > 0 && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         style={{
-                          marginTop: '1rem',
-                          padding: '1rem',
+                          marginTop: '1rem', padding: '1rem',
                           background: 'var(--bg-primary)',
-                          borderRadius: '8px',
-                          border: '1px solid var(--border-color)'
+                          borderRadius: '8px', border: '1px solid var(--border-color)'
                         }}
                       >
                         <strong style={{ display: 'block', marginBottom: '0.5rem' }}>
@@ -868,16 +792,10 @@ Sent from Gep Protech Academic Website
                         </strong>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                           {formData.courses.map((course, idx) => (
-                            <span
-                              key={idx}
-                              style={{
-                                background: 'var(--primary-color)',
-                                color: 'white',
-                                padding: '0.3rem 0.8rem',
-                                borderRadius: '15px',
-                                fontSize: '0.85rem'
-                              }}
-                            >
+                            <span key={idx} style={{
+                              background: 'var(--primary-color)', color: 'white',
+                              padding: '0.3rem 0.8rem', borderRadius: '15px', fontSize: '0.85rem'
+                            }}>
                               {course}
                             </span>
                           ))}
@@ -888,8 +806,8 @@ Sent from Gep Protech Academic Website
                 </motion.div>
               )}
 
-              {/* Step 4: Preview & Submit */}
-              {currentStep === 4 && (
+              {/* Step: Preview — renders for both bootcamp (step 3) and enrollment (step 4) */}
+              {steps[currentStep - 1]?.title === 'Preview' && (
                 <motion.div
                   key="step4"
                   initial={{ opacity: 0, x: 20 }}
@@ -897,7 +815,6 @@ Sent from Gep Protech Academic Website
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {/* Summary Preview */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -907,23 +824,21 @@ Sent from Gep Protech Academic Website
                       background: 'var(--bg-primary)',
                       borderRadius: '12px',
                       border: '2px solid var(--primary-color)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '1.5rem'
+                      display: 'flex', flexDirection: 'column', gap: '1.5rem'
                     }}
                   >
                     <h4 style={{ marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '1.2rem' }}>
-                      📋 Preview Your Enrollment
+                      📋 Preview Your    {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : 'Vacational Training'}
                     </h4>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', fontSize: '0.95rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', fontSize: '0.95rem' }}>
                       <div>
                         <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Name</p>
-                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.name}</p>
+                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)', wordBreak: 'break-word' }}>{formData.name}</p>
                       </div>
                       <div>
                         <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Email</p>
-                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.email}</p>
+                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)', wordBreak: 'break-all' }}>{formData.email}</p>
                       </div>
                       <div>
                         <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>WhatsApp</p>
@@ -940,31 +855,29 @@ Sent from Gep Protech Academic Website
                         <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.occupation}</p>
                       </div>
                       <div>
-                        <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>enrollmentType</p>
-                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{formData.enrollmentType}</p>
+                        <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Enrollment Type</p>
+                        <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>
+                          {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : 'Vacational Training'}
+                        </p>
                       </div>
                     </div>
 
-                    <div>
-                      <p style={{ opacity: 0.7, marginBottom: '0.5rem' }}>Selected Courses</p>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                        {formData.courses.map((course, idx) => (
-                          <span
-                            key={idx}
-                            style={{
-                              background: 'var(--primary-color)',
-                              color: 'white',
-                              padding: '0.4rem 0.9rem',
-                              borderRadius: '20px',
-                              fontSize: '0.9rem',
-                              fontWeight: '500'
-                            }}
-                          >
-                            {course}
-                          </span>
-                        ))}
+                    {formData.enrollmentType !== 'bootcamp' && (
+                      <div>
+                        <p style={{ opacity: 0.7, marginBottom: '0.5rem' }}>Selected Courses</p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                          {formData.courses.map((course, idx) => (
+                            <span key={idx} style={{
+                              background: 'var(--primary-color)', color: 'white',
+                              padding: '0.4rem 0.9rem', borderRadius: '20px',
+                              fontSize: '0.9rem', fontWeight: '500'
+                            }}>
+                              {course}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     <div>
                       <p style={{ opacity: 0.7, marginBottom: '0.5rem' }}>Career Goal</p>
@@ -979,14 +892,11 @@ Sent from Gep Protech Academic Website
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                     style={{
-                      marginTop: '1.5rem',
-                      padding: '1rem',
+                      marginTop: '1.5rem', padding: '1rem',
                       background: 'rgba(37, 211, 102, 0.1)',
                       borderRadius: '8px',
                       border: '1px solid rgba(37, 211, 102, 0.3)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
+                      display: 'flex', alignItems: 'center', gap: '0.5rem'
                     }}
                   >
                     <CheckCircle size={18} color="#25D366" />
@@ -996,15 +906,11 @@ Sent from Gep Protech Academic Website
                   </motion.div>
                 </motion.div>
               )}
+
             </AnimatePresence>
 
             {/* Navigation Buttons */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginTop: '2rem',
-              gap: '1rem'
-            }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', gap: '1rem' }}>
               {currentStep > 1 && (
                 <motion.button
                   type="button"
@@ -1061,15 +967,9 @@ Sent from Gep Protech Academic Website
                   }}
                 >
                   {loading ? (
-                    <>
-                      <div className="spinner" style={spinnerStyle} />
-                      Submitting...
-                    </>
+                    <><div className="spinner" style={spinnerStyle} />Submitting...</>
                   ) : (
-                    <>
-                      <CheckCircle size={18} />
-                      Submit
-                    </>
+                    <><CheckCircle size={18} />Submit</>
                   )}
                 </motion.button>
               )}
@@ -1080,17 +980,10 @@ Sent from Gep Protech Academic Website
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  color: '#25D366',
-                  fontSize: '0.9rem',
-                  fontWeight: '500',
-                  marginTop: '1rem',
-                  padding: '0.75rem',
-                  background: 'rgba(37, 211, 102, 0.1)',
-                  borderRadius: '8px'
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  gap: '0.5rem', color: '#25D366', fontSize: '0.9rem', fontWeight: '500',
+                  marginTop: '1rem', padding: '0.75rem',
+                  background: 'rgba(37, 211, 102, 0.1)', borderRadius: '8px'
                 }}
               >
                 <CheckCircle size={16} />
@@ -1100,18 +993,14 @@ Sent from Gep Protech Academic Website
           </div>
         </motion.div>
 
-        {/* Trust Badges - Mobile Friendly */}
+        {/* Trust Badges */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: '1.5rem',
-            marginTop: '2rem',
-            padding: '0 1rem'
+            display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
+            gap: '1.5rem', marginTop: '2rem', padding: '0 1rem'
           }}
         >
           {[
@@ -1120,13 +1009,9 @@ Sent from Gep Protech Academic Website
             { icon: Award, text: 'Certified Courses' }
           ].map((item, index) => (
             <div key={index} style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: 'var(--card-bg)',
-              padding: '0.5rem 1rem',
-              borderRadius: '25px',
-              border: '1px solid var(--border-color)'
+              display: 'flex', alignItems: 'center', gap: '0.5rem',
+              background: 'var(--card-bg)', padding: '0.5rem 1rem',
+              borderRadius: '25px', border: '1px solid var(--border-color)'
             }}>
               <item.icon size={16} color="var(--primary-color)" />
               <span style={{ fontSize: '0.9rem' }}>{item.text}</span>
@@ -1154,13 +1039,10 @@ Sent from Gep Protech Academic Website
             >
               <div style={{ textAlign: 'center' }}>
                 <div style={{
-                  width: '60px',
-                  height: '60px',
+                  width: '60px', height: '60px',
                   background: 'linear-gradient(135deg, #25D366, #128C7E)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  borderRadius: '50%', display: 'flex',
+                  alignItems: 'center', justifyContent: 'center',
                   margin: '0 auto 1.5rem auto'
                 }}>
                   <Users size={30} color="white" />
@@ -1181,16 +1063,10 @@ Sent from Gep Protech Academic Website
                     whileTap={{ scale: 0.95 }}
                     style={{
                       background: 'linear-gradient(135deg, #25D366, #128C7E)',
-                      color: 'white',
-                      border: 'none',
-                      padding: '1rem 2rem',
-                      borderRadius: '10px',
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
+                      color: 'white', border: 'none',
+                      padding: '1rem 2rem', borderRadius: '10px',
+                      fontSize: '1rem', fontWeight: '600', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: '0.5rem'
                     }}
                   >
                     <Users size={18} />
@@ -1202,14 +1078,10 @@ Sent from Gep Protech Academic Website
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     style={{
-                      background: 'transparent',
-                      color: 'var(--text-secondary)',
+                      background: 'transparent', color: 'var(--text-secondary)',
                       border: '2px solid var(--border-color)',
-                      padding: '1rem 2rem',
-                      borderRadius: '10px',
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      cursor: 'pointer'
+                      padding: '1rem 2rem', borderRadius: '10px',
+                      fontSize: '1rem', fontWeight: '600', cursor: 'pointer'
                     }}
                   >
                     Maybe Later
@@ -1223,43 +1095,28 @@ Sent from Gep Protech Academic Website
 
       <style>{`
         @media (min-width: 768px) {
-          .enroll-grid {
-            grid-template-columns: 1fr 1fr !important;
-          }
+          .enroll-grid { grid-template-columns: 1fr 1fr !important; }
         }
-
         @media (max-width: 480px) {
-          .section-title {
-            font-size: 1.8rem;
-          }
-          .section-subtitle {
-            font-size: 0.95rem;
-          }
+          .section-title { font-size: 1.8rem; }
+          .section-subtitle { font-size: 0.95rem; }
         }
-
         input:focus, textarea:focus, select:focus {
           outline: none;
           border-color: var(--primary-color) !important;
         }
-
         select[multiple] option:checked {
           background: var(--primary-color) linear-gradient(0deg, var(--primary-color) 0%, var(--primary-color) 100%);
           color: white;
         }
-
-        select[multiple] option {
-          padding: 0.5rem;
-        }
-
+        select[multiple] option { padding: 0.5rem; }
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-
-        .spinner {
-          animation: spin 1s linear infinite;
-        }
+        .spinner { animation: spin 1s linear infinite; }
       `}</style>
+
       {/* Floating Notification Toast */}
       <AnimatePresence>
         {notification.visible && (
@@ -1298,13 +1155,7 @@ Sent from Gep Protech Academic Website
               {notification.type === 'success' ? '✅' : '❌'}
             </span>
             <span style={{ flex: 1 }}>{notification.message}</span>
-            <span style={{
-              flexShrink: 0,
-              opacity: 0.8,
-              fontSize: '1.1rem',
-              marginLeft: '0.5rem',
-              cursor: 'pointer'
-            }}>✕</span>
+            <span style={{ flexShrink: 0, opacity: 0.8, fontSize: '1.1rem', marginLeft: '0.5rem', cursor: 'pointer' }}>✕</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1314,75 +1165,49 @@ Sent from Gep Protech Academic Website
 
 // Styles
 const labelStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  marginBottom: '0.5rem',
-  fontWeight: '500',
-  color: 'var(--text-secondary)',
-  fontSize: '0.95rem'
+  display: 'flex', alignItems: 'center',
+  marginBottom: '0.5rem', fontWeight: '500',
+  color: 'var(--text-secondary)', fontSize: '0.95rem'
 };
 
 const inputStyle = {
-  width: '100%',
-  padding: '1rem',
+  width: '100%', padding: '1rem',
   border: '2px solid var(--border-color)',
-  borderRadius: '10px',
-  background: 'var(--bg-primary)',
-  color: 'var(--text-primary)',
-  fontSize: '1rem',
+  borderRadius: '10px', background: 'var(--bg-primary)',
+  color: 'var(--text-primary)', fontSize: '1rem',
   transition: 'all 0.3s ease'
 };
 
 const helperTextStyle = {
-  marginTop: '0.5rem',
-  fontSize: '0.8rem',
-  opacity: 0.7,
-  fontStyle: 'italic'
+  marginTop: '0.5rem', fontSize: '0.8rem', opacity: 0.7, fontStyle: 'italic'
 };
 
 const buttonStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '8px',
-  padding: '1rem 1.5rem',
-  borderRadius: '10px',
-  fontSize: '1rem',
-  fontWeight: '600',
-  cursor: 'pointer',
-  transition: 'all 0.3s ease'
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  gap: '8px', padding: '1rem 1.5rem', borderRadius: '10px',
+  fontSize: '1rem', fontWeight: '600', cursor: 'pointer', transition: 'all 0.3s ease'
 };
 
 const spinnerStyle = {
-  width: '20px',
-  height: '20px',
+  width: '20px', height: '20px',
   border: '3px solid rgba(255,255,255,0.3)',
-  borderTopColor: 'white',
-  borderRadius: '50%',
+  borderTopColor: 'white', borderRadius: '50%',
   animation: 'spin 1s linear infinite'
 };
 
 const modalBackdropStyle = {
-  position: 'fixed',
-  inset: 0,
+  position: 'fixed', inset: 0,
   background: 'rgba(0, 0, 0, 0.5)',
   backdropFilter: 'blur(5px)',
-  zIndex: 10000,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '1rem'
+  zIndex: 10000, display: 'flex',
+  alignItems: 'center', justifyContent: 'center', padding: '1rem'
 };
 
 const modalContentStyle = {
-  background: 'var(--card-bg)',
-  padding: '2rem',
-  borderRadius: '15px',
-  border: '2px solid var(--border-color)',
-  maxWidth: '500px',
-  width: '100%',
-  maxHeight: 'calc(100vh - 40px)',
-  overflowY: 'auto',
+  background: 'var(--card-bg)', padding: '2rem',
+  borderRadius: '15px', border: '2px solid var(--border-color)',
+  maxWidth: '500px', width: '100%',
+  maxHeight: 'calc(100vh - 40px)', overflowY: 'auto',
   boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
 };
 
