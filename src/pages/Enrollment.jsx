@@ -214,10 +214,27 @@ Sent from Gep Protech Academic Website
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    // Handle enrollment type change - reset to step 1 to avoid validation errors
+    if (name === 'enrollmentType') {
+      setFormData({
+        ...formData,
+        enrollmentType: value,
+        // Reset step 2+ fields when switching types
+        education: '',
+        educationOther: '',
+        occupation: '',
+        courses: [],
+        careerGoal: ''
+      });
+      setCurrentStep(1);
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
   const handleCourseChange = (e) => {
@@ -411,23 +428,26 @@ Sent from Gep Protech Academic Website
                 onChange={handleChange}
                 style={{ width: '18px', height: '18px', accentColor: 'var(--primary-color)' }}
               />
-              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Vacational Training</span>
+              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Vocational Training</span>
             </label>
           </div>
-          {/* Security message after radio buttons */}
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.5 }}
-            style={{
-              color: "red",
-              fontWeight: '500',
-              textAlign: 'center',
-              padding: '1rem',
-            }}
-          >
-            Select your enrollment type to proceed.
-          </motion.p>
+          {/* Security message after radio buttons - only visible when no radio button selected */}
+          {!formData.enrollmentType && (
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              style={{
+                color: "red",
+                fontWeight: '500',
+                textAlign: 'center',
+                padding: '1rem',
+              }}
+            >
+              <Lock size={14} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
+              Select your enrollment type to proceed.
+            </motion.p>
+          )}
         </motion.div>
 
         {/* Progress Bar */}
