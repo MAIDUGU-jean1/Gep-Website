@@ -180,7 +180,7 @@ export const courses = [
     description: "Server-side programming and database management",
     duration: "3 months",
     tutor: "Mr Ngulefac Terence",
-    price: "30,000 FCFA",
+    price: "40,000 FCFA",
     level: "Advanced",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     features: ["Laravel", "MySQL", "PHP", "API Development", "Authentication"],
@@ -266,7 +266,7 @@ export const courses = [
   },
   {
     id: 10,
-    title: "Basic Cartography",
+    title: "Basic Cartography and GIS",
     description: "Fundamentals of map making and geographic information systems",
     duration: "3 months",
     tutor: "Ashanga Boris Ngwa",
@@ -378,7 +378,7 @@ export const courses = [
     description: "Comprehensive training in computer maintenance, troubleshooting, and repair for both software and hardware components.",
     duration: "3 months",
     tutor: "IT Support Team",
-    price: "60,000 FCFA",
+    price: "80,000 FCFA",
     level: "Beginner to Intermediate",
     image: "https://images.unsplash.com/photo-1562408590-e32931084e23?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
     features: [
@@ -420,9 +420,9 @@ export const courses = [
   id: 14,
   title: "Cybersecurity & Ethical Hacking",
   description: "Master cybersecurity fundamentals, ethical hacking techniques, and defense strategies to protect digital assets and combat cyber threats.",
-  duration: "4 months",
+  duration: "3 months",
   tutor: "Cybersecurity Experts Team",
-  price: "35,000 FCFA",
+  price: "50,000 FCFA",
   level: "Intermediate",
   image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
   features: [
@@ -498,11 +498,11 @@ export const courses = [
 },
 {
   id: 17,
-  title: "Network Security & Cyber Defense",
+  title: "Computer Network and Network security",
   description: "Specialize in protecting network infrastructures from cyber threats, implementing security protocols, and defending against network-based attacks.",
   duration: "3 months",
   tutor: "Cybersecurity Experts Team",
-  price: "35,000 FCFA",
+  price: "75,000 FCFA",
   level: "Advanced",
   image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
   features: [
@@ -536,5 +536,29 @@ export const courses = [
     "Advanced roles in cybersecurity management"
   ]
 },
-
+{
+  id:18,
+  title: "Project Management",
+  description: "Learn the fundamentals of project management, including planning, execution, and monitoring of projects to ensure successful outcomes.",
+  duration: "3 months",
+  tutor: "Project Management Experts Team",
+  price: "25,000 FCFA",
+  level: "Beginner",
+  image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  features: [
+    "Project Planning & Scheduling",
+    "Risk Management",
+    "Resource Allocation",
+    "Stakeholder Communication",
+    "Quality Management",
+    "Project Monitoring & Control",
+    "Project Closure"
+  ],
+  about: "Gain essential project management skills to plan, execute, and deliver projects successfully. Learn to manage resources, mitigate risks, and ensure projects meet their objectives within scope, time, and budget constraints.",
+  learns: [
+    "Develop project plans and schedules using project management tools",
+    "Identify and manage project risks effectively",
+    "Allocate resources",
+  ]
+}
 ];
