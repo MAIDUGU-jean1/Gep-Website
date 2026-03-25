@@ -118,7 +118,7 @@ const Enrollment = () => {
         message: formData.careerGoal,
       };
 
-      const endpoint = 'bootcamp-application';
+      const endpoint = formData.enrollmentType === 'bootcamp' ? 'bootcamp-application' : 'public-enrollment';
 
       console.log('📤 Sending to:', `${apiUrl}/${endpoint}`);
       console.log('📦 Payload:', enrollmentData);
@@ -134,8 +134,14 @@ const Enrollment = () => {
 
         submissionSucceeded = true;
 
-        let successMessage = dbResult.data.message || 'Bootcamp application submitted successfully!\n\n';
-        successMessage += `📧 We'll contact you soon with confirmation details.`;
+        let successMessage = '';
+        if (formData.enrollmentType === 'bootcamp') {
+          successMessage = dbResult.data.message || 'Bootcamp application submitted successfully!\n\n';
+          successMessage += `📧 We'll contact you soon with confirmation details.`;
+        } else {
+          successMessage = dbResult.data.message || 'Vocational Training enrollment submitted successfully!\n\n';
+          successMessage += `📧 We'll contact you soon with confirmation details.`;
+        }
 
         showNotification(successMessage, 'success');
 
