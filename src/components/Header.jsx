@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Moon, Sun, Menu, X, Home, Info, BookOpen, GraduationCap, Calendar, Users, Image, Award, Phone, MessageCircle } from 'lucide-react';
+import { Moon, Sun, Menu, X, Home, Info, BookOpen, GraduationCap, Calendar, Users, Image, Award, Phone, MessageCircle, Bell } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import Logo from '../assets/Images/logo1.png';
 
@@ -126,52 +126,88 @@ const Header = () => {
                       GeP Internship Program
                     </button>
                   </a>
+                  <a href='#' target='_blank' style={{ textDecoration: 'none' }}>
+                    <button style={{
+                      background: 'var(--primary)',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
+                      fontSize: '0.8rem',
+                      color: isDark ? 'white' : 'black',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      GeP e-Learning
+                    </button>
+                  </a>
                 </div>
               </div>
             </div>
 
-            {/* Desktop Navigation */}
-            <div style={{
+            {/* Desktop Navigation - Center */}
+            <nav style={{
               display: 'flex',
-              alignItems: 'center',
-              gap: '1rem'
+              gap: '2rem',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              flex: 2
             }} className="mobile-hidden">
-              <nav style={{
-                display: 'flex',
-                gap: '1.5rem',
-                flexWrap: 'wrap',
-                justifyContent: 'center'
-              }}>
-                {navItems.slice(0, 6).map((item) => (
-                  <a key={item.name} href={item.href} style={navLinkStyle}>
-                    {item.name}
-                  </a>
-                ))}
-              </nav>
-
-              {/* Action Buttons */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <button onClick={toggleTheme} style={buttonStyle}>
-                  {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
-                </button>
-
-                <a href="/enroll" style={{
-                  ...buttonStyle,
-                  background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
-                  borderRadius: '25px',
-                  padding: '10px 20px',
-                  color: 'white',
-                  fontWeight: '600',
-                  fontSize: '0.9rem',
-                  textDecoration: 'none',
-                  boxShadow: '0 4px 15px rgba(218, 165, 32, 0.3)'
-                }}>
-                  Enroll Now
+              {navItems.slice(0, 6).map((item) => (
+                <a key={item.name} href={item.href} style={navLinkStyle}>
+                  {item.name}
                 </a>
-              </div>
+              ))}
+            </nav>
+
+            {/* Action Buttons - Right Side */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="mobile-hidden">
+              <button onClick={toggleTheme} style={buttonStyle}>
+                {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
+              </button>
+
+              <button style={buttonStyle}>
+                <a href='/blog'>
+                  <Bell size={18} color="var(--primary-color)" />
+                </a>
+                <span style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: '10px',
+                  backgroundColor: 'red',
+                  position: 'relative',
+                  right: '8px',
+                  bottom: '2px'
+                }}></span>
+              </button>
+
+              <a href="/enroll" style={{
+                ...buttonStyle,
+                background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
+                borderRadius: '25px',
+                padding: '10px 20px',
+                color: 'white',
+                fontWeight: '600',
+                fontSize: '0.9rem',
+                textDecoration: 'none',
+                boxShadow: '0 4px 15px rgba(218, 165, 32, 0.3)'
+              }}>
+                Enroll Now
+              </a>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                style={{
+                  ...buttonStyle,
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
+                  color: 'white'
+                }}
+              >
+                <Menu size={22} />
+              </button>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Right Side */}
             <div style={{
               display: 'none',
               alignItems: 'center',
@@ -179,6 +215,21 @@ const Header = () => {
             }} className="mobile-menu">
               <button onClick={toggleTheme} style={buttonStyle}>
                 {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
+              </button>
+
+              <button style={buttonStyle}>
+                <a href='/blog'>
+                  <Bell size={18} color="var(--primary-color)" />
+                </a>
+                <span style={{
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: '10px',
+                  backgroundColor: 'red',
+                  position: 'relative',
+                  right: '8px',
+                  bottom: '2px'
+                }}></span>
               </button>
 
               <button
@@ -393,7 +444,8 @@ const Header = () => {
                   marginTop: '12px',
                   marginBottom: 0
                 }}>
-                  Start your tech journey today!
+                  {/* Start your tech journey today! */}
+                  © 2026 Gep Protech Academic.
                 </p>
               </div>
             </motion.div>
