@@ -9,7 +9,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    'Home', 'About', 'Courses', 'Tutors', 'Gallery', 'Achievements', 'Contact', 'Blog', 'Enroll',
+    'Home', 'About', 'Courses', 'Tutors', 'Gallery', 'Achievements', 'Contact', 'Blog', 'Bootcamp', 'Enroll',
   ];
 
   const headerStyle = {

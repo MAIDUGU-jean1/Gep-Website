@@ -19,6 +19,7 @@ import { BlogProvider } from './context/BlogContext'; // Add this import
 import Subscribe from './sections/Subscribe';
 import Enrollment from './pages/Enrollment';
 import CourseDetails from './pages/CourseDetails';
+import Bootcamp from './pages/Bootcamp';
 import DiscountCountdown from './components/DiscountCountdown';
 
 // Welcome Popup Component - shows on every page load/refresh
@@ -198,6 +199,7 @@ function App() {
               <Route path="/blog/:id" element={<BlogPost />} /> {/* Individual post page */}
               <Route path="/enroll" element={<Enrollment />} />
               <Route path="/course/:id" element={<CourseDetails />} />
+              <Route path="/bootcamp" element={<Bootcamp />} />
             </Routes>
           </main>
           <Footer />
