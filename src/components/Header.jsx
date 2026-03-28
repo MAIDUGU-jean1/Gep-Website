@@ -14,6 +14,7 @@ const Header = () => {
     { name: 'Courses', href: '/#courses', icon: <BookOpen size={18} /> },
     { name: 'Blog', href: '/blog', icon: <GraduationCap size={18} /> },
     { name: 'Events', href: '/events', icon: <Calendar size={18} /> },
+    { name: 'Bootcamp', href: '/bootcamp', icon: <Users size={18} /> },
     { name: 'Tutors', href: '/#tutors', icon: <Users size={18} /> },
     { name: 'Gallery', href: '/#gallery', icon: <Image size={18} /> },
     { name: 'Achievements', href: '/#achievements', icon: <Award size={18} /> },
