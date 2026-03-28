@@ -19,22 +19,40 @@ const Bootcamp = () => {
             date: 'March 31, 2026',
             theme: 'Decode the Tech World',
             topic: 'AI For Everyone',
+            objectives: [
+                'Understand AI fundamentals and machine learning concepts',
+                'Explore real-world AI applications across industries',
+                'Learn about ChatGPT, generative AI, and future trends',
+                'Hands-on intro to AI tools and platforms'
+            ],
             speaker: 'Engr. Selamo Allen',
-            icon: <Code size={24} />
+            icon: <Zap size={24} />
         },
         {
             day: 2,
             date: 'April 1, 2026',
-            theme: 'Think like a product Builder',
-            topic: ' Desing and marketting strategies',
+            theme: 'Think Like a Product Builder',
+            topic: 'Design & Marketing Strategies',
+            objectives: [
+                'Master UI/UX design principles and Figma basics',
+                'Learn product thinking and user-centered design',
+                'Digital marketing strategies and social media growth',
+                'Build a complete product mockup'
+            ],
             speaker: 'Engr. Fien Docila',
             icon: <Palette size={24} />
         },
         {
             day: 3,
             date: 'April 2, 2026',
-            theme: 'Build day one',
+            theme: 'Build Day One',
             topic: 'Cybersecurity + Technical & Non-Technical Tracks',
+            objectives: [
+                'Cybersecurity fundamentals and threat awareness',
+                'Choose your track: Web Dev, Mobile, or Data',
+                'Start building your first project',
+                'Learn version control with Git & GitHub'
+            ],
             speaker: 'Engr. Steph Bryan',
             icon: <BookOpen size={24} />
         },
@@ -43,14 +61,26 @@ const Bootcamp = () => {
             date: 'April 3, 2026',
             theme: 'Build Day Two',
             topic: 'Project Management + Soft Skills + Final Build',
+            objectives: [
+                'Agile methodology and project management basics',
+                'Communication and teamwork skills workshop',
+                'Complete your project with mentor guidance',
+                'Prepare your demo presentation'
+            ],
             speaker: 'Engr. Elvis Ejahmalle',
-            icon: <Zap size={24} />
+            icon: <Code size={24} />
         },
         {
             day: 5,
             date: 'April 4, 2026',
             theme: 'Demo Day',
             topic: 'Present · Celebrate · Convert',
+            objectives: [
+                'Present your project to judges and peers',
+                'Network with industry professionals',
+                'Receive certificates and awards',
+                'Learn next steps for your tech journey'
+            ],
             speaker: 'Engr. Ngulefac Terence',
             icon: <Award size={24} />
         }
@@ -118,10 +148,10 @@ const Bootcamp = () => {
             question: 'What do I need to bring?',
             answer: 'Just bring your laptop and enthusiasm! We\'ll provide all the learning materials, resources, and support you need.'
         },
-        {
-            question: 'Will I get a certificate?',
-            answer: 'Absolutely! All participants who complete the bootcamp will receive a certificate of completion from GEP Protech Academy.'
-        },
+        // {
+        //     question: 'Will I get a certificate?',
+        //     answer: 'Absolutely! All participants who complete the bootcamp will receive a certificate of completion from GEP Protech Academy.'
+        // },
         {
             question: 'How do I register?',
             answer: 'Click the "Register Now" button and fill out the enrollment form. It\'s quick and easy!'
@@ -286,6 +316,14 @@ const Bootcamp = () => {
                                 <div className="program-card-body">
                                     <div className="program-theme">{item.theme}</div>
                                     <h3 className="program-topic">{item.topic}</h3>
+                                    <div className="program-objectives">
+                                        <h4>Objectives:</h4>
+                                        <ul>
+                                            {item.objectives.map((obj, i) => (
+                                                <li key={i}>{obj}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                     <div className="program-speaker">
                                         <Users size={16} />
                                         <span>{item.speaker}</span>
@@ -417,10 +455,10 @@ const Bootcamp = () => {
                                 <CheckCircle size={24} />
                                 <span>100% Free Participation</span>
                             </div>
-                            <div className="highlight-item">
+                            {/* <div className="highlight-item">
                                 <CheckCircle size={24} />
                                 <span>Certificate of Completion</span>
-                            </div>
+                            </div> */}
                             <div className="highlight-item">
                                 <CheckCircle size={24} />
                                 <span>Hands-on Projects</span>

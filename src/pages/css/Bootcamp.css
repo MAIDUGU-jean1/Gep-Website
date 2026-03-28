@@ -10,10 +10,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1a365d 0%, #2d3748 50%, #1a202c 100%);
-  background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1920&q=80');
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(
+    135deg,
+    #1a365d 0%,
+    #2d3748 50%,
+    #1a202c 100%
+  ) !important;
+  background-image: url("https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1920&q=80") !important;
+  background-size: cover !important;
+  background-position: center !important;
   background-attachment: fixed;
   overflow: hidden;
 }
@@ -24,7 +29,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(26, 54, 93, 0.92) 0%, rgba(45, 55, 72, 0.88) 50%, rgba(26, 32, 44, 0.95) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(26, 54, 93, 0.92) 0%,
+    rgba(45, 55, 72, 0.88) 50%,
+    rgba(26, 32, 44, 0.95) 100%
+  );
   z-index: 1;
 }
 
@@ -55,7 +65,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 40px rgba(218, 165, 32, 0.4);
   }
   50% {
@@ -232,7 +243,8 @@
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -276,7 +288,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(218, 165, 32, 0.2));
+  background: linear-gradient(
+    135deg,
+    rgba(218, 165, 32, 0.1),
+    rgba(218, 165, 32, 0.2)
+  );
   border-radius: 50%;
   color: var(--primary-color);
 }
@@ -337,7 +353,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 25px;
-  background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(218, 165, 32, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(218, 165, 32, 0.1),
+    rgba(218, 165, 32, 0.05)
+  );
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -402,6 +422,48 @@
 
 .program-speaker svg {
   color: var(--primary-color);
+}
+
+.program-objectives {
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(218, 165, 32, 0.05);
+  border-radius: 12px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.program-objectives h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.program-objectives ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.program-objectives li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.program-objectives li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.program-objectives li:last-child {
+  margin-bottom: 0;
 }
 
 /* Swag Section */
@@ -613,13 +675,17 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .bootcamp-hero {
+    background-attachment: scroll !important;
+  }
+
   .hero-content {
-    padding: 100px 15px 40px;
+    padding: 200px 15px 40px;
   }
 
   .hero-logo {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
   }
 
   .hero-title {
@@ -667,8 +733,8 @@
 
 @media (max-width: 480px) {
   .hero-logo {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
   }
 
   .hero-title {
@@ -695,13 +761,7 @@
 }
 
 /* Dark Mode Specific Adjustments */
-[data-theme="dark"] .bootcamp-hero {
-  background: linear-gradient(135deg, #0d1b2a 0%, #1a202c 50%, #0d1b2a 100%);
-}
-
-[data-theme="dark"] .hero-overlay {
-  background: linear-gradient(135deg, rgba(13, 27, 42, 0.95) 0%, rgba(26, 32, 44, 0.92) 50%, rgba(13, 27, 42, 0.98) 100%);
-}
+/* Hero background is now always visible regardless of mode */
 
 [data-theme="dark"] .advantage-card:hover {
   box-shadow: 0 15px 40px rgba(218, 165, 32, 0.15);
@@ -727,4 +787,3 @@
 [data-theme="dark"] .highlight-item svg {
   color: white;
 }
-
