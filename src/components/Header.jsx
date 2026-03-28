@@ -126,7 +126,7 @@ const Header = () => {
                       GeP Internship Program
                     </button>
                   </a>
-                  <a href='#' target='_blank' style={{ textDecoration: 'none' }}>
+                  <a href='https://internship.gepprotech.com' target='_blank' style={{ textDecoration: 'none' }}>
                     <button style={{
                       background: 'var(--primary)',
                       border: 'none',
@@ -138,7 +138,7 @@ const Header = () => {
                       color: isDark ? 'white' : 'black',
                       whiteSpace: 'nowrap'
                     }}>
-                      GeP e-Learning
+                      GeP E-Learning
                     </button>
                   </a>
                 </div>
@@ -203,7 +203,7 @@ const Header = () => {
                   color: 'white'
                 }}
               >
-                <Menu size={22} />
+                {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
 
@@ -245,6 +245,72 @@ const Header = () => {
               </button>
             </div>
           </div>
+
+          {/* Mobile Quick Access Buttons - Below HR Line */}
+          <div className="mobile-only" style={{
+            display: 'none',
+            flexDirection: 'column',
+            gap: '0.5rem',
+            padding: '0.5rem 1rem',
+          }}>
+            <hr style={{
+              border: 'none',
+              borderTop: '1px solid var(--border-color)',
+              margin: '0.5rem 0'
+            }} />
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              flexWrap: 'wrap'
+            }}>
+              <a href='https://student.gepprotech.com' target='_blank' style={{ textDecoration: 'none' }}>
+                <button style={{
+                  background: 'var(--primary)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
+                  fontSize: '0.8rem',
+                  color: isDark ? 'white' : 'black',
+                  whiteSpace: 'nowrap'
+                }}>
+                  GeP Student
+                </button>
+              </a>
+              <a href='https://internship.gepprotech.com' target='_blank' style={{ textDecoration: 'none' }}>
+                <button style={{
+                  background: 'var(--primary)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
+                  fontSize: '0.8rem',
+                  color: isDark ? 'white' : 'black',
+                  whiteSpace: 'nowrap'
+                }}>
+                  GeP Internship Program
+                </button>
+              </a>
+              <a href='#' target='_blank' style={{ textDecoration: 'none' }}>
+                <button style={{
+                  background: 'var(--primary)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
+                  fontSize: '0.8rem',
+                  color: isDark ? 'white' : 'black',
+                  whiteSpace: 'nowrap'
+                }}>
+                  GeP E-Learning
+                </button>
+              </a>
+            </div>
+          </div>
         </div>
 
         <style>{`
@@ -255,11 +321,17 @@ const Header = () => {
             .mobile-menu { 
               display: flex !important; 
             }
+            .mobile-only {
+              display: flex !important;
+            }
           }
           
           @media (min-width: 769px) {
             .mobile-menu { 
               display: none !important; 
+            }
+            .mobile-only {
+              display: none !important;
             }
           }
 
@@ -444,8 +516,7 @@ const Header = () => {
                   marginTop: '12px',
                   marginBottom: 0
                 }}>
-                  {/* Start your tech journey today! */}
-                  © 2026 Gep Protech Academic.
+                  Start your tech journey today!
                 </p>
               </div>
             </motion.div>
