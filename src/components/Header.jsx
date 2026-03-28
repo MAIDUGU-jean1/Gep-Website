@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Moon, Sun, Menu, Bell, X } from 'lucide-react';
+import { Moon, Sun, Menu, X, Home, Info, BookOpen, GraduationCap, Calendar, Users, Image, Award, Phone, MessageCircle } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import Logo from '../assets/Images/logo1.png';
 
@@ -9,7 +9,15 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    'Home', 'About', 'Courses', 'Tutors', 'Gallery', 'Achievements', 'Contact', 'Blog', 'Bootcamp', 'Enroll',
+    { name: 'Home', href: '/', icon: <Home size={18} /> },
+    { name: 'About', href: '/#about', icon: <Info size={18} /> },
+    { name: 'Courses', href: '/#courses', icon: <BookOpen size={18} /> },
+    { name: 'Blog', href: '/blog', icon: <GraduationCap size={18} /> },
+    { name: 'Events', href: '/events', icon: <Calendar size={18} /> },
+    { name: 'Tutors', href: '/#tutors', icon: <Users size={18} /> },
+    { name: 'Gallery', href: '/#gallery', icon: <Image size={18} /> },
+    { name: 'Achievements', href: '/#achievements', icon: <Award size={18} /> },
+    { name: 'Contact', href: '/#contact', icon: <Phone size={18} /> },
   ];
 
   const headerStyle = {
@@ -21,12 +29,11 @@ const Header = () => {
     zIndex: 1000,
     boxShadow: '0 2px 20px rgba(0,0,0,0.1)',
     backdropFilter: 'blur(10px)'
-
   };
 
   const logoStyle = {
-    width: '80px',
-    height: '80px',
+    width: '70px',
+    height: '70px',
     borderRadius: '50%',
     objectFit: 'cover'
   };
@@ -35,7 +42,7 @@ const Header = () => {
     background: 'var(--card-bg)',
     border: 'none',
     cursor: 'pointer',
-    padding: '8px',
+    padding: '10px',
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
@@ -54,338 +61,382 @@ const Header = () => {
   };
 
   return (
-    <header style={headerStyle}>
-      <div className="container">
-        {/* Main Navigation Bar */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 1rem'
-        }}>
-          {/* Logo and Title */}
+    <>
+      <header style={headerStyle}>
+        <div className="container">
+          {/* Main Navigation Bar */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            flex: 1
+            justifyContent: 'space-between',
+            padding: '0 1rem'
           }}>
-            <img src={Logo} alt="Gep Protech Academy" style={logoStyle} />
-            <div>
-              <h1 style={{
-                color: 'var(--text-secondary)',
-                fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
-                fontWeight: 'bold',
-                lineHeight: '1.2',
-                margin: 0
-              }}>
-                Gep Protech Academy
-              </h1>
+            {/* Logo and Title */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              flex: 1
+            }}>
+              <img src={Logo} alt="Gep Protech Academy" style={logoStyle} />
+              <div>
+                <h1 style={{
+                  color: 'var(--text-secondary)',
+                  fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
+                  fontWeight: 'bold',
+                  lineHeight: '1.2',
+                  margin: 0
+                }}>
+                  Gep Protech Academy
+                </h1>
 
-              {/* Quick Access Buttons - Desktop */}
-              <div style={{
+                {/* Quick Access Buttons - Desktop */}
+                <div style={{
+                  display: 'flex',
+                  gap: '0.5rem',
+                  marginTop: '0.25rem',
+                }} className="mobile-hidden">
+                  <a href='https://student.gepprotech.com' target='_blank' style={{ textDecoration: 'none' }}>
+                    <button style={{
+                      background: 'var(--primary)',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
+                      fontSize: '0.8rem',
+                      color: isDark ? 'white' : 'black',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      GeP Student
+                    </button>
+                  </a>
+                  <a href='https://internship.gepprotech.com' target='_blank' style={{ textDecoration: 'none' }}>
+                    <button style={{
+                      background: 'var(--primary)',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
+                      fontSize: '0.8rem',
+                      color: isDark ? 'white' : 'black',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      GeP Internship Program
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem'
+            }} className="mobile-hidden">
+              <nav style={{
                 display: 'flex',
-                gap: '0.5rem',
-                marginTop: '0.25rem',
-              }} className="mobile-hidden">
-                <a href='https://student.gepprotech.com' target='_blank' style={{ textDecoration: 'none' }}>
-                  <button style={{
-                    background: 'var(--primary)',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '6px 12px',
-                    borderRadius: '20px',
-                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
-                    fontSize: '0.8rem',
-                    color: isDark ? 'white' : 'black',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    GeP Student
-                  </button>
-                </a>
-                <a href='https://internship.gepprotech.com' target='_blank' style={{ textDecoration: 'none' }}>
-                  <button style={{
-                    background: 'var(--primary)',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '6px 12px',
-                    borderRadius: '20px',
-                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
-                    fontSize: '0.8rem',
-                    color: isDark ? 'white' : 'black',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    GeP Internship Program
-                  </button>
-                </a>
-                <a href='#' target='_blank' style={{ textDecoration: 'none' }}>
-                  <button style={{
-                    background: 'var(--primary)',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '6px 12px',
-                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
-                    borderRadius: '20px',
-                    fontSize: '0.8rem',
-                    color: isDark ? 'white' : 'black',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    GeP E-Learning
-                  </button>
+                gap: '1.5rem',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
+              }}>
+                {navItems.slice(0, 6).map((item) => (
+                  <a key={item.name} href={item.href} style={navLinkStyle}>
+                    {item.name}
+                  </a>
+                ))}
+              </nav>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button onClick={toggleTheme} style={buttonStyle}>
+                  {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
+                </button>
+
+                <a href="/enroll" style={{
+                  ...buttonStyle,
+                  background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
+                  borderRadius: '25px',
+                  padding: '10px 20px',
+                  color: 'white',
+                  fontWeight: '600',
+                  fontSize: '0.9rem',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 15px rgba(218, 165, 32, 0.3)'
+                }}>
+                  Enroll Now
                 </a>
               </div>
             </div>
-          </div>
 
-          {/* Desktop Navigation */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem'
-          }} className="mobile-hidden">
-            <nav style={{
-              display: 'flex',
-              gap: '1.5rem',
-              flexWrap: 'wrap',
-              justifyContent: 'center'
-            }}>
-              {navItems.map((item) => (
-                <a key={item} href={item === 'Enroll' ? '/enroll' : (item === 'Blog' ? '/blog' : `/#${item.toLowerCase()}`)} style={navLinkStyle}>
-                  {item}
-                </a>
-              ))}
-            </nav>
-
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {/* Mobile Menu Button */}
+            <div style={{
+              display: 'none',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }} className="mobile-menu">
               <button onClick={toggleTheme} style={buttonStyle}>
                 {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
               </button>
 
-              <button style={buttonStyle}>
-                <a href='/blog'>
-                  <Bell size={18} color="var(--primary-color)" />
-                </a>
-                <span style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: '10px',
-                  backgroundColor: 'red',
-                  position: 'relative',
-                  right: '8px',
-                  bottom: '2px'
-                }}></span>
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                style={{
+                  ...buttonStyle,
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
+                  color: 'white'
+                }}
+              >
+                {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
-
-              <a href="/enroll" style={buttonStyle}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="green">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893c0-3.18-1.24-6.169-3.495-8.418" />
-                </svg>
-              </a>
             </div>
           </div>
-
-          {/* Mobile Menu Button */}
-          <div style={{
-            display: 'none',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }} className="mobile-menu">
-            <button style={buttonStyle}>
-              <a href='/blog'>
-                <Bell size={18} color="var(--primary-color)" />
-              </a>
-              <span style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: '10px',
-                backgroundColor: 'red',
-                position: 'relative',
-                right: '8px',
-                bottom: '2px'
-              }}></span>
-            </button>
-
-            <button onClick={toggleTheme} style={buttonStyle}>
-              {isDark ? <Sun size={18} color="var(--primary-color)" /> : <Moon size={18} color="var(--primary-color)" />}
-            </button>
-
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              style={{
-                ...buttonStyle,
-                borderRadius: '5px'
-              }}
-            >
-              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
         </div>
 
-        {/* Quick Access Buttons - Mobile */}
-        <div style={{
-          display: 'none',
-          justifyContent: 'center',
-          gap: '0.5rem',
-          padding: '0.5rem 1rem',
-          borderTop: '1px solid var(--border-color)',
-        }} className="mobile-only">
-          <a href='http://www.student.gepprotech.com' target='_blank' style={{ textDecoration: 'none' }}>
-            <button style={{
-              background: 'var(--primary)',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '6px 12px',
-              borderRadius: '20px',
-              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
-              fontSize: '0.8rem',
-              color: isDark ? 'white' : 'black',
-              whiteSpace: 'nowrap'
-            }}>
-              GeP Student
-            </button>
-          </a>
-          <a href='https://internship.gepprotech.com' target='_blank' style={{ textDecoration: 'none' }}>
-            <button style={{
-              background: 'var(--primary)',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '6px 12px',
-              borderRadius: '20px',
-              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
-              fontSize: '0.8rem',
-              color: isDark ? 'white' : 'black',
-              whiteSpace: 'nowrap'
-            }}>
-              GeP Internship Program
-            </button>
-          </a>
-          <a href='#' target='_blank' style={{ textDecoration: 'none' }}>
-            <button style={{
-              background: 'var(--primary)',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '6px 12px',
-              borderRadius: '20px',
-              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)',
-              fontSize: '0.8rem',
-              color: isDark ? 'white' : 'black',
-              whiteSpace: 'nowrap'
-            }}>
-              GeP E-Learning
-            </button>
-          </a>
-        </div>
+        <style>{`
+          @media (max-width: 768px) {
+            .mobile-hidden { 
+              display: none !important; 
+            }
+            .mobile-menu { 
+              display: flex !important; 
+            }
+          }
+          
+          @media (min-width: 769px) {
+            .mobile-menu { 
+              display: none !important; 
+            }
+          }
 
-        {/* Mobile Menu as Modal */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
+          /* Hover effects */
+          a:hover {
+            color: var(--primary-color) !important;
+          }
+
+          button:hover {
+            transform: scale(1.05);
+          }
+
+          /* Smooth transitions */
+          * {
+            transition: color 0.3s ease, background-color 0.3s ease;
+          }
+        `}</style>
+      </header>
+
+      {/* Mobile Menu Modal - Slides from Left */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsMobileMenuOpen(false)}
               style={{
                 position: 'fixed',
                 inset: 0,
-                background: 'rgba(0,0,0,0.45)',
+                background: 'rgba(0,0,0,0.6)',
                 zIndex: 1100,
+                backdropFilter: 'blur(5px)'
+              }}
+            />
+
+            {/* Modal Panel */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '30%',
+                minWidth: '280px',
+                maxWidth: '350px',
+                height: '100vh',
+                background: 'var(--bg-secondary)',
+                zIndex: 1200,
                 display: 'flex',
-                alignItems: 'flex-start',
-                justifyContent: 'center',
-                padding: '1.25rem'
+                flexDirection: 'column',
+                boxShadow: '5px 0 30px rgba(0,0,0,0.3)',
+                overflow: 'hidden'
               }}
             >
-              <motion.div
-                initial={{ y: -12, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -12, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                style={{
-                  width: '100%',
-                  maxWidth: '520px',
-                  background: 'var(--card-bg)',
-                  borderRadius: '12px',
-                  padding: '1rem',
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
-                  border: '1px solid var(--border-color)',
-                  maxHeight: '84vh',
-                  overflow: 'auto'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <strong style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Menu</strong>
-                  <button onClick={() => setIsMobileMenuOpen(false)} style={{ ...buttonStyle, borderRadius: 8 }} aria-label="Close menu">
-                    <X size={18} />
-                  </button>
+              {/* Modal Header */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '1.5rem',
+                borderBottom: '1px solid var(--border-color)',
+                background: 'linear-gradient(135deg, var(--primary-color), #daa520)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <img src={Logo} alt="Gep Protech" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }} />
+                  <div>
+                    <h2 style={{ color: 'white', fontSize: '1.1rem', fontWeight: '700', margin: 0 }}>Gep Protech</h2>
+                    <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', margin: 0 }}>Academy</p>
+                  </div>
                 </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  style={{
+                    background: 'rgba(255,255,255,0.2)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '8px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white'
+                  }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
 
-                <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', paddingBottom: '0.5rem' }}>
-                  {navItems.map((item) => (
-                    <a
-                      key={item}
-                      href={item === 'Enroll' ? '/enroll' : (item === 'Blog' ? '/blog' : `/#${item.toLowerCase()}`)}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      style={{
-                        ...navLinkStyle,
-                        padding: '0.85rem 0',
-                        borderBottom: '1px solid var(--border-color)',
-                        fontSize: '1rem'
-                      }}
-                    >
-                      {item}
-                    </a>
-                  ))}
-                </nav>
-              </motion.div>
+              {/* Navigation Items */}
+              <nav style={{
+                flex: 1,
+                overflowY: 'auto',
+                padding: '1rem 0'
+              }}>
+                {navItems.map((item, index) => (
+                  <motion.a
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '15px',
+                      padding: '1rem 1.5rem',
+                      color: 'var(--text-primary)',
+                      textDecoration: 'none',
+                      fontWeight: '500',
+                      fontSize: '1rem',
+                      transition: 'all 0.3s ease',
+                      borderLeft: '3px solid transparent'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'var(--hover-color)';
+                      e.currentTarget.style.borderLeftColor = 'var(--primary-color)';
+                      e.currentTarget.style.color = 'var(--primary-color)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.borderLeftColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--text-primary)';
+                    }}
+                  >
+                    <span style={{ color: 'var(--primary-color)' }}>{item.icon}</span>
+                    {item.name}
+                  </motion.a>
+                ))}
+              </nav>
+
+              {/* Special Enroll Button */}
+              <div style={{
+                padding: '1.5rem',
+                borderTop: '1px solid var(--border-color)'
+              }}>
+                <motion.a
+                  href="/enroll"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    width: '100%',
+                    padding: '15px 25px',
+                    background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
+                    color: 'white',
+                    textDecoration: 'none',
+                    borderRadius: '12px',
+                    fontWeight: '700',
+                    fontSize: '1.1rem',
+                    boxShadow: '0 4px 20px rgba(218, 165, 32, 0.4)',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-3px)';
+                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(218, 165, 32, 0.5)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(218, 165, 32, 0.4)';
+                  }}
+                >
+                  <GraduationCap size={22} />
+                  Enroll Now
+                </motion.a>
+                <p style={{
+                  textAlign: 'center',
+                  color: 'var(--text-secondary)',
+                  fontSize: '0.85rem',
+                  marginTop: '12px',
+                  marginBottom: 0
+                }}>
+                  Start your tech journey today!
+                </p>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+          </>
+        )}
+      </AnimatePresence>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .mobile-hidden { 
-            display: none !important; 
-          }
-          .mobile-menu { 
-            display: flex !important; 
-          }
-          .mobile-only {
-            display: flex !important;
-          }
-          
-          /* Adjust header layout for mobile */
-          header > div > div:first-child {
-            flex-direction: column;
-            gap: 0.5rem;
-          }
-        }
-        
-        @media (min-width: 769px) {
-          .mobile-menu { 
-            display: none !important; 
-          }
-          .mobile-only {
-            display: none !important;
-          }
-        }
-
-        /* Hover effects */
-        a:hover {
-          color: var(--primary-color) !important;
-        }
-
-        button:hover {
-          transform: scale(1.05);
-        }
-
-        /* Smooth transitions */
-        * {
-          transition: color 0.3s ease, background-color 0.3s ease;
-        }
-      `}</style>
-    </header>
+      {/* Floating WhatsApp Button - Bottom Left */}
+      <motion.a
+        href="https://wa.me/237XXXXXXXXX"
+        target="_blank"
+        rel="noopener noreferrer"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 1, type: 'spring', stiffness: 200 }}
+        style={{
+          position: 'fixed',
+          bottom: '30px',
+          left: '30px',
+          width: '60px',
+          height: '60px',
+          borderRadius: '50%',
+          background: '#25D366',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 20px rgba(37, 211, 102, 0.4)',
+          zIndex: 999,
+          cursor: 'pointer',
+          transition: 'all 0.3s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.1)';
+          e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 211, 102, 0.5)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 20px rgba(37, 211, 102, 0.4)';
+        }}
+      >
+        <MessageCircle size={30} color="white" />
+      </motion.a>
+    </>
   );
 };
 

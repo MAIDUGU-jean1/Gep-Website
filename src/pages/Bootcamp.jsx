@@ -210,7 +210,7 @@ const Bootcamp = () => {
                             <Link to="/enroll" className="btn-primary">
                                 Register Now
                             </Link>
-                            <a href="#program" className="btn-secondary">
+                            <a href="/events" className="btn-secondary">
                                 Other Events
                             </a>
                         </div>

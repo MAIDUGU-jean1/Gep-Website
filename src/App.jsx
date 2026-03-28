@@ -20,6 +20,7 @@ import Subscribe from './sections/Subscribe';
 import Enrollment from './pages/Enrollment';
 import CourseDetails from './pages/CourseDetails';
 import Bootcamp from './pages/Bootcamp';
+import Events from './pages/Events';
 import DiscountCountdown from './components/DiscountCountdown';
 
 // Welcome Popup Component - shows on every page load/refresh
@@ -200,6 +201,7 @@ function App() {
               <Route path="/enroll" element={<Enrollment />} />
               <Route path="/course/:id" element={<CourseDetails />} />
               <Route path="/bootcamp" element={<Bootcamp />} />
+              <Route path="/events" element={<Events />} />
             </Routes>
           </main>
           <Footer />
