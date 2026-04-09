@@ -80,7 +80,7 @@ const tutors = [
     courses: ["Web Development", "React Masterclass", "Laravel Backend", "Express", "Node.js"],
     students: 1500,
     email: "maidugujeandedieu600@gmail.com",
-    detailedBio: "Terence is a passionate full-stack developer with extensive experience in modern web technologies. He has built numerous web applications and enjoys mentoring aspiring developers.",
+    detailedBio: "Jean is a passionate full-stack developer with extensive experience in modern web technologies. He has built numerous web applications and enjoys mentoring aspiring developers.",
     achievements: [
       "Built 50+ web applications",
       "React Certified Developer",

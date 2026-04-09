@@ -1,130 +1,118 @@
-import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Calendar, MapPin, Users, Filter, ChevronRight, Clock, Tag } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Calendar, MapPin, Users, Filter, ChevronRight, Clock, Tag, Star, Send, User, Mail, MessageSquare, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './css/Events.css';
+
+const apiUrl = import.meta.env.VITE_API_URL;
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600';
 
 const Events = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('All');
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showReviewModal, setShowReviewModal] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        isAnonymous: 'no',
+        message: ''
+    });
+    const [formErrors, setFormErrors] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
 
-    // Event categories
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/events`);
+                setEvents(response.data.events || response.data);
+            } catch (error) {
+                console.error('Failed to fetch events:', error);
+                setEvents([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchEvents();
+    }, []);
+
     const categories = ['All', 'Workshops', 'Training', 'Webinars', 'Networking', 'Meetups'];
 
-    // Events data
-    const events = [
-        {
-            id: 1,
-            title: 'GEP Bootcamp 2026',
-            description: 'An intensive 5-day bootcamp covering AI, Design, Cybersecurity, and Project Management. Learn from industry experts and build real projects.',
-            startDate: 'March 31, 2026',
-            endDate: 'April 4, 2026',
-            location: 'GEP Office, Psalm One City',
-            category: 'Workshops',
-            registered: 25,
-            image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600',
-            link: '/bootcamp'
-        },
-        {
-            id: 2,
-            title: 'Launching of 13th Batch',
-            description: 'Join us for the official launch of our 12th batch! Discover our programs, meet instructors, and learn about scholarship opportunities.',
-            startDate: 'April 11, 2026',
-            endDate: 'April 11, 2026',
-            location: 'GEP Office, Psalm One City',
-            category: 'Training',
-            registered: 42,
-            image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600',
-            link: '/enroll'
-        },
-        // {
-        //   id: 3,
-        //   title: 'Web Development Masterclass',
-        //   description: 'A comprehensive webinar on modern web development technologies including React, Node.js, and cloud deployment strategies.',
-        //   startDate: 'April 15, 2026',
-        //   endDate: 'April 15, 2026',
-        //   location: 'Online (Zoom)',
-        //   category: 'Webinars',
-        //   registered: 78,
-        //   image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600',
-        //   link: '#'
-        // },
-        // {
-        //   id: 4,
-        //   title: 'Tech Networking Night',
-        //   description: 'Connect with fellow tech enthusiasts, industry professionals, and potential collaborators in a relaxed networking environment.',
-        //   startDate: 'April 20, 2026',
-        //   endDate: 'April 20, 2026',
-        //   location: 'GEP Office, Psalm One City',
-        //   category: 'Networking',
-        //   registered: 35,
-        //   image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=600',
-        //   link: '#'
-        // },
-        // {
-        //   id: 5,
-        //   title: 'AI & Machine Learning Workshop',
-        //   description: 'Hands-on workshop covering AI fundamentals, machine learning algorithms, and practical applications in business.',
-        //   startDate: 'April 25, 2026',
-        //   endDate: 'April 26, 2026',
-        //   location: 'GEP Office, Psalm One City',
-        //   category: 'Workshops',
-        //   registered: 30,
-        //   image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600',
-        //   link: '#'
-        // },
-        // {
-        //   id: 6,
-        //   title: 'Mobile App Development Training',
-        //   description: 'Learn to build cross-platform mobile applications using React Native and Flutter frameworks.',
-        //   startDate: 'May 5, 2026',
-        //   endDate: 'May 9, 2026',
-        //   location: 'GEP Office, Psalm One City',
-        //   category: 'Training',
-        //   registered: 22,
-        //   image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600',
-        //   link: '#'
-        // },
-        // {
-        //   id: 7,
-        //   title: 'Cybersecurity Essentials Webinar',
-        //   description: 'Understand cybersecurity threats, protection strategies, and best practices for securing your digital assets.',
-        //   startDate: 'May 10, 2026',
-        //   endDate: 'May 10, 2026',
-        //   location: 'Online (Zoom)',
-        //   category: 'Webinars',
-        //   registered: 65,
-        //   image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600',
-        //   link: '#'
-        // },
-        // {
-        //   id: 8,
-        //   title: 'Women in Tech Meetup',
-        //   description: 'A supportive community meetup for women in technology to share experiences, mentorship, and career growth opportunities.',
-        //   startDate: 'May 15, 2026',
-        //   endDate: 'May 15, 2026',
-        //   location: 'GEP Office, Psalm One City',
-        //   category: 'Meetups',
-        //   registered: 48,
-        //   image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?w=600',
-        //   link: '#'
-        // }
-    ];
-
-    // Filter events based on search and category
     const filteredEvents = useMemo(() => {
         return events.filter(event => {
             const matchesSearch =
-                event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                event.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                event.category.toLowerCase().includes(searchQuery.toLowerCase());
+                event.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                event.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                event.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                event.type?.toLowerCase().includes(searchQuery.toLowerCase());
 
-            const matchesCategory = activeCategory === 'All' || event.category === activeCategory;
+            const matchesCategory = activeCategory === 'All' || event.type === activeCategory;
 
             return matchesSearch && matchesCategory;
         });
-    }, [searchQuery, activeCategory]);
+    }, [searchQuery, activeCategory, events]);
+
+    const handleReviewClick = (event) => {
+        setSelectedEvent(event);
+        setShowReviewModal(true);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        if (formErrors[name]) {
+            setFormErrors({ ...formErrors, [name]: '' });
+        }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+        if (!formData.name.trim()) errors.name = 'Name is required';
+        if (!formData.email.trim()) {
+            errors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            errors.email = 'Email is invalid';
+        }
+        if (!formData.message.trim()) errors.message = 'Message is required';
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    const handleReviewSubmit = (e) => {
+        e.preventDefault();
+        if (!validateForm()) return;
+
+        setIsSubmitting(true);
+        setTimeout(() => {
+            console.log('Review submitted:', {
+                event_id: selectedEvent?.id,
+                ...formData
+            });
+            setFormData({ name: '', email: '', isAnonymous: 'no', message: '' });
+            setIsSubmitting(false);
+            setSubmitSuccess(true);
+            setTimeout(() => {
+                setSubmitSuccess(false);
+                setShowReviewModal(false);
+            }, 2000);
+        }, 1000);
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    };
+
+    const getThumbnail = (event) => {
+        if (!event.thumbnail) return DEFAULT_IMAGE;
+        if (event.thumbnail.startsWith('http')) return event.thumbnail;
+        return `${apiUrl}/storage/${event.thumbnail}`;
+    };
 
     return (
         <div className="events-page">
@@ -194,7 +182,12 @@ const Events = () => {
             {/* Events Grid Section */}
             <section className="events-grid-section">
                 <div className="container">
-                    {filteredEvents.length > 0 ? (
+                    {loading ? (
+                        <div className="loading-container">
+                            <div className="loading-spinner"></div>
+                            <p>Loading events...</p>
+                        </div>
+                    ) : filteredEvents.length > 0 ? (
                         <div className="events-grid">
                             {filteredEvents.map((event, index) => (
                                 <motion.div
@@ -205,20 +198,20 @@ const Events = () => {
                                     transition={{ duration: 0.5, delay: index * 0.1 }}
                                 >
                                     <div className="event-image">
-                                        <img src={event.image} alt={event.title} />
+                                        <img src={getThumbnail(event)} alt={event.title} />
                                         <div className="event-category">
                                             <Tag size={14} />
-                                            <span>{event.category}</span>
+                                            <span>{event.type}</span>
                                         </div>
                                     </div>
                                     <div className="event-content">
                                         <div className="event-date">
                                             <Calendar size={16} />
-                                            <span>{event.startDate}</span>
-                                            {event.endDate !== event.startDate && (
+                                            <span>{formatDate(event.date || event.start_date)}</span>
+                                            {event.end_date && event.end_date !== event.start_date && (
                                                 <>
                                                     <span className="date-separator">-</span>
-                                                    <span>{event.endDate}</span>
+                                                    <span>{formatDate(event.end_date)}</span>
                                                 </>
                                             )}
                                         </div>
@@ -228,19 +221,14 @@ const Events = () => {
                                             <MapPin size={16} />
                                             <span>{event.location}</span>
                                         </div>
-                                        <div className="event-stats">
-                                            <div className="stat">
-                                                <Users size={16} />
-                                                <span>{event.registered} Registered</span>
-                                            </div>
-                                        </div>
                                         <div className="event-actions">
-                                            <Link to={event.link} className="btn-view">
+                                            <button className="btn-review" onClick={() => handleReviewClick(event)}>
+                                                <Star size={16} />
+                                                Review
+                                            </button>
+                                            <Link to={event.code ? `/bootcamp?event=${event.code}` : '/enroll'} className="btn-view">
                                                 View Details
                                                 <ChevronRight size={16} />
-                                            </Link>
-                                            <Link to="/enroll" className="btn-register">
-                                                Register Now
                                             </Link>
                                         </div>
                                     </div>
@@ -260,6 +248,138 @@ const Events = () => {
                     )}
                 </div>
             </section>
+
+            {/* Review Modal */}
+            <AnimatePresence>
+                {showReviewModal && (
+                    <motion.div
+                        className="modal-overlay"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setShowReviewModal(false)}
+                    >
+                        <motion.div
+                            className="review-modal"
+                            initial={{ opacity: 0, y: 50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 50 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button className="modal-close" onClick={() => setShowReviewModal(false)}>
+                                <X size={20} />
+                            </button>
+                            <div className="modal-header">
+                                <h2>Review Event</h2>
+                                <p>Share your experience about {selectedEvent?.title}</p>
+                            </div>
+
+                            {submitSuccess && (
+                                <motion.div
+                                    className="success-message"
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                >
+                                    Thank you for your review! It has been submitted successfully.
+                                </motion.div>
+                            )}
+
+                            <form onSubmit={handleReviewSubmit} className="review-form">
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="name">
+                                            <User size={18} />
+                                            Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleInputChange}
+                                            placeholder="Your name"
+                                            className={formErrors.name ? 'error' : ''}
+                                            disabled={formData.isAnonymous === 'yes'}
+                                        />
+                                        {formErrors.name && <span className="error-text">{formErrors.name}</span>}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="email">
+                                            <Mail size={18} />
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            placeholder="your@email.com"
+                                            className={formErrors.email ? 'error' : ''}
+                                            disabled={formData.isAnonymous === 'yes'}
+                                        />
+                                        {formErrors.email && <span className="error-text">{formErrors.email}</span>}
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="radio-label">
+                                        <input
+                                            type="radio"
+                                            name="isAnonymous"
+                                            value="no"
+                                            checked={formData.isAnonymous === 'no'}
+                                            onChange={handleInputChange}
+                                        />
+                                        <span className="radio-custom"></span>
+                                        Show my name
+                                    </label>
+                                    <label className="radio-label">
+                                        <input
+                                            type="radio"
+                                            name="isAnonymous"
+                                            value="yes"
+                                            checked={formData.isAnonymous === 'yes'}
+                                            onChange={handleInputChange}
+                                        />
+                                        <span className="radio-custom"></span>
+                                        Submit anonymously
+                                    </label>
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="message">
+                                        <MessageSquare size={18} />
+                                        Your Review
+                                    </label>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleInputChange}
+                                        placeholder="Share your experience with this event..."
+                                        rows={5}
+                                        className={formErrors.message ? 'error' : ''}
+                                    ></textarea>
+                                    {formErrors.message && <span className="error-text">{formErrors.message}</span>}
+                                </div>
+
+                                <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                    {isSubmitting ? (
+                                        <span className="loading-text">Submitting...</span>
+                                    ) : (
+                                        <>
+                                            <Send size={18} />
+                                            Submit Review
+                                        </>
+                                    )}
+                                </button>
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

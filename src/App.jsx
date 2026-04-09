@@ -22,6 +22,7 @@ import CourseDetails from './pages/CourseDetails';
 import Bootcamp from './pages/Bootcamp';
 import Events from './pages/Events';
 import DiscountCountdown from './components/DiscountCountdown';
+import Review from './pages/Review';
 
 // Welcome Popup Component - shows on every page load/refresh
 const WelcomePopup = () => {
@@ -202,6 +203,7 @@ function App() {
               <Route path="/course/:id" element={<CourseDetails />} />
               <Route path="/bootcamp" element={<Bootcamp />} />
               <Route path="/events" element={<Events />} />
+              <Route path="/review" element={<Review />} />
             </Routes>
           </main>
           <Footer />

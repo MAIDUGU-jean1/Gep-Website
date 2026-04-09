@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Moon, Sun, Menu, X, Home, Info, BookOpen, GraduationCap, Calendar, Users, Image, Award, Phone, MessageCircle, Bell } from 'lucide-react';
+import { Moon, Sun, Menu, X, Home, Info, BookOpen, GraduationCap, Calendar, Users, Image, Award, Phone, MessageCircle, Bell, Star } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import Logo from '../assets/Images/logo1.png';
 
@@ -14,6 +14,7 @@ const Header = () => {
     { name: 'Courses', href: '/#courses', icon: <BookOpen size={18} /> },
     { name: 'Blog', href: '/blog', icon: <GraduationCap size={18} /> },
     { name: 'Events', href: '/events', icon: <Calendar size={18} /> },
+    { name: 'Reviews', href: '/review', icon: <Star size={18} /> },
     { name: 'Bootcamp', href: '/bootcamp', icon: <Users size={18} /> },
     { name: 'Tutors', href: '/#tutors', icon: <Users size={18} /> },
     { name: 'Gallery', href: '/#gallery', icon: <Image size={18} /> },

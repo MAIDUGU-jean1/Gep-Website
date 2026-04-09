@@ -26,7 +26,7 @@ const Hero = () => {
       marginTop: '5rem',
       overflow: 'hidden'
     }}>
-      <div className="container" style={{ width: '100%'}}>
+      <div className="container" style={{ width: '100%' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr',
@@ -34,11 +34,11 @@ const Hero = () => {
           alignItems: 'center',
           width: 'inherit'
         }} className="hero-grid">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            style={{ order: 2 }} 
+            style={{ order: 2 }}
             className="mobile-order-2"
           >
             <div style={{
@@ -61,7 +61,7 @@ const Hero = () => {
                 Professional Training
               </div>
             </div>
-            
+
             <h1 style={{
               fontSize: 'clamp(2.5rem, 5vw, 4rem)',
               fontWeight: 'bold',
@@ -72,7 +72,7 @@ const Hero = () => {
               Transform Your Career with{' '}
               <span style={{ color: 'var(--primary-color)' }}>Gep Protech</span>
             </h1>
-            
+
             <p style={{
               fontSize: 'clamp(1.1rem, 3vw, 1.3rem)',
               lineHeight: '1.6',
@@ -80,18 +80,18 @@ const Hero = () => {
               opacity: 0.9,
               maxWidth: '600px'
             }}>
-              Master in-demand skills with our comprehensive vocational training programs. 
+              Master in-demand skills with our comprehensive vocational training programs.
               Get hands-on experience and launch your career in tech, design, and business.
             </p>
-            
+
             <div className='enrol-grid' style={{
               display: 'flex',
               gap: '1rem',
               flexWrap: 'wrap',
               marginBottom: '3rem'
             }}>
-               <motion.a 
-                className="btn-secondary" 
+              <motion.a
+                className="btn-secondary"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -102,18 +102,18 @@ const Hero = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 href='/enroll'
-                // onClick={openVideo}
+              // onClick={openVideo}
               >
                 {/* <Play size={20} /> */}
-                Enroll Now 
+                Enroll Now
               </motion.a>
               <button className="btn-primary">
-                    <a href="#courses" style={{ color: 'white', textDecoration: 'none' }}>
-                        Explore Courses
-                    </a>
+                <a href="#courses" style={{ color: 'white', textDecoration: 'none' }}>
+                  Explore Courses
+                </a>
               </button>
-              <motion.a 
-                className="btn-secondary" 
+              <motion.a
+                className="btn-secondary"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -121,16 +121,16 @@ const Hero = () => {
                   textDecoration: 'none',
                   margin: '0',
                 }}
-                whileHover={{ scale: 1.05, color: 'white'  }}
+                whileHover={{ scale: 1.05, color: 'white' }}
                 whileTap={{ scale: 0.95 }}
                 href='/blog'
-                // onClick={openVideo}
+              // onClick={openVideo}
               >
                 {/* <Play size={20} /> */}
                 What's New
               </motion.a>
             </div>
-            
+
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
@@ -141,35 +141,35 @@ const Hero = () => {
                 { icon: Award, number: '50+', label: 'Certified Courses' },
                 { icon: Clock, number: '98%', label: 'Success Rate' }
               ].map((item, index) => (
-                <motion.div 
+                <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                   style={{ textAlign: 'center' }}
                 >
-                  <item.icon 
-                    size={32} 
-                    style={{ 
+                  <item.icon
+                    size={32}
+                    style={{
                       marginBottom: '0.5rem',
                       color: 'var(--primary-color)'
-                    }} 
+                    }}
                     className="stats-icon"
                   />
-                  <div 
-                    style={{ 
-                      fontSize: 'clamp(1.5rem, 3vw, 2rem)', 
-                      fontWeight: 'bold', 
-                      color: 'var(--text-secondary)' 
+                  <div
+                    style={{
+                      fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                      fontWeight: 'bold',
+                      color: 'var(--text-secondary)'
                     }}
                     className="stats-number"
                   >
                     {item.number}
                   </div>
-                  <div 
-                    style={{ 
-                      fontSize: '0.9rem', 
-                      opacity: 0.8 
+                  <div
+                    style={{
+                      fontSize: '0.9rem',
+                      opacity: 0.8
                     }}
                     className="stats-label"
                   >
@@ -179,8 +179,8 @@ const Hero = () => {
               ))}
             </div>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
@@ -193,11 +193,11 @@ const Hero = () => {
               order: 1,
               position: 'relative',
               overflow: 'hidden'
-            }} 
+            }}
             className="mobile-order-1"
           >
             {/* Video Thumbnail with Image */}
-            <div 
+            <div
               style={{
                 width: '100%',
                 height: '400px',
@@ -210,7 +210,7 @@ const Hero = () => {
               className="video-thumbnail"
             >
               {/* Background Image */}
-              <img 
+              <img
                 src={Impression}
                 alt="Gep Protech Student Success Stories"
                 style={{
@@ -220,7 +220,7 @@ const Hero = () => {
                   transition: 'transform 0.3s ease'
                 }}
               />
-              
+
               {/* Dark Overlay */}
               <div style={{
                 position: 'absolute',
@@ -235,7 +235,7 @@ const Hero = () => {
                 transition: 'background 0.3s ease'
               }}>
                 {/* Play Button */}
-                <motion.div 
+                <motion.div
                   style={{
                     background: 'rgba(218, 165, 32, 0.9)',
                     width: '80px',
@@ -341,7 +341,7 @@ const Hero = () => {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
-              <button 
+              <button
                 onClick={closeVideo}
                 style={{
                   position: 'absolute',
@@ -369,8 +369,8 @@ const Hero = () => {
                 paddingBottom: '56.25%', // 16:9 aspect ratio
                 position: 'relative'
               }}>
-                <video 
-                  controls 
+                <video
+                  controls
                   autoPlay
                   style={{
                     position: 'absolute',
@@ -381,13 +381,13 @@ const Hero = () => {
                     border: 'none'
                   }}
                 >
-                  <source 
+                  <source
                     src={advert}
-                    type="video/mp4" 
+                    type="video/mp4"
                   />
-                  <source 
+                  <source
                     src={advert}
-                    type="video/mp4" 
+                    type="video/mp4"
                   />
                   Your browser does not support the video tag.
                 </video>
@@ -403,13 +403,13 @@ const Hero = () => {
                 }}>
                   Welcome to Gep Protech Academic
                 </h3>
-                <p style={{ 
+                <p style={{
                   opacity: 0.8,
                   lineHeight: '1.6',
                   fontSize: '1rem'
                 }}>
-                  Discover how our vocational training programs can transform your career. 
-                  Watch this introduction to learn about our teaching methodology, 
+                  Discover how our vocational training programs can transform your career.
+                  Watch this introduction to learn about our teaching methodology,
                   state-of-the-art facilities, and student success stories.
                 </p>
               </div>
@@ -419,7 +419,7 @@ const Hero = () => {
       </AnimatePresence>
 
       <style>{`
-
+      
         @media (max-width: 990px) {
       .home {
         margin-top: 9rem !important; /* Higher margin for mobile */
