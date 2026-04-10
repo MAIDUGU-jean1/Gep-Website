@@ -6,6 +6,7 @@ import axios from 'axios';
 import './css/Events.css';
 
 const apiUrl = import.meta.env.VITE_API_URL;
+const fileUrl = import.meta.env.VITE_FILE_API_URL;
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600';
 
 const Events = () => {
@@ -71,35 +72,43 @@ const Events = () => {
 
     const validateForm = () => {
         const errors = {};
-        if (!formData.name.trim()) errors.name = 'Name is required';
-        if (!formData.email.trim()) {
-            errors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            errors.email = 'Email is invalid';
+        if (formData.isAnonymous !== 'yes') {
+            if (!formData.name.trim()) errors.name = 'Name is required';
+            if (!formData.email.trim()) {
+                errors.email = 'Email is required';
+            } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                errors.email = 'Email is invalid';
+            }
         }
         if (!formData.message.trim()) errors.message = 'Message is required';
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
 
-    const handleReviewSubmit = (e) => {
+    const handleReviewSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
 
         setIsSubmitting(true);
-        setTimeout(() => {
-            console.log('Review submitted:', {
+        try {
+            await axios.post(`${apiUrl}/reviews`, {
                 event_id: selectedEvent?.id,
-                ...formData
+                name: formData.isAnonymous === 'yes' ? null : formData.name,
+                email: formData.isAnonymous === 'yes' ? null : formData.email,
+                is_anonymous: formData.isAnonymous === 'yes',
+                message: formData.message,
             });
             setFormData({ name: '', email: '', isAnonymous: 'no', message: '' });
-            setIsSubmitting(false);
             setSubmitSuccess(true);
             setTimeout(() => {
                 setSubmitSuccess(false);
                 setShowReviewModal(false);
             }, 2000);
-        }, 1000);
+        } catch (error) {
+            console.error('Failed to submit review:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const formatDate = (dateString) => {
@@ -111,7 +120,7 @@ const Events = () => {
     const getThumbnail = (event) => {
         if (!event.thumbnail) return DEFAULT_IMAGE;
         if (event.thumbnail.startsWith('http')) return event.thumbnail;
-        return `${apiUrl}/storage/${event.thumbnail}`;
+        return `${fileUrl}/${event.thumbnail}`;
     };
 
     return (
@@ -265,6 +274,7 @@ const Events = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 50 }}
                             onClick={(e) => e.stopPropagation()}
+                            style={{ pointerEvents: 'auto' }}
                         >
                             <button className="modal-close" onClick={() => setShowReviewModal(false)}>
                                 <X size={20} />
@@ -284,7 +294,7 @@ const Events = () => {
                                 </motion.div>
                             )}
 
-                            <form onSubmit={handleReviewSubmit} className="review-form">
+                            <form onSubmit={handleReviewSubmit} className="review-form" style={{ pointerEvents: 'auto' }}>
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="name">
@@ -300,6 +310,7 @@ const Events = () => {
                                             placeholder="Your name"
                                             className={formErrors.name ? 'error' : ''}
                                             disabled={formData.isAnonymous === 'yes'}
+                                            style={{ pointerEvents: 'auto' }}
                                         />
                                         {formErrors.name && <span className="error-text">{formErrors.name}</span>}
                                     </div>
@@ -318,6 +329,7 @@ const Events = () => {
                                             placeholder="your@email.com"
                                             className={formErrors.email ? 'error' : ''}
                                             disabled={formData.isAnonymous === 'yes'}
+                                            style={{ pointerEvents: 'auto' }}
                                         />
                                         {formErrors.email && <span className="error-text">{formErrors.email}</span>}
                                     </div>
@@ -353,15 +365,16 @@ const Events = () => {
                                         <MessageSquare size={18} />
                                         Your Review
                                     </label>
-                                    <textarea
-                                        id="message"
-                                        name="message"
-                                        value={formData.message}
-                                        onChange={handleInputChange}
-                                        placeholder="Share your experience with this event..."
-                                        rows={5}
-                                        className={formErrors.message ? 'error' : ''}
-                                    ></textarea>
+                                        <textarea
+                                            id="message"
+                                            name="message"
+                                            value={formData.message}
+                                            onChange={handleInputChange}
+                                            placeholder="Share your experience with this event..."
+                                            rows={5}
+                                            className={formErrors.message ? 'error' : ''}
+                                            style={{ pointerEvents: 'auto' }}
+                                        ></textarea>
                                     {formErrors.message && <span className="error-text">{formErrors.message}</span>}
                                 </div>
 

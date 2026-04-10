@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Send, User, Mail, MessageSquare, Calendar, Clock, ThumbsUp, Quote } from 'lucide-react';
+import axios from 'axios';
 import './css/Review.css';
+
+const apiUrl = import.meta.env.VITE_API_URL;
+const fileUrl = import.meta.env.VITE_FILE_API_URL;
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400';
 
 const Review = () => {
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState('all');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,99 +24,40 @@ const Review = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const sampleReviews = [
-    {
-      id: 1,
-      name: 'Marie Claire',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
-      rating: 5,
-      date: 'April 5, 2026',
-      message: 'GEP Protech Academy transformed my career. The courses are well-structured and the instructors are exceptional. I landed my dream job within 3 months of completing the web development program!',
-      likes: 24
-    },
-    {
-      id: 2,
-      name: 'Pierre Kamga',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-      rating: 5,
-      date: 'April 3, 2026',
-      message: 'Outstanding learning experience! The bootcamp was intensive but incredibly rewarding. The hands-on projects gave me real-world skills that I use every day.',
-      likes: 18
-    },
-    {
-      id: 3,
-      name: 'Fatou Mbarga',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
-      rating: 4,
-      date: 'March 28, 2026',
-      message: 'Great academy with excellent resources. The community support is amazing. Would highly recommend to anyone looking to break into tech.',
-      likes: 12
-    },
-    {
-      id: 4,
-      name: 'Jean Paul Biwole',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-      rating: 5,
-      date: 'March 25, 2026',
-      message: 'The instructors are knowledgeable and patient. The curriculum is up-to-date with industry standards. Best investment in my education!',
-      likes: 15
-    },
-    {
-      id: 5,
-      name: 'Amara Diop',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-      rating: 5,
-      date: 'March 20, 2026',
-      message: 'I joined the academy with zero tech knowledge. After 6 months, I\'m now a junior developer at a tech startup. The journey has been incredible!',
-      likes: 22
-    },
-    {
-      id: 6,
-      name: 'Samuel Nguemfo',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-      rating: 4,
-      date: 'March 15, 2026',
-      message: 'Quality education at an affordable price. The mentorship program helped me refine my skills and build a professional portfolio.',
-      likes: 9
-    }
+  const filterOptions = [
+    { value: 'all', label: 'All' },
+    { value: 'anonymous', label: 'Anonymous' },
+    { value: 'non_anonymous', label: 'Non Anonymous' }
   ];
 
-  const events = [
-    {
-      id: 1,
-      title: 'GEP Bootcamp 2026',
-      date: 'March 31 - April 4, 2026',
-      description: '5-day intensive tech bootcamp covering AI, Web Development, and more.',
-      image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400',
-      attendees: '25+ Registered'
-    },
-    {
-      id: 2,
-      title: 'Tech Career Fair',
-      date: 'April 15, 2026',
-      description: 'Connect with top tech employers and explore career opportunities.',
-      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400',
-      attendees: 'Coming Soon'
-    },
-    {
-      id: 3,
-      title: 'AI Workshop Series',
-      date: 'Every Saturday',
-      description: 'Hands-on workshops on Artificial Intelligence and Machine Learning.',
-      image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400',
-      attendees: 'Ongoing'
-    }
-  ];
+  const filteredReviews = reviews.filter(review => {
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'anonymous') return review.is_anonymous === true;
+    if (activeFilter === 'non_anonymous') return review.is_anonymous === false;
+    return true;
+  });
+
+  const displayedReviews = showAllReviews ? filteredReviews : filteredReviews.slice(0, 4);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setReviews(sampleReviews);
-      setIsLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
+    const fetchData = async () => {
+      try {
+        const [reviewsRes, eventsRes] = await Promise.all([
+          axios.get(`${apiUrl}/reviews`),
+          axios.get(`${apiUrl}/events`)
+        ]);
+        setReviews(reviewsRes.data.reviews || reviewsRes.data);
+        setEvents(eventsRes.data.events || eventsRes.data);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
-  const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 4);
+  // const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 4);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -121,40 +69,41 @@ const Review = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.name.trim()) errors.name = 'Name is required';
-    if (!formData.email.trim()) {
-      errors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Email is invalid';
+    if (formData.isAnonymous !== 'yes') {
+      if (!formData.name.trim()) errors.name = 'Name is required';
+      if (!formData.email.trim()) {
+        errors.email = 'Email is required';
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        errors.email = 'Email is invalid';
+      }
     }
     if (!formData.message.trim()) errors.message = 'Message is required';
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      const newReview = {
-        id: reviews.length + 1,
-        name: formData.isAnonymous === 'yes' ? 'Anonymous' : formData.name,
-        avatar: formData.isAnonymous === 'yes' 
-          ? 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'
-          : 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150',
-        rating: 5,
-        date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+    try {
+      const response = await axios.post(`${apiUrl}/reviews`, {
+        event_id: null,
+        name: formData.isAnonymous === 'yes' ? null : formData.name,
+        email: formData.isAnonymous === 'yes' ? null : formData.email,
+        is_anonymous: formData.isAnonymous === 'yes',
         message: formData.message,
-        likes: 0
-      };
-      setReviews([newReview, ...reviews]);
+      });
+      setReviews([response.data.review || { ...formData, id: Date.now(), date: new Date().toLocaleDateString() }, ...reviews]);
       setFormData({ name: '', email: '', isAnonymous: 'no', message: '' });
-      setIsSubmitting(false);
       setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 3000);
-    }, 1000);
+    } catch (error) {
+      console.error('Failed to submit review:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const renderStars = (rating) => {
@@ -167,6 +116,18 @@ const Review = () => {
         className={`star-icon ${i < rating ? 'filled' : ''}`}
       />
     ));
+  };
+
+  const getThumbnail = (event) => {
+    if (!event?.thumbnail) return DEFAULT_IMAGE;
+    if (event.thumbnail.startsWith('http')) return event.thumbnail;
+    return `${fileUrl}/${event.thumbnail}`;
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   };
 
   return (
@@ -188,15 +149,11 @@ const Review = () => {
             </p>
             <div className="hero-stats">
               <div className="stat-item">
-                <span className="stat-number">{reviews.length}+</span>
+                <span className="stat-number">{reviews.length}</span>
                 <span className="stat-label">Reviews</span>
               </div>
               <div className="stat-item">
-                <span className="stat-number">500+</span>
-                <span className="stat-label">Students</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">50+</span>
+                <span className="stat-number">{events.length}+</span>
                 <span className="stat-label">Events</span>
               </div>
             </div>
@@ -235,13 +192,13 @@ const Review = () => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <div className="event-image">
-                  <img src={event.image} alt={event.title} />
-                  <div className="event-badge">{event.attendees}</div>
+                  <img src={getThumbnail(event)} alt={event.title} />
+                  <div className="event-badge">{event.type}</div>
                 </div>
                 <div className="event-content">
                   <h3>{event.title}</h3>
                   <div className="event-meta">
-                    <span><Calendar size={16} /> {event.date}</span>
+                    <span><Calendar size={16} /> {formatDate(event.date || event.start_date)}</span>
                   </div>
                   <p>{event.description}</p>
                   <button className="event-btn">Learn More</button>
@@ -272,6 +229,21 @@ const Review = () => {
             Real experiences from our community of learners
           </motion.p>
 
+          <div className="filter-container">
+            {filterOptions.map((option) => (
+              <button
+                key={option.value}
+                className={`filter-btn ${activeFilter === option.value ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveFilter(option.value);
+                  setShowAllReviews(false);
+                }}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+
           {isLoading ? (
             <div className="loading-container">
               <div className="loading-spinner"></div>
@@ -298,14 +270,17 @@ const Review = () => {
                     >
                       <div className="review-header">
                         <div className="review-avatar">
-                          <img src={review.avatar} alt={review.name} />
+                          <img 
+                            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" 
+                            alt="User" 
+                          />
                         </div>
                         <div className="review-info">
-                          <h4>{review.name}</h4>
-                          <span className="review-date">{review.date}</span>
+                          <h4>{review.is_anonymous || review.isAnonymous ? 'Anonymous' : review.name}</h4>
+                          <span className="review-date">{formatDate(review.created_at || review.date)}</span>
                         </div>
                         <div className="review-rating">
-                          {renderStars(review.rating)}
+                          {renderStars(review.rating || 5)}
                         </div>
                       </div>
                       <div className="review-body">
@@ -323,13 +298,13 @@ const Review = () => {
                 </AnimatePresence>
               </div>
 
-              {reviews.length > 4 && (
+              {filteredReviews.length > 4 && (
                 <div className="view-all-container">
                   <button
                     className="view-all-btn"
                     onClick={() => setShowAllReviews(!showAllReviews)}
                   >
-                    {showAllReviews ? 'Show Less' : `View All ${reviews.length} Reviews`}
+                    {showAllReviews ? 'Show Less' : `View All ${filteredReviews.length} Reviews`}
                   </button>
                 </div>
               )}

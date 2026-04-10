@@ -698,3 +698,35 @@
 [data-theme="dark"] .form-container {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
+
+/* Filter Container */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.filter-container .filter-btn {
+  padding: 12px 24px;
+  border: 2px solid var(--border-color);
+  border-radius: 25px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-container .filter-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.filter-container .filter-btn.active {
+  background: linear-gradient(135deg, var(--primary-color), #daa520);
+  color: white;
+  border-color: var(--primary-color);
+}

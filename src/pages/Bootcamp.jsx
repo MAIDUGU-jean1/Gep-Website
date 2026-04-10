@@ -4,6 +4,11 @@ import { Calendar, Clock, Users, CheckCircle, ChevronDown, ChevronUp, ShoppingBa
 import { Link } from 'react-router-dom';
 import './css/Bootcamp.css';
 
+import tshirtImg from '../assets/Images/swag/new-white.jpeg';
+import capImg from '../assets/Images/swag/cap.jpeg';
+import penImg from '../assets/Images/swag/pen.jpeg';
+import notebookImg from '../assets/Images/swag/new2.jpeg';
+
 const Bootcamp = () => {
     const [activeDay, setActiveDay] = useState(0);
     const [openFaq, setOpenFaq] = useState(null);
@@ -113,26 +118,27 @@ const Bootcamp = () => {
     // Swag items
     const swagItems = [
         {
-            image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
+            image: tshirtImg,
             title: 'GEP Bootcamp T-Shirt',
             price: '5,000 FCFA'
         },
         {
-            image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=400',
+            image: capImg,
             title: 'GEP Brand Cap',
             price: '3,500 FCFA'
         },
         {
-            image: 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400',
+            image: penImg,
             title: 'GEP Premium Pen Set',
-            price: '2,000 FCFA'
+            price: '2,000FCs'
         },
         {
-            image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400',
-            title: 'GEP Notebook',
-            price: '2,500 FCFA'
+            image: notebookImg,
+            title: 'GEP Branded cap and t-shirt',
+            price: '2,500FCFA'
         }
     ];
+
 
     // FAQ data
     const faqs = [
