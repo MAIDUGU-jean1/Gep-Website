@@ -28,7 +28,7 @@ const Review = () => {
     email: '',
     isAnonymous: false,
     message: '',
-    rating: 5,
+    rating: 0,
     eventId: null,
     eventTitle: ''
   });
@@ -59,20 +59,20 @@ const Review = () => {
           axios.get(`${apiUrl}/events`)
         ]);
         setReviews(reviewsRes.data.reviews || reviewsRes.data);
-        
+
         const allEvents = eventsRes.data.events || eventsRes.data;
         const now = new Date();
-        
+
         const upcoming = allEvents.filter(event => {
           const eventDate = new Date(event.date || event.start_date);
           return eventDate >= now;
         });
-        
+
         const past = allEvents.filter(event => {
           const eventDate = new Date(event.date || event.start_date);
           return eventDate < now;
         });
-        
+
         setEvents(upcoming);
         setPastEvents(past);
       } catch (error) {
@@ -186,8 +186,8 @@ const Review = () => {
   const handleLike = async (reviewId) => {
     try {
       const response = await axios.post(`${apiUrl}/reviews/${reviewId}/like`);
-      setReviews(reviews.map(review => 
-        review.id === reviewId 
+      setReviews(reviews.map(review =>
+        review.id === reviewId
           ? { ...review, likes_count: response.data.likes_count }
           : review
       ));
@@ -199,8 +199,8 @@ const Review = () => {
   const handleUnlike = async (reviewId) => {
     try {
       const response = await axios.delete(`${apiUrl}/reviews/${reviewId}/like`);
-      setReviews(reviews.map(review => 
-        review.id === reviewId 
+      setReviews(reviews.map(review =>
+        review.id === reviewId
           ? { ...review, likes_count: response.data.likes_count }
           : review
       ));
@@ -237,16 +237,16 @@ const Review = () => {
             <p className="hero-description">
               Discover what our students say about their journey at GEP Protech Academy.
             </p>
-            
+
             <div className="hero-tabs">
-              <button 
+              <button
                 className={`hero-tab ${activeEventTab === 'upcoming' ? 'active' : ''}`}
                 onClick={() => setActiveEventTab('upcoming')}
               >
                 <CalendarDays size={20} />
                 <span>Upcoming Events</span>
               </button>
-              <button 
+              <button
                 className={`hero-tab ${activeEventTab === 'past' ? 'active' : ''}`}
                 onClick={() => setActiveEventTab('past')}
               >
@@ -286,7 +286,7 @@ const Review = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {activeEventTab === 'upcoming' 
+            {activeEventTab === 'upcoming'
               ? 'Join our events and take your tech journey to the next level'
               : '回顾我们过去的活动，看看我们社区的精彩时刻'}
           </motion.p>
@@ -405,11 +405,11 @@ const Review = () => {
                       <div className="review-body">
                         <Quote size={24} className="quote-icon" />
                         <p>
-                          {(expandedReviews[review.id] || (review.message && review.message.length <= 20)) 
-                            ? review.message 
-                            : truncateMessage(review.message, 20)}
+                          {(expandedReviews[review.id] || (review.message && review.message.length <= 20))
+                            ? review.message
+                            : truncateMessage(review.message, 50)}
                           {review.message && review.message.length > 20 && (
-                            <button 
+                            <button
                               className="learn-more-btn"
                               onClick={() => toggleExpandReview(review.id)}
                             >
@@ -456,7 +456,7 @@ const Review = () => {
             <div className="form-header">
               <h2>Share Your Experience</h2>
               <p>
-                {formData.eventTitle 
+                {formData.eventTitle
                   ? `Share your experience about "${formData.eventTitle}" event`
                   : 'Your feedback helps us improve and helps others make informed decisions'}
               </p>

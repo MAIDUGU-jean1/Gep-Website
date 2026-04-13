@@ -367,6 +367,43 @@ Sent from Gep Protech Academic Website
           }}>
             Complete the steps below to begin your journey with us. Your information is secure and will be sent to our team.
           </p>
+          
+          <div style={{
+            textAlign: 'center',
+            marginTop: '1.5rem'
+          }}>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+              Don't know what path to choose? 
+            </span>
+            <a 
+              href="/find-path" 
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = '/find-path';
+              }}
+              style={{
+                color: 'var(--primary-color)',
+                fontWeight: '600',
+                textDecoration: 'none',
+                marginLeft: '0.5rem',
+                fontSize: '0.95rem',
+                borderBottom: '1px solid var(--primary-color)',
+                paddingBottom: '2px',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.color = '#b8942e';
+                e.target.style.borderBottomColor = '#b8942e';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.color = 'var(--primary-color)';
+                e.target.style.borderBottomColor = 'var(--primary-color)';
+              }}
+            >
+              Find Your Path
+            </a>
+          </div>
+          
           {/* Enrollment Type Radio Buttons */}
           <div style={{
             display: 'flex',

@@ -15,7 +15,7 @@ const Header = () => {
     { name: 'Blog', href: '/blog', icon: <GraduationCap size={18} /> },
     { name: 'Events', href: '/events', icon: <Calendar size={18} /> },
     { name: 'Reviews', href: '/review', icon: <Star size={18} /> },
-    { name: 'Bootcamp', href: '/bootcamp', icon: <Users size={18} /> },
+    // { name: 'Bootcamp', href: '/bootcamp', icon: <Users size={18} /> },
     { name: 'Tutors', href: '/#tutors', icon: <Users size={18} /> },
     { name: 'Gallery', href: '/#gallery', icon: <Image size={18} /> },
     { name: 'Achievements', href: '/#achievements', icon: <Award size={18} /> },

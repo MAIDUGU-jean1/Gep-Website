@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Gift, Timer } from 'lucide-react';
+import { X, GraduationCap, Send, BookOpen } from 'lucide-react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Hero from './sections/Hero';
@@ -13,9 +13,9 @@ import Contact from './sections/Contact';
 import { useTheme } from './hooks/useTheme';
 import Achievements from './sections/Achievement';
 import TutorProfile from './pages/TutorProfile';
-import Blog from '../src/pages/Blog'; // Add this import
-import BlogPost from './pages/BlogPost'; // We'll create this next
-import { BlogProvider } from './context/BlogContext'; // Add this import
+import Blog from '../src/pages/Blog';
+import BlogPost from './pages/BlogPost';
+import { BlogProvider } from './context/BlogContext';
 import Subscribe from './sections/Subscribe';
 import Enrollment from './pages/Enrollment';
 import CourseDetails from './pages/CourseDetails';
@@ -23,56 +23,17 @@ import Bootcamp from './pages/Bootcamp';
 import Events from './pages/Events';
 import DiscountCountdown from './components/DiscountCountdown';
 import Review from './pages/Review';
+import FindPath from './pages/FindPath';
 
-// Welcome Popup Component - shows on every page load/refresh
 const WelcomePopup = () => {
   const [showPopup, setShowPopup] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  // Discount end date - April 10, 2026
-  const DISCOUNT_END_DATE = new Date("2026-04-10T23:59:59").getTime();
-
-  // useEffect(() => {
-    // Show popup after a short delay on mount
-  //   const timer = setTimeout(() => {
-  //     setShowPopup(true);
-  //   }, 1000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
-  // Countdown timer
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const distance = DISCOUNT_END_DATE - now;
-
-      if (distance < 0) {
-        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-      }
-
-      return {
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000),
-      };
-    };
-
-    setTimeLeft(calculateTimeLeft());
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-
-    return () => clearInterval(timer);
+    const timer = setTimeout(() => {
+      setShowPopup(true);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
-
-  const formatNumber = (num) => String(num).padStart(2, "0");
-
-  // Calculate progress percentage (from 32 days total)
-  const totalSeconds = 32 * 24 * 60 * 60;
-  const remainingSeconds = timeLeft.days * 24 * 60 * 60 + timeLeft.hours * 60 * 60 + timeLeft.minutes * 60 + timeLeft.seconds;
-  const progressPercent = Math.min(100, (remainingSeconds / totalSeconds) * 100);
 
   if (!showPopup) return null;
 
@@ -93,74 +54,193 @@ const WelcomePopup = () => {
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.8, y: 50 }}
             onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '500px',
+              padding: '40px 35px',
+              textAlign: 'center',
+              background: 'var(--card-bg)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '24px'
+            }}
           >
             <button
               className="modal-close-btn"
               onClick={() => setShowPopup(false)}
+              style={{ 
+                position: 'absolute', 
+                top: '15px', 
+                right: '15px',
+                background: 'var(--bg-primary)',
+                color: 'var(--text-secondary)'
+              }}
             >
               <X size={20} />
             </button>
 
-            <div className="modal-header">
-              <div className="modal-icon-wrapper">
-                <Gift size={40} className="modal-gift-icon" />
-              </div>
-              <h2 className="modal-title">Welcome to Gep Protech!</h2>
-              <p className="modal-subtitle">Get 30% off on all our courses</p>
+            <div className="modal-header" style={{ marginBottom: '25px' }}>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: 'spring' }}
+                style={{
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 20px',
+                  boxShadow: '0 8px 25px rgba(218, 165, 32, 0.4)'
+                }}
+              >
+                <GraduationCap size={40} color="white" />
+              </motion.div>
+              <h2 style={{
+                fontSize: '1.8rem',
+                fontWeight: '800',
+                color: 'var(--text-primary)',
+                marginBottom: '10px',
+                letterSpacing: '-0.5px'
+              }}>
+                Welcome to GeP ProTech! 👋
+              </h2>
+              <p style={{
+                fontSize: '1.05rem',
+                color: 'var(--text-secondary)',
+                lineHeight: '1.6'
+              }}>
+                Your journey to becoming a tech professional starts here.
+              </p>
             </div>
 
-            <div className="modal-timer-section">
-              <p className="timer-label">Offer ends in:</p>
-              <div className="modal-timer">
-                <div className="modal-time-block">
-                  <span className="modal-time-value">{formatNumber(timeLeft.days)}</span>
-                  <span className="modal-time-label">Days</span>
-                </div>
-                <span className="modal-time-sep">:</span>
-                <div className="modal-time-block">
-                  <span className="modal-time-value">{formatNumber(timeLeft.hours)}</span>
-                  <span className="modal-time-label">Hours</span>
-                </div>
-                <span className="modal-time-sep">:</span>
-                <div className="modal-time-block">
-                  <span className="modal-time-value">{formatNumber(timeLeft.minutes)}</span>
-                  <span className="modal-time-label">Minutes</span>
-                </div>
-                <span className="modal-time-sep">:</span>
-                <div className="modal-time-block">
-                  <span className="modal-time-value">{formatNumber(timeLeft.seconds)}</span>
-                  <span className="modal-time-label">Seconds</span>
-                </div>
-              </div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              style={{
+                background: 'var(--navy, #1A3A6B)',
+                borderRadius: '16px',
+                padding: '25px 20px',
+                marginBottom: '25px',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <div style={{
+                position: 'absolute',
+                top: '-20px',
+                right: '-20px',
+                width: '80px',
+                height: '80px',
+                background: 'rgba(218, 165, 32, 0.2)',
+                borderRadius: '50%'
+              }}></div>
+              <div style={{
+                position: 'absolute',
+                bottom: '-30px',
+                left: '-30px',
+                width: '100px',
+                height: '100px',
+                background: 'rgba(218, 165, 32, 0.1)',
+                borderRadius: '50%'
+              }}></div>
+              
+              <p style={{
+                color: 'var(--primary-color)',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                marginBottom: '10px'
+              }}>
+                🎉 Announcement
+              </p>
+              <h3 style={{
+                color: 'white',
+                fontSize: '1.4rem',
+                fontWeight: '700',
+                marginBottom: '8px'
+              }}>
+                Batch 13 is Now Ongoing!
+              </h3>
+              <p style={{
+                color: 'rgba(255,255,255,0.85)',
+                fontSize: '0.95rem',
+                lineHeight: '1.5'
+              }}>
+                Join our current cohort and transform your career in just <strong style={{ color: 'var(--primary-color)' }}>3 months</strong> of intensive training.
+              </p>
+            </motion.div>
+
+            <div style={{
+              display: 'flex',
+              gap: '12px',
+              marginBottom: '20px',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link 
+                  to="/enroll" 
+                  onClick={() => setShowPopup(false)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '14px 28px',
+                    background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
+                    color: 'white',
+                    borderRadius: '30px',
+                    fontWeight: '600',
+                    fontSize: '1rem',
+                    textDecoration: 'none',
+                    boxShadow: '0 4px 15px rgba(218, 165, 32, 0.4)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <Send size={18} />
+                  Apply Now
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <a 
+                  href="/#courses" 
+                  onClick={() => setShowPopup(false)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '14px 28px',
+                    background: 'transparent',
+                    color: 'var(--primary-color)',
+                    border: '2px solid var(--primary-color)',
+                    borderRadius: '30px',
+                    fontWeight: '600',
+                    fontSize: '1rem',
+                    textDecoration: 'none',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <BookOpen size={18} />
+                  View Courses
+                </a>
+              </motion.div>
             </div>
 
-            <div className="modal-progress-section">
-              <div className="progress-header">
-                <span>Time remaining</span>
-                <span>{Math.round(progressPercent)}% left</span>
-              </div>
-              <div className="modal-progress-bar">
-                <motion.div
-                  className="modal-progress-fill"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progressPercent}%` }}
-                  transition={{ duration: 0.5 }}
-                />
-              </div>
-            </div>
-
-            <div className="modal-cta-section">
-              <Link to="/enroll" className="modal-apply-btn" onClick={() => setShowPopup(false)}>
-                <Timer size={18} />
-                Apply Now
-              </Link>
-              <a href="/#courses" className="modal-courses-btn" onClick={() => setShowPopup(false)}>
-                View Courses
-              </a>
-            </div>
-
-            <p className="modal-offer-text">
-              Don't miss out on this amazing opportunity to learn new skills and advance your career!
+            <p style={{
+              color: 'var(--text-secondary)',
+              fontSize: '0.9rem',
+              fontStyle: 'italic'
+            }}>
+              "The best time to start was yesterday. The next best time is now."
             </p>
           </motion.div>
         </motion.div>
@@ -188,7 +268,7 @@ function App() {
   useTheme();
 
   return (
-    <BlogProvider> {/* Wrap with BlogProvider */}
+    <BlogProvider>
       <Router>
         <div className="App">
           <WelcomePopup />
@@ -197,13 +277,14 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/tutor/:id" element={<TutorProfile />} />
-              <Route path="/blog" element={<Blog />} /> {/* Blog listing page */}
-              <Route path="/blog/:id" element={<BlogPost />} /> {/* Individual post page */}
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
               <Route path="/enroll" element={<Enrollment />} />
               <Route path="/course/:id" element={<CourseDetails />} />
               <Route path="/bootcamp" element={<Bootcamp />} />
               <Route path="/events" element={<Events />} />
               <Route path="/review" element={<Review />} />
+              <Route path="/find-path" element={<FindPath />} />
             </Routes>
           </main>
           <Footer />
