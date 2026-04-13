@@ -213,8 +213,8 @@ const Bootcamp = () => {
 
                         {/* Buttons */}
                         <div className="hero-buttons">
-                            <Link to="/enroll" className="btn-primary">
-                                Register Now
+                            <Link to="/review" className="btn-primary">
+                                Review 
                             </Link>
                             <a href="/events" className="btn-secondary">
                                 Other Events
@@ -475,7 +475,7 @@ const Bootcamp = () => {
                             </div>
                         </div>
                         <Link to="/enroll" className="btn-primary">
-                            Secure Your Spot Now
+                            Bootcamp 2026 Review
                         </Link>
                     </motion.div>
                 </div>

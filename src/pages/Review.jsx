@@ -1,24 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Send, User, Mail, MessageSquare, Calendar, Clock, ThumbsUp, Quote } from 'lucide-react';
+import { Star, Send, User, Mail, MessageSquare, Calendar, Clock, ThumbsUp, Quote, Eye, EyeOff, ArrowRight, History, CalendarDays } from 'lucide-react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './css/Review.css';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const fileUrl = import.meta.env.VITE_FILE_API_URL;
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400';
+const DARK_PERSON_IMAGE = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces';
+const ANONYMOUS_ICON = 'https://images.unsplash.com/photo-1519638399535-1b036603ac07?w=150&h=150&fit=crop&crop=faces';
 
 const Review = () => {
+  const navigate = useNavigate();
+  const formRef = useRef(null);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [events, setEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [activeEventTab, setActiveEventTab] = useState('upcoming');
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [expandedReviews, setExpandedReviews] = useState({});
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    isAnonymous: 'no',
-    message: ''
+    isAnonymous: false,
+    message: '',
+    rating: 5,
+    eventId: null,
+    eventTitle: ''
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,7 +59,22 @@ const Review = () => {
           axios.get(`${apiUrl}/events`)
         ]);
         setReviews(reviewsRes.data.reviews || reviewsRes.data);
-        setEvents(eventsRes.data.events || eventsRes.data);
+        
+        const allEvents = eventsRes.data.events || eventsRes.data;
+        const now = new Date();
+        
+        const upcoming = allEvents.filter(event => {
+          const eventDate = new Date(event.date || event.start_date);
+          return eventDate >= now;
+        });
+        
+        const past = allEvents.filter(event => {
+          const eventDate = new Date(event.date || event.start_date);
+          return eventDate < now;
+        });
+        
+        setEvents(upcoming);
+        setPastEvents(past);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       } finally {
@@ -57,11 +84,32 @@ const Review = () => {
     fetchData();
   }, []);
 
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleEventReview = (event) => {
+    setFormData(prev => ({
+      ...prev,
+      eventId: event.id,
+      eventTitle: event.title
+    }));
+    scrollToForm();
+  };
+
+  const handleLearnMore = (event) => {
+    navigate('/events');
+  };
+
   // const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 4);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox') {
+      setFormData({ ...formData, [name]: checked });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
     if (formErrors[name]) {
       setFormErrors({ ...formErrors, [name]: '' });
     }
@@ -69,7 +117,7 @@ const Review = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (formData.isAnonymous !== 'yes') {
+    if (!formData.isAnonymous) {
       if (!formData.name.trim()) errors.name = 'Name is required';
       if (!formData.email.trim()) {
         errors.email = 'Email is required';
@@ -89,14 +137,15 @@ const Review = () => {
     setIsSubmitting(true);
     try {
       const response = await axios.post(`${apiUrl}/reviews`, {
-        event_id: null,
-        name: formData.isAnonymous === 'yes' ? null : formData.name,
-        email: formData.isAnonymous === 'yes' ? null : formData.email,
-        is_anonymous: formData.isAnonymous === 'yes',
+        event_id: formData.eventId,
+        name: formData.isAnonymous ? null : formData.name,
+        email: formData.isAnonymous ? null : formData.email,
+        is_anonymous: formData.isAnonymous,
         message: formData.message,
+        rating: formData.rating,
       });
       setReviews([response.data.review || { ...formData, id: Date.now(), date: new Date().toLocaleDateString() }, ...reviews]);
-      setFormData({ name: '', email: '', isAnonymous: 'no', message: '' });
+      setFormData({ name: '', email: '', isAnonymous: false, message: '', rating: 5, eventId: null, eventTitle: '' });
       setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 3000);
     } catch (error) {
@@ -104,6 +153,18 @@ const Review = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const toggleExpandReview = (reviewId) => {
+    setExpandedReviews(prev => ({
+      ...prev,
+      [reviewId]: !prev[reviewId]
+    }));
+  };
+
+  const truncateMessage = (message, maxLength = 20) => {
+    if (message.length <= maxLength) return message;
+    return message.substring(0, maxLength) + '...';
   };
 
   const renderStars = (rating) => {
@@ -116,6 +177,36 @@ const Review = () => {
         className={`star-icon ${i < rating ? 'filled' : ''}`}
       />
     ));
+  };
+
+  const handleRatingClick = (rating) => {
+    setFormData({ ...formData, rating });
+  };
+
+  const handleLike = async (reviewId) => {
+    try {
+      const response = await axios.post(`${apiUrl}/reviews/${reviewId}/like`);
+      setReviews(reviews.map(review => 
+        review.id === reviewId 
+          ? { ...review, likes_count: response.data.likes_count }
+          : review
+      ));
+    } catch (error) {
+      console.error('Failed to like review:', error);
+    }
+  };
+
+  const handleUnlike = async (reviewId) => {
+    try {
+      const response = await axios.delete(`${apiUrl}/reviews/${reviewId}/like`);
+      setReviews(reviews.map(review => 
+        review.id === reviewId 
+          ? { ...review, likes_count: response.data.likes_count }
+          : review
+      ));
+    } catch (error) {
+      console.error('Failed to unlike review:', error);
+    }
   };
 
   const getThumbnail = (event) => {
@@ -142,19 +233,36 @@ const Review = () => {
             transition={{ duration: 0.8 }}
             className="hero-main"
           >
-            <h1 className="hero-title">Reviews & Events</h1>
+            <h1 className="hero-title">Reviews</h1>
             <p className="hero-description">
-              Discover what our students say about their journey at GEP Protech Academy 
-              and stay updated with our upcoming events.
+              Discover what our students say about their journey at GEP Protech Academy.
             </p>
+            
+            <div className="hero-tabs">
+              <button 
+                className={`hero-tab ${activeEventTab === 'upcoming' ? 'active' : ''}`}
+                onClick={() => setActiveEventTab('upcoming')}
+              >
+                <CalendarDays size={20} />
+                <span>Upcoming Events</span>
+              </button>
+              <button 
+                className={`hero-tab ${activeEventTab === 'past' ? 'active' : ''}`}
+                onClick={() => setActiveEventTab('past')}
+              >
+                <History size={20} />
+                <span>Past Events</span>
+              </button>
+            </div>
+
             <div className="hero-stats">
               <div className="stat-item">
                 <span className="stat-number">{reviews.length}</span>
                 <span className="stat-label">Reviews</span>
               </div>
               <div className="stat-item">
-                <span className="stat-number">{events.length}+</span>
-                <span className="stat-label">Events</span>
+                <span className="stat-number">{activeEventTab === 'upcoming' ? events.length : pastEvents.length}+</span>
+                <span className="stat-label">{activeEventTab === 'upcoming' ? 'Upcoming' : 'Past'} Events</span>
               </div>
             </div>
           </motion.div>
@@ -170,7 +278,7 @@ const Review = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            Upcoming Events
+            {activeEventTab === 'upcoming' ? 'Upcoming Events' : 'Past Events'}
           </motion.h2>
           <motion.p
             className="section-subtitle"
@@ -178,11 +286,13 @@ const Review = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            Join our events and take your tech journey to the next level
+            {activeEventTab === 'upcoming' 
+              ? 'Join our events and take your tech journey to the next level'
+              : '回顾我们过去的活动，看看我们社区的精彩时刻'}
           </motion.p>
 
           <div className="events-grid">
-            {events.map((event, index) => (
+            {(activeEventTab === 'upcoming' ? events : pastEvents).map((event, index) => (
               <motion.div
                 key={event.id}
                 className="event-card"
@@ -201,7 +311,15 @@ const Review = () => {
                     <span><Calendar size={16} /> {formatDate(event.date || event.start_date)}</span>
                   </div>
                   <p>{event.description}</p>
-                  <button className="event-btn">Learn More</button>
+                  <div className="event-actions">
+                    <button className="event-btn" onClick={() => handleLearnMore(event)}>
+                      Learn More <ArrowRight size={16} />
+                    </button>
+                    <button className="event-review-btn" onClick={() => handleEventReview(event)}>
+                      <MessageSquare size={16} />
+                      Review
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -270,13 +388,14 @@ const Review = () => {
                     >
                       <div className="review-header">
                         <div className="review-avatar">
-                          <img 
-                            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" 
-                            alt="User" 
-                          />
+                          {review.is_anonymous || review.isAnonymous ? (
+                            <img src={ANONYMOUS_ICON} alt="Anonymous" />
+                          ) : (
+                            <img src={DARK_PERSON_IMAGE} alt={review.name} />
+                          )}
                         </div>
                         <div className="review-info">
-                          <h4>{review.is_anonymous || review.isAnonymous ? 'Anonymous' : review.name}</h4>
+                          <h4>{(review.is_anonymous || review.isAnonymous) ? 'Anonymous' : review.name}</h4>
                           <span className="review-date">{formatDate(review.created_at || review.date)}</span>
                         </div>
                         <div className="review-rating">
@@ -285,12 +404,24 @@ const Review = () => {
                       </div>
                       <div className="review-body">
                         <Quote size={24} className="quote-icon" />
-                        <p>{review.message}</p>
+                        <p>
+                          {(expandedReviews[review.id] || (review.message && review.message.length <= 20)) 
+                            ? review.message 
+                            : truncateMessage(review.message, 20)}
+                          {review.message && review.message.length > 20 && (
+                            <button 
+                              className="learn-more-btn"
+                              onClick={() => toggleExpandReview(review.id)}
+                            >
+                              {expandedReviews[review.id] ? ' Show less' : ' Learn more'}
+                            </button>
+                          )}
+                        </p>
                       </div>
                       <div className="review-footer">
-                        <button className="like-btn">
+                        <button className="like-btn" onClick={() => handleLike(review.id)}>
                           <ThumbsUp size={16} />
-                          <span>{review.likes}</span>
+                          <span>{review.likes_count || review.likes || 0}</span>
                         </button>
                       </div>
                     </motion.div>
@@ -314,7 +445,7 @@ const Review = () => {
       </section>
 
       {/* Review Form Section */}
-      <section className="form-section">
+      <section className="form-section" ref={formRef}>
         <div className="container">
           <motion.div
             className="form-container"
@@ -324,7 +455,11 @@ const Review = () => {
           >
             <div className="form-header">
               <h2>Share Your Experience</h2>
-              <p>Your feedback helps us improve and helps others make informed decisions</p>
+              <p>
+                {formData.eventTitle 
+                  ? `Share your experience about "${formData.eventTitle}" event`
+                  : 'Your feedback helps us improve and helps others make informed decisions'}
+              </p>
             </div>
 
             {submitSuccess && (
@@ -353,7 +488,7 @@ const Review = () => {
                     onChange={handleInputChange}
                     placeholder="Your name"
                     className={formErrors.name ? 'error' : ''}
-                    disabled={formData.isAnonymous === 'yes'}
+                    disabled={formData.isAnonymous}
                   />
                   {formErrors.name && <span className="error-text">{formErrors.name}</span>}
                 </div>
@@ -371,35 +506,10 @@ const Review = () => {
                     onChange={handleInputChange}
                     placeholder="your@email.com"
                     className={formErrors.email ? 'error' : ''}
-                    disabled={formData.isAnonymous === 'yes'}
+                    disabled={formData.isAnonymous}
                   />
                   {formErrors.email && <span className="error-text">{formErrors.email}</span>}
                 </div>
-              </div>
-
-              <div className="form-group">
-                <label className="radio-label">
-                  <input
-                    type="radio"
-                    name="isAnonymous"
-                    value="no"
-                    checked={formData.isAnonymous === 'no'}
-                    onChange={handleInputChange}
-                  />
-                  <span className="radio-custom"></span>
-                  Show my name
-                </label>
-                <label className="radio-label">
-                  <input
-                    type="radio"
-                    name="isAnonymous"
-                    value="yes"
-                    checked={formData.isAnonymous === 'yes'}
-                    onChange={handleInputChange}
-                  />
-                  <span className="radio-custom"></span>
-                  Submit anonymously
-                </label>
               </div>
 
               <div className="form-group">
@@ -417,6 +527,42 @@ const Review = () => {
                   className={formErrors.message ? 'error' : ''}
                 ></textarea>
                 {formErrors.message && <span className="error-text">{formErrors.message}</span>}
+              </div>
+
+              <div className="form-group">
+                <label>
+                  <Star size={18} />
+                  Rating
+                </label>
+                <div className="rating-stars">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`star-btn ${star <= formData.rating ? 'active' : ''}`}
+                      onClick={() => handleRatingClick(star)}
+                    >
+                      <Star
+                        size={24}
+                        fill={star <= formData.rating ? 'var(--primary-color)' : 'none'}
+                        stroke={star <= formData.rating ? 'var(--primary-color)' : 'var(--text-secondary)'}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="isAnonymous"
+                    checked={formData.isAnonymous}
+                    onChange={handleInputChange}
+                  />
+                  <span className="checkbox-custom"></span>
+                  Submit anonymously
+                </label>
               </div>
 
               <button type="submit" className="submit-btn" disabled={isSubmitting}>

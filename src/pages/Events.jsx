@@ -19,8 +19,9 @@ const Events = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        isAnonymous: 'no',
-        message: ''
+        isAnonymous: false,
+        message: '',
+        rating: 5
     });
     const [formErrors, setFormErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,8 +64,12 @@ const Events = () => {
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const { name, value, type, checked } = e.target;
+        if (type === 'checkbox') {
+            setFormData({ ...formData, [name]: checked });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
         if (formErrors[name]) {
             setFormErrors({ ...formErrors, [name]: '' });
         }
@@ -72,7 +77,7 @@ const Events = () => {
 
     const validateForm = () => {
         const errors = {};
-        if (formData.isAnonymous !== 'yes') {
+        if (!formData.isAnonymous) {
             if (!formData.name.trim()) errors.name = 'Name is required';
             if (!formData.email.trim()) {
                 errors.email = 'Email is required';
@@ -93,12 +98,13 @@ const Events = () => {
         try {
             await axios.post(`${apiUrl}/reviews`, {
                 event_id: selectedEvent?.id,
-                name: formData.isAnonymous === 'yes' ? null : formData.name,
-                email: formData.isAnonymous === 'yes' ? null : formData.email,
-                is_anonymous: formData.isAnonymous === 'yes',
+                name: formData.isAnonymous ? null : formData.name,
+                email: formData.isAnonymous ? null : formData.email,
+                is_anonymous: formData.isAnonymous,
                 message: formData.message,
+                rating: formData.rating,
             });
-            setFormData({ name: '', email: '', isAnonymous: 'no', message: '' });
+            setFormData({ name: '', email: '', isAnonymous: false, message: '', rating: 5 });
             setSubmitSuccess(true);
             setTimeout(() => {
                 setSubmitSuccess(false);
@@ -109,6 +115,10 @@ const Events = () => {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleRatingClick = (rating) => {
+        setFormData({ ...formData, rating });
     };
 
     const formatDate = (dateString) => {
@@ -276,10 +286,10 @@ const Events = () => {
                             onClick={(e) => e.stopPropagation()}
                             style={{ pointerEvents: 'auto' }}
                         >
-                            <button className="modal-close" onClick={() => setShowReviewModal(false)}>
-                                <X size={20} />
-                            </button>
                             <div className="modal-header">
+                                <button className="modal-close" onClick={() => setShowReviewModal(false)}>
+                                    <X size={20} />
+                                </button>
                                 <h2>Review Event</h2>
                                 <p>Share your experience about {selectedEvent?.title}</p>
                             </div>
@@ -309,7 +319,7 @@ const Events = () => {
                                             onChange={handleInputChange}
                                             placeholder="Your name"
                                             className={formErrors.name ? 'error' : ''}
-                                            disabled={formData.isAnonymous === 'yes'}
+                                            disabled={formData.isAnonymous}
                                             style={{ pointerEvents: 'auto' }}
                                         />
                                         {formErrors.name && <span className="error-text">{formErrors.name}</span>}
@@ -328,36 +338,11 @@ const Events = () => {
                                             onChange={handleInputChange}
                                             placeholder="your@email.com"
                                             className={formErrors.email ? 'error' : ''}
-                                            disabled={formData.isAnonymous === 'yes'}
+                                            disabled={formData.isAnonymous}
                                             style={{ pointerEvents: 'auto' }}
                                         />
                                         {formErrors.email && <span className="error-text">{formErrors.email}</span>}
                                     </div>
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="radio-label">
-                                        <input
-                                            type="radio"
-                                            name="isAnonymous"
-                                            value="no"
-                                            checked={formData.isAnonymous === 'no'}
-                                            onChange={handleInputChange}
-                                        />
-                                        <span className="radio-custom"></span>
-                                        Show my name
-                                    </label>
-                                    <label className="radio-label">
-                                        <input
-                                            type="radio"
-                                            name="isAnonymous"
-                                            value="yes"
-                                            checked={formData.isAnonymous === 'yes'}
-                                            onChange={handleInputChange}
-                                        />
-                                        <span className="radio-custom"></span>
-                                        Submit anonymously
-                                    </label>
                                 </div>
 
                                 <div className="form-group">
@@ -376,6 +361,42 @@ const Events = () => {
                                             style={{ pointerEvents: 'auto' }}
                                         ></textarea>
                                     {formErrors.message && <span className="error-text">{formErrors.message}</span>}
+                                </div>
+
+                                <div className="form-group">
+                                    <label>
+                                        <Star size={18} />
+                                        Rating
+                                    </label>
+                                    <div className="rating-stars">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                className={`star-btn ${star <= formData.rating ? 'active' : ''}`}
+                                                onClick={() => handleRatingClick(star)}
+                                            >
+                                                <Star
+                                                    size={24}
+                                                    fill={star <= formData.rating ? 'var(--primary-color)' : 'none'}
+                                                    stroke={star <= formData.rating ? 'var(--primary-color)' : 'var(--text-secondary)'}
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            name="isAnonymous"
+                                            checked={formData.isAnonymous}
+                                            onChange={handleInputChange}
+                                        />
+                                        <span className="checkbox-custom"></span>
+                                        Submit anonymously
+                                    </label>
                                 </div>
 
                                 <button type="submit" className="submit-btn" disabled={isSubmitting}>

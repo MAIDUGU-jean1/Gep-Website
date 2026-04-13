@@ -526,9 +526,9 @@ const Header = () => {
         )}
       </AnimatePresence>
 
-      {/* Floating WhatsApp Button - Bottom Left */}
+      {/* Floating WhatsApp Button - Bottom Right */}
       <motion.a
-        href="https://wa.me/237XXXXXXXXX"
+        href="https://wa.me/237674386778"
         target="_blank"
         rel="noopener noreferrer"
         initial={{ scale: 0 }}
@@ -537,7 +537,7 @@ const Header = () => {
         style={{
           position: 'fixed',
           bottom: '30px',
-          left: '30px',
+          right: '30px',
           width: '60px',
           height: '60px',
           borderRadius: '50%',

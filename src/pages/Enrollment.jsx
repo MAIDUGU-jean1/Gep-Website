@@ -35,9 +35,13 @@ const Enrollment = () => {
   const [emailSent, setEmailSent] = useState(false);
   const [notification, setNotification] = useState({
     message: '',
-    type: '',   // 'success' | 'error'
+    type: '',
     visible: false
   });
+
+  // Configuration for enrollment types
+  const isBootcampOpen = false;
+  const isInternshipOpen = true;
 
   const coursesList = [
     "BackEnd Web Development",
@@ -55,14 +59,18 @@ const Enrollment = () => {
     "Mobile App Development",
     "Software/Hardware Maintenance",
     "Topography and Remote Sensing",
-    "UI/UX Design"
+    "UI/UX Design",
+    "Business Intelligence",
+    "DevOps",
+    "Computer Aided Design (CAD)",
+    "IT Project Management",
   ];
 
-  // FIX 1: Bootcamp Preview step number is now 3 (not 4) so currentStep reaches it correctly
-  const steps = formData.enrollmentType === 'bootcamp' ? [
+  // FIX 1: Bootcamp/Internship Preview step number is now 3 (not 4) so currentStep reaches it correctly
+  const steps = (formData.enrollmentType === 'bootcamp' || formData.enrollmentType === 'internship') ? [
     { number: 1, title: 'Personal Info', icon: User, description: 'Tell us about yourself' },
     { number: 2, title: 'Background', icon: School, description: 'Your education & occupation' },
-    { number: 3, title: 'Preview', icon: CheckCircle, description: 'Review and submit' } // ✅ was 4, now 3
+    { number: 3, title: 'Preview', icon: CheckCircle, description: 'Review and submit' }
   ] : [
     { number: 1, title: 'Personal Info', icon: User, description: 'Tell us about yourself' },
     { number: 2, title: 'Background', icon: School, description: 'Your education & occupation' },
@@ -75,7 +83,7 @@ const Enrollment = () => {
 
   // Handle step adjustment when enrollment type changes
   useEffect(() => {
-    if (formData.enrollmentType === 'bootcamp' && currentStep > 2) {
+    if ((formData.enrollmentType === 'bootcamp' || formData.enrollmentType === 'internship') && currentStep > 2) {
       setCurrentStep(2);
     }
   }, [formData.enrollmentType, steps.length]);
@@ -118,7 +126,9 @@ const Enrollment = () => {
         message: formData.careerGoal,
       };
 
-      const endpoint = formData.enrollmentType === 'bootcamp' ? 'bootcamp-application' : 'public-enrollment';
+      let endpoint = 'public-enrollment';
+      if (formData.enrollmentType === 'bootcamp') endpoint = 'bootcamp-application';
+      else if (formData.enrollmentType === 'internship') endpoint = 'internship-application';
 
       console.log('📤 Sending to:', `${apiUrl}/${endpoint}`);
       console.log('📦 Payload:', enrollmentData);
@@ -135,7 +145,10 @@ const Enrollment = () => {
         submissionSucceeded = true;
 
         let successMessage = '';
-        if (formData.enrollmentType === 'bootcamp') {
+        if (formData.enrollmentType === 'internship') {
+          successMessage = dbResult.data.message || 'Internship application submitted successfully!\n\n';
+          successMessage += `📧 We'll contact you soon with confirmation details.`;
+        } else if (formData.enrollmentType === 'bootcamp') {
           successMessage = dbResult.data.message || 'Bootcamp application submitted successfully!\n\n';
           successMessage += `📧 We'll contact you soon with confirmation details.`;
         } else {
@@ -145,8 +158,11 @@ const Enrollment = () => {
 
         showNotification(successMessage, 'success');
 
+        const typeLabel = formData.enrollmentType === 'internship' ? 'Internship' :
+          formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : 'Vocational Training';
+
         const whatsappMessage = `
-New Bootcamp Application from Gep Protech Website:
+New ${typeLabel} Application from Gep Protech Website:
 
 *Name:* ${formData.name}
 *Email:* ${formData.email}
@@ -197,7 +213,6 @@ Sent from Gep Protech Academic Website
       if (error.response) {
         const { status, statusText, data } = error.response;
         const serverMsg = data?.message || data?.error || JSON.stringify(data);
-        // errorMessage = `Server Error: ${serverMsg}`;
 
         if (data?.errors) {
           errorMessage += '\n\nPlease check the following:';
@@ -260,7 +275,7 @@ Sent from Gep Protech Academic Website
   // FIX 3: nextStep/prevStep are now fully sequential — no manual skipping needed
   const nextStep = () => {
     if (currentStep === 1 && !formData.enrollmentType) {
-      showNotification('Please choose an enrollment type (Bootcamp or Vacational Training) to continue.', 'error');
+      showNotification('Please choose an enrollment type (Internship or Vocational Training) to continue.', 'error');
       return;
     }
     if (currentStep < steps.length) {
@@ -360,51 +375,58 @@ Sent from Gep Protech Academic Website
             marginTop: '1.5rem',
             flexWrap: 'wrap'
           }}>
+            {isInternshipOpen && (
+              <label style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.5rem',
+                cursor: 'pointer',
+                padding: '1rem 2rem',
+                borderRadius: '15px',
+                border: formData.enrollmentType === 'internship' ? '2px solid var(--primary-color)' : '2px solid var(--border-color)',
+                background: formData.enrollmentType === 'internship' ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
+                transition: 'all 0.3s ease',
+                position: 'relative'
+              }}>
+                {formData.enrollmentType === 'internship' && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '-8px',
+                    right: '-8px',
+                    width: '20px',
+                    height: '20px',
+                    background: 'var(--primary-color)',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <Check size={12} color="white" />
+                  </div>
+                )}
+                <input
+                  type="radio"
+                  name="enrollmentType"
+                  value="internship"
+                  checked={formData.enrollmentType === 'internship'}
+                  onChange={handleChange}
+                  style={{ width: '18px', height: '18px', accentColor: 'var(--primary-color)' }}
+                />
+                <span style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '1.1rem' }}>Internship</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', maxWidth: '200px' }}>
+                  2-months internship program from August to September 2026.
+                </span>
+              </label>
+            )}
             <label style={{
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               gap: '0.5rem',
               cursor: 'pointer',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '10px',
-              border: formData.enrollmentType === 'bootcamp' ? '2px solid var(--primary-color)' : '2px solid var(--border-color)',
-              background: formData.enrollmentType === 'bootcamp' ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
-              transition: 'all 0.3s ease',
-              position: 'relative'
-            }}>
-              {formData.enrollmentType === 'bootcamp' && (
-                <div style={{
-                  position: 'absolute',
-                  top: '-8px',
-                  right: '-8px',
-                  width: '20px',
-                  height: '20px',
-                  background: 'var(--primary-color)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <Check size={12} color="white" />
-                </div>
-              )}
-              <input
-                type="radio"
-                name="enrollmentType"
-                value="bootcamp"
-                checked={formData.enrollmentType === 'bootcamp'}
-                onChange={handleChange}
-                style={{ width: '18px', height: '18px', accentColor: 'var(--primary-color)' }}
-              />
-              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Bootcamp</span>
-            </label>
-            <label style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              cursor: 'pointer',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '10px',
+              padding: '1rem 2rem',
+              borderRadius: '15px',
               border: formData.enrollmentType === 'enrollment' ? '2px solid var(--primary-color)' : '2px solid var(--border-color)',
               background: formData.enrollmentType === 'enrollment' ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
               transition: 'all 0.3s ease',
@@ -434,7 +456,10 @@ Sent from Gep Protech Academic Website
                 onChange={handleChange}
                 style={{ width: '18px', height: '18px', accentColor: 'var(--primary-color)' }}
               />
-              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Vocational Training</span>
+              <span style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '1.1rem' }}>Vocational Training</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', maxWidth: '200px' }}>
+                3-month plus, Professional and Vocational Tech Training schedule from April to June 2026.
+              </span>
             </label>
           </div>
           {/* Security message after radio buttons - only visible when no radio button selected */}
@@ -854,7 +879,7 @@ Sent from Gep Protech Academic Website
                     }}
                   >
                     <h4 style={{ marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '1.2rem' }}>
-                      📋 Preview Your    {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : 'Vacational Training'}
+                      📋 Preview Your {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : formData.enrollmentType === 'internship' ? 'Internship' : 'Vocational Training'}
                     </h4>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', fontSize: '0.95rem' }}>
@@ -883,7 +908,7 @@ Sent from Gep Protech Academic Website
                       <div>
                         <p style={{ opacity: 0.7, marginBottom: '0.25rem' }}>Enrollment Type</p>
                         <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>
-                          {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : 'Vacational Training'}
+                          {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : formData.enrollmentType === 'internship' ? 'Internship' : 'Vocational Training'}
                         </p>
                       </div>
                     </div>

@@ -32,14 +32,14 @@ const WelcomePopup = () => {
   // Discount end date - April 10, 2026
   const DISCOUNT_END_DATE = new Date("2026-04-10T23:59:59").getTime();
 
-  useEffect(() => {
+  // useEffect(() => {
     // Show popup after a short delay on mount
-    const timer = setTimeout(() => {
-      setShowPopup(true);
-    }, 1000);
+  //   const timer = setTimeout(() => {
+  //     setShowPopup(true);
+  //   }, 1000);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   // Countdown timer
   useEffect(() => {

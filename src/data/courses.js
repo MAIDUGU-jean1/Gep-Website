@@ -560,5 +560,62 @@ export const courses = [
     "Identify and manage project risks effectively",
     "Allocate resources",
   ]
-}
+},
+{
+  id:19,
+  title: "DevOps",
+  description: "Learn the principles and practices of DevOps to streamline software development and operations, enabling faster delivery and improved collaboration between teams.",
+  duration: "3 months",
+  tutor: " DevOps Experts Team",
+  price: "35,000 FCFA",
+  level: "Beginner",
+  image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  features: [
+    "Continuous Integration & Continuous Deployment (CI/CD)",
+    "Infrastructure as Code (IaC)",
+    "Containerization with Docker",
+    "Orchestration with Kubernetes",
+    "DevOps Culture & Collaboration",
+    "Monitoring & Logging",
+    "Cloud Platforms (AWS, Azure, GCP)"
+  ],
+  about: "Gain essential DevOps skills to streamline software development and operations. Learn to implement CI/CD pipelines, manage infrastructure as code, and collaborate effectively between development and operations teams.",
+  learns: [
+    "Implement continuous integration and deployment pipelines",
+    "Manage infrastructure as code using tools like Terraform",
+    "Containerize applications with Docker",
+    "Orchestrate containers with Kubernetes",
+    "Foster a DevOps culture and improve collaboration",
+    "Monitor and log application performance",
+    "Deploy applications to cloud platforms (AWS, Azure, GCP)"
+  ]
+},{
+  id:20,
+  title: "Computer Aided Design (CAD)",
+  description: "Learn the principles and practices of Computer Aided Design (CAD) to create detailed technical drawings and models for various industries.",
+  duration: "3 months",
+  tutor: "CAD Experts Team",
+  price: "30,000 FCFA",
+  level: "Beginner",
+  image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+  features: [
+    "CAD Software Proficiency",
+    "Technical Drawing & Modeling",
+    "3D Modeling & Visualization",
+    "CAD for Engineering & Architecture",
+    "CAD for Manufacturing & Product Design",
+    "CAD Standards & Best Practices",
+    "CAD Project Workflow"
+  ],
+  about: "Gain essential CAD skills to create detailed technical drawings and models. Learn to use CAD software, model 3D objects, and apply CAD principles in engineering and architectural design.",
+  learns: [
+    "Develop proficiency in CAD software such as AutoCAD, SolidWorks, or Revit",
+    "Create technical drawings and models",
+    "Visualize 3D objects and assemblies",
+    "Apply CAD principles in engineering and architectural design",
+    "Follow CAD standards and best practices",
+    "Manage CAD project workflows and collaboration",
+    "Prepare CAD files for manufacturing and product design",
+  ]
+},
 ];
