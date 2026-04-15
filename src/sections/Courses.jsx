@@ -291,11 +291,14 @@ const Courses = () => {
                   />
 
                   <div className="level-badge">{course.level}</div>
+                  {course.bonus > 0 && (
+                    <div className="discount-badge">
+                        <span className="discount-text">{course.bonus}% OFF</span>
+                        <small className="discount-subtext">Limited</small>
 
-                  <div className="discount-badge">
-                    <span className="discount-text">30% OFF</span>
-                    <small className="discount-subtext">Limited</small>
-                  </div>
+
+                    </div>
+                  )}
                 </div>
 
                 {/* INFO */}
@@ -321,13 +324,21 @@ const Courses = () => {
 
                   <div className="price-section">
                     {(() => {
-                      const original = parsePrice(course.price);
-                      const discounted = Math.round((original + 10000) * 0.7);
+                      let original;
+                      let discounted;
+                      if (course.bonus > 0){
+                         original = parsePrice(course.price);
+                         discounted = Math.round((original ) - (original * (course.bonus / 100)) );
+                        
+                      }else{
+                         original = parsePrice(course.slash_price);
+                         discounted = parsePrice(course.price);
+                      }
 
                       return (
                         <div className="price-display">
                           <span className="original-price">
-                            {formatPrice(original + 10000)}
+                            {formatPrice(original )}
                           </span>
 
                           <span className="discounted-price">
