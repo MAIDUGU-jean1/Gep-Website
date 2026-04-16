@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Send, User, Mail, MessageSquare, Calendar, Clock, ThumbsUp, Quote, Eye, EyeOff, ArrowRight, History, CalendarDays } from 'lucide-react';
+import { Star, Send, User, Mail, MessageSquare, Calendar, Clock, ThumbsUp, Quote, Eye, EyeOff, ArrowRight, History, CalendarDays, User2 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './css/Review.css';
@@ -9,18 +9,22 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const fileUrl = import.meta.env.VITE_FILE_API_URL;
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400';
 const DARK_PERSON_IMAGE = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces';
-const ANONYMOUS_ICON = 'https://images.unsplash.com/photo-1519638399535-1b036603ac07?w=150&h=150&fit=crop&crop=faces';
 
 const Review = () => {
   const navigate = useNavigate();
   const formRef = useRef(null);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [reviews, setReviews] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [pastEvents, setPastEvents] = useState([]);
+  const [activeEvents, setActiveEvents] = useState([]);
+  const [inactiveEvents, setInactiveEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
-  const [activeEventTab, setActiveEventTab] = useState('upcoming');
+  const [activeEventTab, setActiveEventTab] = useState('ongoing');
+  
+  const handleTabChange = (tab) => {
+    setActiveEventTab(tab);
+  };
+  
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [expandedReviews, setExpandedReviews] = useState({});
   const [formData, setFormData] = useState({
@@ -28,7 +32,7 @@ const Review = () => {
     email: '',
     isAnonymous: false,
     message: '',
-    rating: 0,
+    rating: 5,
     eventId: null,
     eventTitle: ''
   });
@@ -38,14 +42,14 @@ const Review = () => {
 
   const filterOptions = [
     { value: 'all', label: 'All' },
-    { value: 'anonymous', label: 'Anonymous' },
-    { value: 'non_anonymous', label: 'Non Anonymous' }
+    { value: true, label: 'Anonymous' },
+    { value: false, label: 'Non Anonymous' }
   ];
 
   const filteredReviews = reviews.filter(review => {
     if (activeFilter === 'all') return true;
-    if (activeFilter === 'anonymous') return review.is_anonymous === true;
-    if (activeFilter === 'non_anonymous') return review.is_anonymous === false;
+    if (activeFilter === true) return review.is_anonymous === true;
+    if (activeFilter === false) return review.is_anonymous === false;
     return true;
   });
 
@@ -60,21 +64,12 @@ const Review = () => {
         ]);
         setReviews(reviewsRes.data.reviews || reviewsRes.data);
 
-        const allEvents = eventsRes.data.events || eventsRes.data;
-        const now = new Date();
+        const eventsData = eventsRes.data;
+        const active = eventsData.active || eventsData.events || [];
+        const inactive = eventsData.inactive || [];
 
-        const upcoming = allEvents.filter(event => {
-          const eventDate = new Date(event.date || event.start_date);
-          return eventDate >= now;
-        });
-
-        const past = allEvents.filter(event => {
-          const eventDate = new Date(event.date || event.start_date);
-          return eventDate < now;
-        });
-
-        setEvents(upcoming);
-        setPastEvents(past);
+        setActiveEvents(active);
+        setInactiveEvents(inactive);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       } finally {
@@ -100,8 +95,6 @@ const Review = () => {
   const handleLearnMore = (event) => {
     navigate('/events');
   };
-
-  // const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 4);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -240,15 +233,15 @@ const Review = () => {
 
             <div className="hero-tabs">
               <button
-                className={`hero-tab ${activeEventTab === 'upcoming' ? 'active' : ''}`}
-                onClick={() => setActiveEventTab('upcoming')}
+                className={`hero-tab ${activeEventTab === 'ongoing' ? 'active' : ''}`}
+                onClick={() => handleTabChange('ongoing')}
               >
                 <CalendarDays size={20} />
-                <span>Upcoming Events</span>
+                <span>Ongoing Events</span>
               </button>
               <button
                 className={`hero-tab ${activeEventTab === 'past' ? 'active' : ''}`}
-                onClick={() => setActiveEventTab('past')}
+                onClick={() => handleTabChange('past')}
               >
                 <History size={20} />
                 <span>Past Events</span>
@@ -261,8 +254,8 @@ const Review = () => {
                 <span className="stat-label">Reviews</span>
               </div>
               <div className="stat-item">
-                <span className="stat-number">{activeEventTab === 'upcoming' ? events.length : pastEvents.length}+</span>
-                <span className="stat-label">{activeEventTab === 'upcoming' ? 'Upcoming' : 'Past'} Events</span>
+                <span className="stat-number">{activeEventTab === 'ongoing' ? activeEvents.length : inactiveEvents.length}+</span>
+                <span className="stat-label">{activeEventTab === 'ongoing' ? 'Ongoing' : 'Past'} Events</span>
               </div>
             </div>
           </motion.div>
@@ -278,21 +271,32 @@ const Review = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            {activeEventTab === 'upcoming' ? 'Upcoming Events' : 'Past Events'}
+            {activeEventTab === 'ongoing' ? 'Ongoing Events' : 'Past Events'}
           </motion.h2>
+
           <motion.p
             className="section-subtitle"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {activeEventTab === 'upcoming'
+            {activeEventTab === 'ongoing'
               ? 'Join our events and take your tech journey to the next level'
-              : '回顾我们过去的活动，看看我们社区的精彩时刻'}
+              : 'Do not miss our next event, stay tuned on our event page'}
           </motion.p>
 
           <div className="events-grid">
-            {(activeEventTab === 'upcoming' ? events : pastEvents).map((event, index) => (
+            {activeEventTab === 'ongoing' && activeEvents.length === 0 && (
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1/-1' }}>
+                No ongoing events at the moment.
+              </p>
+            )}
+            {activeEventTab === 'past' && inactiveEvents.length === 0 && (
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1/-1' }}>
+                No past events available.
+              </p>
+            )}
+            {(activeEventTab === 'ongoing' ? activeEvents : inactiveEvents).map((event, index) => (
               <motion.div
                 key={event.id}
                 className="event-card"
@@ -389,7 +393,9 @@ const Review = () => {
                       <div className="review-header">
                         <div className="review-avatar">
                           {review.is_anonymous || review.isAnonymous ? (
-                            <img src={ANONYMOUS_ICON} alt="Anonymous" />
+                            <div className="anonymous-avatar">
+                              <User2 size={28} />
+                            </div>
                           ) : (
                             <img src={DARK_PERSON_IMAGE} alt={review.name} />
                           )}
@@ -404,19 +410,21 @@ const Review = () => {
                       </div>
                       <div className="review-body">
                         <Quote size={24} className="quote-icon" />
-                        <p>
-                          {(expandedReviews[review.id] || (review.message && review.message.length <= 20))
-                            ? review.message
-                            : truncateMessage(review.message, 50)}
-                          {review.message && review.message.length > 20 && (
+                        {review.message && review.message.length > 20 ? (
+                          <p>
+                            {expandedReviews[review.id] 
+                              ? review.message 
+                              : truncateMessage(review.message, 20)}
                             <button
                               className="learn-more-btn"
                               onClick={() => toggleExpandReview(review.id)}
                             >
-                              {expandedReviews[review.id] ? ' Show less' : ' Learn more'}
+                              {expandedReviews[review.id] ? '...Show less' : '...Learn more'}
                             </button>
-                          )}
-                        </p>
+                          </p>
+                        ) : (
+                          <p>{review.message}</p>
+                        )}
                       </div>
                       <div className="review-footer">
                         <button className="like-btn" onClick={() => handleLike(review.id)}>
