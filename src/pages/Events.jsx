@@ -31,10 +31,17 @@ const Events = () => {
         const fetchEvents = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/events`);
-                setEvents(response.data.events || response.data);
+
+                const eventsData = response.data;
+                const allEvents = [
+                    ...(eventsData.active || []),
+                    ...(eventsData.inactive || [])
+                ];
+                setEvents(allEvents);
+
             } catch (error) {
                 console.error('Failed to fetch events:', error);
-                setEvents([]);
+                setEvents([]); // ✅ always fallback to empty array, never undefined
             } finally {
                 setLoading(false);
             }
@@ -45,6 +52,9 @@ const Events = () => {
     const categories = ['All', 'Workshops', 'Training', 'Webinars', 'Networking', 'Meetups'];
 
     const filteredEvents = useMemo(() => {
+        // Ensure events is an array before filtering
+        if (!Array.isArray(events)) return [];
+
         return events.filter(event => {
             const matchesSearch =
                 event.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -350,16 +360,16 @@ const Events = () => {
                                         <MessageSquare size={18} />
                                         Your Review
                                     </label>
-                                        <textarea
-                                            id="message"
-                                            name="message"
-                                            value={formData.message}
-                                            onChange={handleInputChange}
-                                            placeholder="Share your experience with this event..."
-                                            rows={5}
-                                            className={formErrors.message ? 'error' : ''}
-                                            style={{ pointerEvents: 'auto' }}
-                                        ></textarea>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleInputChange}
+                                        placeholder="Share your experience with this event..."
+                                        rows={5}
+                                        className={formErrors.message ? 'error' : ''}
+                                        style={{ pointerEvents: 'auto' }}
+                                    ></textarea>
                                     {formErrors.message && <span className="error-text">{formErrors.message}</span>}
                                 </div>
 
