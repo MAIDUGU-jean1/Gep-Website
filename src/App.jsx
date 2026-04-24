@@ -56,11 +56,14 @@ const WelcomePopup = () => {
             onClick={(e) => e.stopPropagation()}
             style={{
               maxWidth: '500px',
-              padding: '40px 35px',
+              width: '90%',
+              padding: '25px 20px',
               textAlign: 'center',
               background: 'var(--card-bg)',
               border: '1px solid var(--border-color)',
-              borderRadius: '24px'
+              borderRadius: '24px',
+              maxHeight: '90vh',
+              overflowY: 'auto'
             }}
           >
             <button
@@ -77,38 +80,38 @@ const WelcomePopup = () => {
               <X size={20} />
             </button>
 
-            <div className="modal-header" style={{ marginBottom: '25px' }}>
+            <div className="modal-header" style={{ marginBottom: '20px' }}>
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: 'spring' }}
                 style={{
-                  width: '80px',
-                  height: '80px',
+                  width: '60px',
+                  height: '60px',
                   borderRadius: '50%',
                   background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  margin: '0 auto 20px',
-                  boxShadow: '0 8px 25px rgba(218, 165, 32, 0.4)'
+                  margin: '0 auto 15px',
+                  boxShadow: '0 6px 20px rgba(218, 165, 32, 0.4)'
                 }}
               >
-                <GraduationCap size={40} color="white" />
+                <GraduationCap size={30} color="white" />
               </motion.div>
               <h2 style={{
-                fontSize: '1.8rem',
+                fontSize: 'clamp(1.3rem, 5vw, 1.8rem)',
                 fontWeight: '800',
                 color: 'var(--text-primary)',
-                marginBottom: '10px',
+                marginBottom: '8px',
                 letterSpacing: '-0.5px'
               }}>
                 Welcome to GeP ProTech! 👋
               </h2>
               <p style={{
-                fontSize: '1.05rem',
+                fontSize: '0.95rem',
                 color: 'var(--text-secondary)',
-                lineHeight: '1.6'
+                lineHeight: '1.5'
               }}>
                 Your journey to becoming a tech professional starts here.
               </p>
@@ -121,53 +124,53 @@ const WelcomePopup = () => {
               style={{
                 background: 'var(--navy, #1A3A6B)',
                 borderRadius: '16px',
-                padding: '25px 20px',
-                marginBottom: '25px',
+                padding: '18px 15px',
+                marginBottom: '20px',
                 position: 'relative',
                 overflow: 'hidden'
               }}
             >
               <div style={{
                 position: 'absolute',
-                top: '-20px',
-                right: '-20px',
-                width: '80px',
-                height: '80px',
+                top: '-15px',
+                right: '-15px',
+                width: '60px',
+                height: '60px',
                 background: 'rgba(218, 165, 32, 0.2)',
                 borderRadius: '50%'
               }}></div>
               <div style={{
                 position: 'absolute',
-                bottom: '-30px',
-                left: '-30px',
-                width: '100px',
-                height: '100px',
+                bottom: '-20px',
+                left: '-20px',
+                width: '70px',
+                height: '70px',
                 background: 'rgba(218, 165, 32, 0.1)',
                 borderRadius: '50%'
               }}></div>
               
               <p style={{
                 color: 'var(--primary-color)',
-                fontSize: '0.9rem',
+                fontSize: '0.8rem',
                 fontWeight: '600',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                marginBottom: '10px'
+                marginBottom: '8px'
               }}>
                 🎉 Announcement
               </p>
               <h3 style={{
                 color: 'white',
-                fontSize: '1.4rem',
+                fontSize: '1.2rem',
                 fontWeight: '700',
-                marginBottom: '8px'
+                marginBottom: '6px'
               }}>
                 Batch 13 is Now Ongoing!
               </h3>
               <p style={{
                 color: 'rgba(255,255,255,0.85)',
-                fontSize: '0.95rem',
-                lineHeight: '1.5'
+                fontSize: '0.85rem',
+                lineHeight: '1.4'
               }}>
                 Join our current cohort and transform your career in just <strong style={{ color: 'var(--primary-color)' }}>3 months</strong> of intensive training.
               </p>
@@ -175,8 +178,8 @@ const WelcomePopup = () => {
 
             <div style={{
               display: 'flex',
-              gap: '12px',
-              marginBottom: '20px',
+              gap: '10px',
+              marginBottom: '15px',
               flexWrap: 'wrap',
               justifyContent: 'center'
             }}>
@@ -190,19 +193,19 @@ const WelcomePopup = () => {
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    padding: '14px 28px',
+                    gap: '6px',
+                    padding: '12px 22px',
                     background: 'linear-gradient(135deg, var(--primary-color), #daa520)',
                     color: 'white',
                     borderRadius: '30px',
                     fontWeight: '600',
-                    fontSize: '1rem',
+                    fontSize: '0.9rem',
                     textDecoration: 'none',
                     boxShadow: '0 4px 15px rgba(218, 165, 32, 0.4)',
                     transition: 'all 0.3s ease'
                   }}
                 >
-                  <Send size={18} />
+                  <Send size={16} />
                   Apply Now
                 </Link>
               </motion.div>
@@ -217,19 +220,19 @@ const WelcomePopup = () => {
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    padding: '14px 28px',
+                    gap: '6px',
+                    padding: '12px 22px',
                     background: 'transparent',
                     color: 'var(--primary-color)',
                     border: '2px solid var(--primary-color)',
                     borderRadius: '30px',
                     fontWeight: '600',
-                    fontSize: '1rem',
+                    fontSize: '0.9rem',
                     textDecoration: 'none',
                     transition: 'all 0.3s ease'
                   }}
                 >
-                  <BookOpen size={18} />
+                  <BookOpen size={16} />
                   View Courses
                 </a>
               </motion.div>
@@ -237,7 +240,7 @@ const WelcomePopup = () => {
 
             <p style={{
               color: 'var(--text-secondary)',
-              fontSize: '0.9rem',
+              fontSize: '0.8rem',
               fontStyle: 'italic'
             }}>
               "The best time to start was yesterday. The next best time is now."
