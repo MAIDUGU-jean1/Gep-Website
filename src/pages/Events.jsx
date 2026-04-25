@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, act } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Calendar, MapPin, Users, Filter, ChevronRight, Clock, Tag, Star, Send, User, Mail, MessageSquare, X } from 'lucide-react';
+import { Search, Calendar, MapPin, Users, CalendarCheck, Filter, ChevronRight, Clock, Tag, Star, History, Send, User, Mail, CalendarDays, MessageSquare, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './css/Events.css';
@@ -15,6 +15,9 @@ const Events = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showReviewModal, setShowReviewModal] = useState(false);
+    const [ongoingEvents, setOngoingEvents] = useState([]);
+    const [pastEvents, setPastEvents] = useState([]);
+    const [upcomingEvents, setUpcomingEvents] = useState([]); // []
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [formData, setFormData] = useState({
         name: '',
@@ -26,16 +29,19 @@ const Events = () => {
     const [formErrors, setFormErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [activeEventTab, setActiveEventTab] = useState('All');
+
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 const response = await axios.get(`${apiUrl}/events`);
 
+                console.log('API Response:', response.data);
+
                 const eventsData = response.data;
                 const allEvents = [
-                    ...(eventsData.active || []),
-                    ...(eventsData.inactive || [])
+                    ...(eventsData.events || []),
                 ];
                 setEvents(allEvents);
 
@@ -49,24 +55,36 @@ const Events = () => {
         fetchEvents();
     }, []);
 
-    const categories = ['All', 'Workshops', 'Training', 'Webinars', 'Networking', 'Meetups'];
+    const categories = ['All', 'Bootcamp', 'Internship', 'Vocational Training', 'Graduation', 'Seminar', 'Other Events'];
 
     const filteredEvents = useMemo(() => {
         // Ensure events is an array before filtering
         if (!Array.isArray(events)) return [];
 
+
+
         return events.filter(event => {
+
+            console.log('Event:', event); // Debugging line
+            console.log('Active Tab', activeEventTab);
             const matchesSearch =
                 event.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 event.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 event.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 event.type?.toLowerCase().includes(searchQuery.toLowerCase());
 
-            const matchesCategory = activeCategory === 'All' || event.type === activeCategory;
+            
 
-            return matchesSearch && matchesCategory;
+            const matchesCategory = activeCategory === 'All' || event.type === activeCategory.toLowerCase() ;       
+            
+            
+            const matchStatus = activeEventTab === 'All' || event.status === activeEventTab;
+
+            
+
+             return matchesSearch && matchesCategory && matchStatus;
         });
-    }, [searchQuery, activeCategory, events]);
+    }, [searchQuery, activeCategory, activeEventTab, events]);
 
     const handleReviewClick = (event) => {
         setSelectedEvent(event);
@@ -160,6 +178,26 @@ const Events = () => {
                             Discover workshops, training sessions, webinars, and networking opportunities
                             designed to accelerate your tech journey. Join our community and learn from industry experts.
                         </p>
+
+                        <div className="hero-tabs">
+                            <button className={`hero-tab ${activeEventTab === 'All'? 'active' : ''}`} onClick={() => setActiveEventTab('All')}>
+                               {/* <CalendarCheck size={20} /> */}
+                                <span>ALL</span>
+                            </button>
+                            <button className={`hero-tab ${activeEventTab === 'upcoming'? 'active' : ''}`} onClick={() => setActiveEventTab('upcoming')}>
+                               <CalendarCheck size={20} />
+                                <span>Upcoming Events</span>
+                            </button>
+                            <button className={`hero-tab ${activeEventTab === 'ongoing' ? 'active' : ''}`} onClick={() => setActiveEventTab('ongoing')}>
+                                <CalendarDays size={20} />
+                                <span>Ongoing Events</span>
+                            </button>
+
+                            <button className={`hero-tab ${activeEventTab === 'past' ? 'active' : ''}`} onClick={() => setActiveEventTab('past')}>
+                                <History size={20} />
+                                <span>Past Events</span>
+                            </button>
+                        </div>
                     </motion.div>
                 </div>
             </section>

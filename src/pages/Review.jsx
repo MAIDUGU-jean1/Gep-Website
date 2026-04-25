@@ -4,11 +4,12 @@ import { Star, Send, User, Mail, MessageSquare, Calendar, Clock, ThumbsUp, Quote
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './css/Review.css';
+import Logo from '../assets/Images/logo1.png';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const fileUrl = import.meta.env.VITE_FILE_API_URL;
-const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400';
-const DARK_PERSON_IMAGE = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces';
+const DEFAULT_IMAGE = Logo;
+const DARK_PERSON_IMAGE = Logo;
 
 const Review = () => {
   const navigate = useNavigate();
@@ -19,11 +20,8 @@ const Review = () => {
   const [inactiveEvents, setInactiveEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
-  const [activeEventTab, setActiveEventTab] = useState('ongoing');
   
-  const handleTabChange = (tab) => {
-    setActiveEventTab(tab);
-  };
+
   
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [expandedReviews, setExpandedReviews] = useState({});
@@ -48,8 +46,8 @@ const Review = () => {
 
   const filteredReviews = reviews.filter(review => {
     if (activeFilter === 'all') return true;
-    if (activeFilter === true) return review.is_anonymous === true;
-    if (activeFilter === false) return review.is_anonymous === false;
+    if (activeFilter === true) return review.is_anonymous === 1;
+    if (activeFilter === false) return review.is_anonymous === 0;
     return true;
   });
 
@@ -62,6 +60,8 @@ const Review = () => {
           axios.get(`${apiUrl}/reviews`),
           axios.get(`${apiUrl}/events`)
         ]);
+
+        console.log('Reviews Response:', reviewsRes.data);
         setReviews(reviewsRes.data.reviews || reviewsRes.data);
 
         const eventsData = eventsRes.data;
@@ -231,105 +231,20 @@ const Review = () => {
               Discover what our students say about their journey at GEP Protech Academy.
             </p>
 
-            <div className="hero-tabs">
-              <button
-                className={`hero-tab ${activeEventTab === 'ongoing' ? 'active' : ''}`}
-                onClick={() => handleTabChange('ongoing')}
-              >
-                <CalendarDays size={20} />
-                <span>Ongoing Events</span>
-              </button>
-              <button
-                className={`hero-tab ${activeEventTab === 'past' ? 'active' : ''}`}
-                onClick={() => handleTabChange('past')}
-              >
-                <History size={20} />
-                <span>Past Events</span>
-              </button>
-            </div>
+
 
             <div className="hero-stats">
               <div className="stat-item">
                 <span className="stat-number">{reviews.length}</span>
                 <span className="stat-label">Reviews</span>
               </div>
-              <div className="stat-item">
-                <span className="stat-number">{activeEventTab === 'ongoing' ? activeEvents.length : inactiveEvents.length}+</span>
-                <span className="stat-label">{activeEventTab === 'ongoing' ? 'Ongoing' : 'Past'} Events</span>
-              </div>
+
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Events Section */}
-      <section className="events-section">
-        <div className="container">
-          <motion.h2
-            className="section-title"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            {activeEventTab === 'ongoing' ? 'Ongoing Events' : 'Past Events'}
-          </motion.h2>
 
-          <motion.p
-            className="section-subtitle"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            {activeEventTab === 'ongoing'
-              ? 'Join our events and take your tech journey to the next level'
-              : 'Do not miss our next event, stay tuned on our event page'}
-          </motion.p>
-
-          <div className="events-grid">
-            {activeEventTab === 'ongoing' && activeEvents.length === 0 && (
-              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1/-1' }}>
-                No ongoing events at the moment.
-              </p>
-            )}
-            {activeEventTab === 'past' && inactiveEvents.length === 0 && (
-              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', gridColumn: '1/-1' }}>
-                No past events available.
-              </p>
-            )}
-            {(activeEventTab === 'ongoing' ? activeEvents : inactiveEvents).map((event, index) => (
-              <motion.div
-                key={event.id}
-                className="event-card"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <div className="event-image">
-                  <img src={getThumbnail(event)} alt={event.title} />
-                  <div className="event-badge">{event.type}</div>
-                </div>
-                <div className="event-content">
-                  <h3>{event.title}</h3>
-                  <div className="event-meta">
-                    <span><Calendar size={16} /> {formatDate(event.date || event.start_date)}</span>
-                  </div>
-                  <p>{event.description}</p>
-                  <div className="event-actions">
-                    <button className="event-btn" onClick={() => handleLearnMore(event)}>
-                      Learn More <ArrowRight size={16} />
-                    </button>
-                    <button className="event-review-btn" onClick={() => handleEventReview(event)}>
-                      <MessageSquare size={16} />
-                      Review
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Reviews Section */}
       <section className="reviews-section">
