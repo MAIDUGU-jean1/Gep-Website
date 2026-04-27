@@ -13,13 +13,36 @@ import {
     CheckCircle,
     Award
 } from 'lucide-react';
-import { courses } from '../data/courses';
+import { fetchCourses } from '../data/courses';
 import './css/CourseDetails.css';
 
 const CourseDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const courseId = parseInt(id);
+
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Fetch all courses
+    useEffect(() => {
+        const loadCourses = async () => {
+            try {
+                setLoading(true);
+                const data = await fetchCourses();
+                setCourses(data);
+                setError(null);
+            } catch (err) {
+                setError(err.message);
+                console.error("Failed to load courses:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadCourses();
+    }, []);
 
     // Find the main course
     const mainCourse = courses.find(c => c.id === courseId);
@@ -101,7 +124,7 @@ const CourseDetails = () => {
             about: (
                 <div className="tab-content-inner">
                     <p className="tab-description">
-                        {course.detailedDescription || course.description}
+                        {course.about || course.description}
                     </p>
                     <div className="tab-about-details">
                         <div className="tab-detail-item">
@@ -181,11 +204,32 @@ const CourseDetails = () => {
         return tabContent[tab] || tabContent.about;
     };
 
-    // Handle course click from slider
-    const handleCourseClick = (courseId) => {
-        navigate(`/course/${courseId}`);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    // Loading state
+    if (loading) {
+        return (
+            <div className="course-details-page">
+                <div className="loading-state">
+                    <div className="loading-spinner"></div>
+                    <p>Loading course details...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="course-details-page">
+                <div className="error-state">
+                    <h2>Failed to load course</h2>
+                    <p>{error}</p>
+                    <button onClick={() => window.location.reload()} className="retry-button">
+                        Retry
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     // If course not found
     if (!mainCourse) {
@@ -199,7 +243,7 @@ const CourseDetails = () => {
                     >
                         <h2>Course Not Found</h2>
                         <p>The course you're looking for doesn't exist or has been removed.</p>
-                        <Link to="/" className="btn-primary">
+                        <Link to="/#courses" className="btn-primary">
                             <ArrowLeft size={18} />
                             Back to Home
                         </Link>
@@ -241,16 +285,18 @@ const CourseDetails = () => {
                     >
                         <div className="main-course-image">
                             <img
-                                src={mainCourse.image}
+                                src={import.meta.env.VITE_FILE_API_URL + "/" + mainCourse.thumbnail}
                                 alt={mainCourse.title}
                             />
-                            <div className="level-badge-main">
-                                {mainCourse.level}
+                            <div className="level-badge">
+                                {mainCourse.level === 'C' ? 'Beginner - Advanced' : mainCourse.level === 'B' ? 'Intermediate - Advanced' : 'Advanced'}
                             </div>
-                            <div className="discount-badge-main">
-                                <span className="discount-text">30% OFF</span>
-                                <small className="discount-subtext">Limited</small>
-                            </div>
+                            {mainCourse.bonus > 0 && (
+                                <div className="discount-badge">
+                                    <span className="discount-text">{mainCourse.bonus}% OFF</span>
+                                    <small className="discount-subtext">Limited</small>
+                                </div>
+                            )}
                         </div>
 
                         <div className="main-course-info">
@@ -274,13 +320,13 @@ const CourseDetails = () => {
                                     <span>Key Skills:</span>
                                 </div>
                                 <div className="features-tags">
-                                    {mainCourse.features.map((feature, idx) => (
+                                    {mainCourse.skills.map((skill, idx) => (
                                         <motion.span
                                             key={idx}
                                             whileHover={{ scale: 1.05 }}
                                             className="feature-tag"
                                         >
-                                            {feature}
+                                            {skill}
                                         </motion.span>
                                     ))}
                                 </div>
@@ -288,19 +334,29 @@ const CourseDetails = () => {
 
                             <div className="main-course-price">
                                 {(() => {
-                                    const original = parsePrice(mainCourse.price);
-                                    const discounted = Math.round((original + 10000) * 0.7);
+                                    let original;
+                                    let discounted;
+                                    if (mainCourse.bonus > 0){
+                                        original = parsePrice(mainCourse.price);
+                                        discounted = Math.round((original ) - (original * (mainCourse.bonus / 100)) );
+                                        
+                                    }else{
+                                        original = parsePrice(mainCourse.slash_price);
+                                        discounted = parsePrice(mainCourse.price);
+                                    }
+
                                     return (
                                         <div className="price-display">
-                                            <span className="original-price">
-                                                {formatPrice(original + 10000)}
-                                            </span>
-                                            <span className="discounted-price">
-                                                {formatPrice(discounted)}
-                                            </span>
+                                        <span className="original-price">
+                                            {formatPrice(original )}
+                                        </span>
+
+                                        <span className="discounted-price">
+                                            {formatPrice(discounted)}
+                                        </span>
                                         </div>
                                     );
-                                })()}
+                                    })()}
                             </div>
 
                             <div className="main-course-actions">

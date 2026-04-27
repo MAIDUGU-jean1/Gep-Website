@@ -1,48 +1,53 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Clock, Users, BookOpen, Search, X, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { courses } from "../data/courses";
+import { fetchCourses, getCategoriesFromCourses, getCourseCategoriesMapping } from "../data/courses";
 import "./styles/Courses.css";
 
 const Courses = () => {
   const navigate = useNavigate();
 
+  const [courses, setCourses] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch courses on component mount
+  useEffect(() => {
+    const loadCourses = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchCourses();
+        if (data.length === 0) {
+          console.warn("No courses fetched from API, using fallback data if available");
+        }
+        setCourses(data);
+        setError(null);
+      } catch (err) {
+        setError(err.message);
+        console.error("Failed to load courses:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCourses();
+  }, []);
 
   /* ------------------------------------------------ */
-  /* CATEGORY CONFIGURATION */
+  /* CATEGORY CONFIGURATION - DYNAMIC */
   /* ------------------------------------------------ */
 
-  const courseCategories = {
-    All: [
-      "Front-end Web Development",
-      "Back-end Development",
-      "Digital Marketing",
-      "Graphic Design",
-      "Data Science",
-      "Mobile App Development",
-      "Cybersecurity",
-    ],
-    Tech: [
-      "Front-end Web Development",
-      "Back-end Development",
-      "Data Science",
-      "Mobile App Development",
-      "Cybersecurity",
-    ],
-    Design: ["Graphic Design"],
-    Business: ["Digital Marketing", "Basic Cartography"],
-    Development: [
-      "Front-end Web Development",
-      "Back-end Development",
-      "Mobile App Development"
-    ],
-  };
+  const courseCategories = useMemo(() => {
+    return getCourseCategoriesMapping(courses);
+  }, [courses]);
 
-  const categories = ["All", "Tech", "Design", "Business", "Development"];
+  const categories = useMemo(() => {
+    return getCategoriesFromCourses(courses);
+  }, [courses]);
 
   /* ------------------------------------------------ */
   /* HELPERS */
@@ -111,7 +116,68 @@ const Courses = () => {
     }
 
     return result;
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, courses, courseCategories]);
+
+  /* ------------------------------------------------ */
+  /* LOADING & ERROR STATES */
+  /* ------------------------------------------------ */
+
+  if (loading) {
+    return (
+      <section id="courses" className="courses-section">
+        <div className="courses-container">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="loading-state"
+          >
+            <div className="loading-spinner"></div>
+            <p>Loading courses...</p>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="courses" className="courses-section">
+        <div className="courses-container">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="error-state"
+          >
+            <h3>Failed to load courses</h3>
+            <p>{error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="retry-button"
+            >
+              Retry
+            </button>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
+
+  if (courses.length === 0) {
+    return (
+      <section id="courses" className="courses-section">
+        <div className="courses-container">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="empty-state"
+          >
+            <h3>No courses available</h3>
+            <p>Check back soon for new courses.</p>
+          </motion.div>
+        </div>
+      </section>
+    );
+  }
 
   /* ------------------------------------------------ */
   /* COMPONENT UI */
@@ -285,18 +351,16 @@ const Courses = () => {
 
                 <div className="course-image-container">
                   <img
-                    src={course.image}
+                    src={import.meta.env.VITE_FILE_API_URL + "/" + course.thumbnail}
                     alt={course.title}
                     className="course-image"
                   />
 
-                  <div className="level-badge">{course.level}</div>
+                  <div className="level-badge">{course.level === 'C' ? 'Beginner - Advanced' : course.level === 'B' ? 'Intermediate - Advanced' : 'Advanced'}</div>
                   {course.bonus > 0 && (
                     <div className="discount-badge">
                         <span className="discount-text">{course.bonus}% OFF</span>
                         <small className="discount-subtext">Limited</small>
-
-
                     </div>
                   )}
                 </div>
