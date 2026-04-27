@@ -87,7 +87,7 @@ const Enrollment = () => {
     if ((formData.enrollmentType === 'bootcamp' || formData.enrollmentType === 'internship') && currentStep > 2) {
       setCurrentStep(2);
     }
-  }, [formData.enrollmentType, steps.length]);
+  }, [formData.enrollmentType, currentStep, steps.length]);
 
   const showNotification = (message, type) => {
     if (notifTimerRef.current) clearTimeout(notifTimerRef.current);
@@ -268,7 +268,7 @@ Sent from Gep Protech Academic Website
   };
 
   const handleJoinGroup = () => {
-    const groupLink = 'https://chat.whatsapp.com/https://chat.whatsapp.com/GhT341sUq7GIfQLQexCFmN?mode=gi_t';
+    const groupLink = 'https://chat.whatsapp.com/GhT341sUq7GIfQLQexCFmN';
     window.open(groupLink, '_blank');
     setShowGroupPopup(false);
   };
@@ -415,492 +415,485 @@ Sent from Gep Protech Academic Website
           )}
         </motion.div>
 
-        {/* Progress Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="progress-container"
-        >
-          <div className="progress-header">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span className="progress-step-badge">
-                Step {currentStep}/{steps.length}
-              </span>
-              <span className="progress-step-title">
-                {steps[currentStep - 1].title}
-              </span>
-            </div>
-            <span className="progress-percentage">
-              {Math.round(getProgressPercentage())}% Complete
-            </span>
-          </div>
-
-          <div className="progress-bar-bg">
+        {formData.enrollmentType && (
+          <>
+            {/* Progress Bar */}
             <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${getProgressPercentage()}%` }}
-              transition={{ duration: 0.3 }}
-              className="progress-bar-fill"
-            />
-          </div>
-        </motion.div>
-
-        {/* Steps Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="steps-nav"
-        >
-          {steps.map((step, index) => (
-            <motion.div
-              key={step.number}
-              whileHover={{ y: -2 }}
-              className={`step-item ${index + 1 < currentStep ? 'completed' : ''} ${index + 1 === currentStep ? 'active' : ''}`}
-              onClick={() => setCurrentStep(step.number)}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="progress-container"
             >
-              <div className="step-number">
-                {index + 1 < currentStep ? (
-                  <Check size={14} color="white" />
-                ) : (
-                  <step.icon size={14} color={index + 1 === currentStep ? 'var(--primary-color)' : 'var(--text-primary)'} />
+              <div className="progress-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span className="progress-step-badge">
+                    Step {currentStep}/{steps.length}
+                  </span>
+                  <span className="progress-step-title">
+                    {steps[currentStep - 1].title}
+                  </span>
+                </div>
+                <span className="progress-percentage">
+                  {Math.round(getProgressPercentage())}% Complete
+                </span>
+              </div>
+
+              <div className="progress-bar-bg">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${getProgressPercentage()}%` }}
+                  transition={{ duration: 0.3 }}
+                  className="progress-bar-fill"
+                />
+              </div>
+            </motion.div>
+
+            {/* Steps Navigation */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="steps-nav"
+            >
+              {steps.map((step, index) => (
+                <motion.div
+                  key={step.number}
+                  whileHover={{ y: -2 }}
+                  className={`step-item ${index + 1 < currentStep ? 'completed' : ''} ${index + 1 === currentStep ? 'active' : ''}`}
+                  onClick={() => setCurrentStep(step.number)}
+                >
+                  <div className="step-number">
+                    {index + 1 < currentStep ? (
+                      <Check size={14} color="white" />
+                    ) : (
+                      <step.icon size={14} color={index + 1 === currentStep ? 'var(--primary-color)' : 'var(--text-primary)'} />
+                    )}
+                  </div>
+                  <span className="step-label">
+                    {step.title}
+                  </span>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Form Container */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="form-container"
+            >
+              {/* Current Step Header */}
+              <div className="form-header">
+                {(() => {
+                  const StepIcon = steps[currentStep - 1]?.icon;
+                  return StepIcon ? (
+                    <div className="form-header-icon">
+                      <StepIcon size={20} color="white" />
+                    </div>
+                  ) : null;
+                })()}
+                <div>
+                  <h3 className="form-header-title">
+                    {steps[currentStep - 1].title}
+                  </h3>
+                  <p className="form-header-description">
+                    {steps[currentStep - 1].description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Form Steps */}
+              <div style={{ padding: '1.5rem' }}>
+                <AnimatePresence mode="wait">
+
+                  {/* Step: Personal Info */}
+                  {steps[currentStep - 1]?.title === 'Personal Info' && (
+                    <motion.div
+                      key="step1"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="step-content"
+                    >
+                      <div className="input-group">
+                        <label className="input-label">
+                          <User size={16} style={{ marginRight: '0.5rem' }} />
+                          Full Name *
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          required
+                          disabled={loading}
+                          className="input-field"
+                          placeholder="Enter your full name"
+                        />
+                      </div>
+
+                      <div className="input-group">
+                        <label className="input-label">
+                          <Mail size={16} style={{ marginRight: '0.5rem' }} />
+                          Email Address *
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                          disabled={loading}
+                          className="input-field"
+                          placeholder="Enter your email address"
+                        />
+                      </div>
+
+                      <div className="input-group">
+                        <label className="input-label">
+                          <Phone size={16} style={{ marginRight: '0.5rem' }} />
+                          WhatsApp Number *
+                        </label>
+                        <input
+                          type="tel"
+                          name="contact"
+                          value={formData.contact}
+                          onChange={handleChange}
+                          required
+                          disabled={loading}
+                          className="input-field"
+                          placeholder="+237 XXX XXX XXX"
+                        />
+                        <p className="helper-text">We'll use this to contact you via WhatsApp</p>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Step: Background */}
+                  {steps[currentStep - 1]?.title === 'Background' && (
+                    <motion.div
+                      key="step2"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="step-content"
+                    >
+                      <div className="input-group">
+                        <label className="input-label">
+                          <School size={16} style={{ marginRight: '0.5rem' }} />
+                          Educational Qualification *
+                        </label>
+                        <select
+                          name="education"
+                          value={formData.education}
+                          onChange={handleChange}
+                          required
+                          disabled={loading}
+                          className="input-field"
+                        >
+                          <option value="">Select qualification</option>
+                          <option value="No formal education">No formal education</option>
+                          <option value="Advanced level">Advanced level</option>
+                          <option value="HND">HND</option>
+                          <option value="University Student">University Student</option>
+                          <option value="Bachelor's degree">Bachelor's degree</option>
+                          <option value="Master's degree">Master's degree</option>
+                          <option value="PhD">PhD</option>
+                          <option value="Other">Other (Specify)</option>
+                        </select>
+                      </div>
+
+                      {formData.education === 'Other' && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                        >
+                          <input
+                            type="text"
+                            name="educationOther"
+                            value={formData.educationOther}
+                            onChange={handleChange}
+                            placeholder="Specify your qualification"
+                            className="input-field"
+                          />
+                        </motion.div>
+                      )}
+
+                      <div className="input-group">
+                        <label className="input-label">
+                          <Briefcase size={16} style={{ marginRight: '0.5rem' }} />
+                          Current Occupation
+                        </label>
+                        <input
+                          type="text"
+                          name="occupation"
+                          value={formData.occupation}
+                          onChange={handleChange}
+                          disabled={loading}
+                          className="input-field"
+                          placeholder="e.g., Student, Software Engineer, etc."
+                        />
+                      </div>
+
+                      <div className="input-group">
+                        <label className="input-label">
+                          <Briefcase size={16} style={{ marginRight: '0.5rem' }} />
+                          Career Goal *
+                        </label>
+                        <textarea
+                          name="careerGoal"
+                          value={formData.careerGoal}
+                          onChange={handleChange}
+                          required
+                          disabled={loading}
+                          rows="4"
+                          className="input-field"
+                          placeholder="Tell us about your career goals and background. Why are you interested in these courses?"
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Step: Courses & Goals — only renders for enrollment (bootcamp never reaches this title) */}
+                  {steps[currentStep - 1]?.title === 'Courses & Goals' && (
+                    <motion.div
+                      key="step3"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="step-content"
+                    >
+                      <div className="input-group">
+                        <label className="input-label">
+                          <BookOpen size={16} style={{ marginRight: '0.5rem' }} />
+                          Select Courses of Interest * (Multiple)
+                        </label>
+                        <div style={{ position: 'relative' }}>
+                          <select
+                            name="courses"
+                            value={formData.courses}
+                            onChange={handleCourseChange}
+                            multiple
+                            size="6"
+                            disabled={loading}
+                            className="input-field"
+                          >
+                            {coursesList.map((course, index) => (
+                              <option key={index} value={course}>
+                                {course}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <p className="helper-text">Hold Ctrl (Cmd on Mac) to select multiple courses</p>
+
+                        {formData.courses.length > 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="courses-selected"
+                          >
+                            <strong>
+                              Selected Courses ({formData.courses.length}):
+                            </strong>
+                            <div className="courses-tags">
+                              {formData.courses.map((course, idx) => (
+                                <span key={idx} className="course-tag">
+                                  {course}
+                                </span>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Step: Preview — renders for both bootcamp (step 3) and enrollment (step 4) */}
+                  {steps[currentStep - 1]?.title === 'Preview' && (
+                    <motion.div
+                      key="step4"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="step-content"
+                    >
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="preview-card"
+                      >
+                        <h4 className="preview-title">
+                          📋 Preview Your {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : formData.enrollmentType === 'internship' ? 'Internship' : 'Vocational Training'}
+                        </h4>
+
+                        <div className="preview-grid">
+                          <div>
+                            <p className="preview-label">Name</p>
+                            <p className="preview-value">{formData.name}</p>
+                          </div>
+                          <div>
+                            <p className="preview-label">Email</p>
+                            <p className="preview-value" style={{ wordBreak: 'break-all' }}>{formData.email}</p>
+                          </div>
+                          <div>
+                            <p className="preview-label">WhatsApp</p>
+                            <p className="preview-value">{formData.contact}</p>
+                          </div>
+                          <div>
+                            <p className="preview-label">Education Level</p>
+                            <p className="preview-value">
+                              {formData.education === 'Other' ? formData.educationOther : formData.education}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="preview-label">Occupation</p>
+                            <p className="preview-value">{formData.occupation}</p>
+                          </div>
+                          <div>
+                            <p className="preview-label">Enrollment Type</p>
+                            <p className="preview-value">
+                              {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : formData.enrollmentType === 'internship' ? 'Internship' : 'Vocational Training'}
+                            </p>
+                          </div>
+                        </div>
+
+                        {formData.enrollmentType !== 'bootcamp' && (
+                          <div className="preview-courses">
+                            <p className="preview-courses-title">Selected Courses</p>
+                            <div className="preview-courses-list">
+                              {formData.courses.map((course, idx) => (
+                                <span key={idx} className="preview-course-tag">
+                                  {course}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div>
+                          <p className="preview-label">Career Goal</p>
+                          <p className="preview-goal">
+                            {formData.careerGoal}
+                          </p>
+                        </div>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="success-banner"
+                      >
+                        <CheckCircle size={18} color="#25D366" />
+                        <span>
+                          All information looks good? Click Submit to continue to WhatsApp.
+                        </span>
+                      </motion.div>
+                    </motion.div>
+                  )}
+
+                </AnimatePresence>
+
+                {/* Navigation Buttons */}
+                <div className="navigation-buttons">
+                  {currentStep > 1 && (
+                    <motion.button
+                      type="button"
+                      onClick={prevStep}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="nav-button secondary"
+                    >
+                      <ArrowLeft size={18} />
+                      Previous
+                    </motion.button>
+                  )}
+
+                  {currentStep < steps.length ? (
+                    <motion.button
+                      type="button"
+                      onClick={nextStep}
+                      disabled={!isStepValid()}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="nav-button primary"
+                      style={{
+                        background: !isStepValid() ? 'var(--border-color)' : 'var(--primary-color)',
+                        color: !isStepValid() ? 'var(--text-primary)' : 'white',
+                        cursor: !isStepValid() ? 'not-allowed' : 'pointer',
+                      }}
+                    >
+                      Next Step
+                      <ArrowRight size={18} />
+                    </motion.button>
+                  ) : (
+                    <motion.button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={loading || !isStepValid()}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="nav-button whatsapp"
+                      style={{
+                        background: loading ? 'var(--border-color)' : undefined,
+                        cursor: loading || !isStepValid() ? 'not-allowed' : 'pointer'
+                      }}
+                    >
+                      {loading ? (
+                        <><div className="spinner" />Submitting...</>
+                      ) : (
+                        <><CheckCircle size={18} />Submit</>
+                      )}
+                    </motion.button>
+                  )}
+                </div>
+
+                {/* Success Message */}
+                {emailSent && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      gap: '0.5rem', color: '#25D366', fontSize: '0.9rem', fontWeight: '500',
+                      marginTop: '1rem', padding: '0.75rem',
+                      background: 'rgba(37, 211, 102, 0.1)', borderRadius: '8px'
+                    }}
+                  >
+                    <CheckCircle size={16} />
+                    Email sent! Redirecting to WhatsApp...
+                  </motion.div>
                 )}
               </div>
-              <span className="step-label">
-                {step.title}
-              </span>
             </motion.div>
-          ))}
-        </motion.div>
 
-        {/* Form Container */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="form-container"
-        >
-          {/* Current Step Header */}
-          <div className="form-header">
-            {(() => {
-              const StepIcon = steps[currentStep - 1]?.icon;
-              return StepIcon ? (
-                <div className="form-header-icon">
-                  <StepIcon size={20} color="white" />
+            {/* Trust Badges */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="trust-badges"
+            >
+              {[
+                { icon: Lock, text: 'Secure & Private' },
+                { icon: Check, text: 'Quick Response' },
+                { icon: Award, text: 'Certified Courses' }
+              ].map((item, index) => (
+                <div key={index} className="trust-badge">
+                  <item.icon size={16} color="var(--primary-color)" />
+                  <span>{item.text}</span>
                 </div>
-              ) : null;
-            })()}
-            <div>
-              <h3 className="form-header-title">
-                {steps[currentStep - 1].title}
-              </h3>
-              <p className="form-header-description">
-                {steps[currentStep - 1].description}
-              </p>
-            </div>
-          </div>
-
-          {/* Form Steps */}
-          <div style={{ padding: '1.5rem' }}>
-            <AnimatePresence mode="wait">
-
-              {/* FIX 2: All panels now render based on steps[currentStep-1].title instead of hardcoded numbers */}
-
-               {/* Step: Personal Info */}
-               {steps[currentStep - 1]?.title === 'Personal Info' && (
-                 <motion.div
-                   key="step1"
-                   initial={{ opacity: 0, x: 20 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   exit={{ opacity: 0, x: -20 }}
-                   transition={{ duration: 0.3 }}
-                   className="step-content"
-                 >
-                   <div className="input-group">
-                     <label className="input-label">
-                       <User size={16} style={{ marginRight: '0.5rem' }} />
-                       Full Name *
-                     </label>
-                     <input
-                       type="text"
-                       name="name"
-                       value={formData.name}
-                       onChange={handleChange}
-                       required
-                       disabled={loading}
-                       className="input-field"
-                       placeholder="Enter your full name"
-                     />
-                   </div>
-
-                   <div className="input-group">
-                     <label className="input-label">
-                       <Mail size={16} style={{ marginRight: '0.5rem' }} />
-                       Email Address *
-                     </label>
-                     <input
-                       type="email"
-                       name="email"
-                       value={formData.email}
-                       onChange={handleChange}
-                       required
-                       disabled={loading}
-                       className="input-field"
-                       placeholder="Enter your email address"
-                     />
-                   </div>
-
-                   <div className="input-group">
-                     <label className="input-label">
-                       <Phone size={16} style={{ marginRight: '0.5rem' }} />
-                       WhatsApp Number *
-                     </label>
-                     <input
-                       type="tel"
-                       name="contact"
-                       value={formData.contact}
-                       onChange={handleChange}
-                       required
-                       disabled={loading}
-                       className="input-field"
-                       placeholder="+237 XXX XXX XXX"
-                     />
-                     <p className="helper-text">We'll use this to contact you via WhatsApp</p>
-                   </div>
-                 </motion.div>
-               )}
-
-               {/* Step: Background */}
-               {steps[currentStep - 1]?.title === 'Background' && (
-                 <motion.div
-                   key="step2"
-                   initial={{ opacity: 0, x: 20 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   exit={{ opacity: 0, x: -20 }}
-                   transition={{ duration: 0.3 }}
-                   className="step-content"
-                 >
-                   <div className="input-group">
-                     <label className="input-label">
-                       <School size={16} style={{ marginRight: '0.5rem' }} />
-                       Educational Qualification *
-                     </label>
-                     <select
-                       name="education"
-                       value={formData.education}
-                       onChange={handleChange}
-                       required
-                       disabled={loading}
-                       className="input-field"
-                     >
-                       <option value="">Select qualification</option>
-                       <option value="No formal education">No formal education</option>
-                       <option value="Advanced level">Advanced level</option>
-                       <option value="HND">HND</option>
-                       <option value="University Student">University Student</option>
-                       <option value="Bachelor's degree">Bachelor's degree</option>
-                       <option value="Master's degree">Master's degree</option>
-                       <option value="PhD">PhD</option>
-                       <option value="Other">Other (Specify)</option>
-                     </select>
-                   </div>
-
-                   {formData.education === 'Other' && (
-                     <motion.div
-                       initial={{ opacity: 0, height: 0 }}
-                       animate={{ opacity: 1, height: 'auto' }}
-                       exit={{ opacity: 0, height: 0 }}
-                     >
-                       <input
-                         type="text"
-                         name="educationOther"
-                         value={formData.educationOther}
-                         onChange={handleChange}
-                         placeholder="Specify your qualification"
-                         className="input-field"
-                       />
-                     </motion.div>
-                   )}
-
-                   <div className="input-group">
-                     <label className="input-label">
-                       <Briefcase size={16} style={{ marginRight: '0.5rem' }} />
-                       Current Occupation
-                     </label>
-                     <input
-                       type="text"
-                       name="occupation"
-                       value={formData.occupation}
-                       onChange={handleChange}
-                       disabled={loading}
-                       className="input-field"
-                       placeholder="e.g., Student, Software Engineer, etc."
-                     />
-                   </div>
-
-                   <div className="input-group">
-                     <label className="input-label">
-                       <Briefcase size={16} style={{ marginRight: '0.5rem' }} />
-                       Career Goal *
-                     </label>
-                     <textarea
-                       name="careerGoal"
-                       value={formData.careerGoal}
-                       onChange={handleChange}
-                       required
-                       disabled={loading}
-                       rows="4"
-                       className="input-field"
-                       placeholder="Tell us about your career goals and background. Why are you interested in these courses?"
-                     />
-                   </div>
-                 </motion.div>
-               )}
-
-               {/* Step: Courses & Goals — only renders for enrollment (bootcamp never reaches this title) */}
-               {steps[currentStep - 1]?.title === 'Courses & Goals' && (
-                 <motion.div
-                   key="step3"
-                   initial={{ opacity: 0, x: 20 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   exit={{ opacity: 0, x: -20 }}
-                   transition={{ duration: 0.3 }}
-                 >
-                   <div className="input-group">
-                     <label className="input-label">
-                       <BookOpen size={16} style={{ marginRight: '0.5rem' }} />
-                       Select Courses of Interest * (Multiple)
-                     </label>
-                     <div style={{ position: 'relative' }}>
-                       <select
-                         name="courses"
-                         value={formData.courses}
-                         onChange={handleCourseChange}
-                         multiple
-                         size="6"
-                         disabled={loading}
-                         className="input-field"
-                       >
-                         {coursesList.map((course, index) => (
-                           <option key={index} value={course}>
-                             {course}
-                           </option>
-                         ))}
-                       </select>
-                     </div>
-                     <p className="helper-text">Hold Ctrl (Cmd on Mac) to select multiple courses</p>
-
-                     {formData.courses.length > 0 && (
-                       <motion.div
-                         initial={{ opacity: 0, y: 10 }}
-                         animate={{ opacity: 1, y: 0 }}
-                         className="courses-selected"
-                       >
-                         <strong>
-                           Selected Courses ({formData.courses.length}):
-                         </strong>
-                         <div className="courses-tags">
-                           {formData.courses.map((course, idx) => (
-                             <span key={idx} className="course-tag">
-                               {course}
-                             </span>
-                           ))}
-                         </div>
-                       </motion.div>
-                     )}
-                   </div>
-                 </motion.div>
-               )}
-
-               {/* Step: Preview — renders for both bootcamp (step 3) and enrollment (step 4) */}
-               {steps[currentStep - 1]?.title === 'Preview' && (
-                 <motion.div
-                   key="step4"
-                   initial={{ opacity: 0, x: 20 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   exit={{ opacity: 0, x: -20 }}
-                   transition={{ duration: 0.3 }}
-                 >
-                   <motion.div
-                     initial={{ opacity: 0 }}
-                     animate={{ opacity: 1 }}
-                     transition={{ delay: 0.2 }}
-                     className="preview-card"
-                   >
-                     <h4 className="preview-title">
-                       📋 Preview Your {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : formData.enrollmentType === 'internship' ? 'Internship' : 'Vocational Training'}
-                     </h4>
-
-                     <div className="preview-grid">
-                       <div>
-                         <p className="preview-label">Name</p>
-                         <p className="preview-value">{formData.name}</p>
-                       </div>
-                       <div>
-                         <p className="preview-label">Email</p>
-                         <p className="preview-value" style={{ wordBreak: 'break-all' }}>{formData.email}</p>
-                       </div>
-                       <div>
-                         <p className="preview-label">WhatsApp</p>
-                         <p className="preview-value">{formData.contact}</p>
-                       </div>
-                       <div>
-                         <p className="preview-label">Education Level</p>
-                         <p className="preview-value">
-                           {formData.education === 'Other' ? formData.educationOther : formData.education}
-                         </p>
-                       </div>
-                       <div>
-                         <p className="preview-label">Occupation</p>
-                         <p className="preview-value">{formData.occupation}</p>
-                       </div>
-                       <div>
-                         <p className="preview-label">Enrollment Type</p>
-                         <p className="preview-value">
-                           {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : formData.enrollmentType === 'internship' ? 'Internship' : 'Vocational Training'}
-                         </p>
-                       </div>
-                     </div>
-
-                     {formData.enrollmentType !== 'bootcamp' && (
-                       <div className="preview-courses">
-                         <p className="preview-courses-title">Selected Courses</p>
-                         <div className="preview-courses-list">
-                           {formData.courses.map((course, idx) => (
-                             <span key={idx} className="preview-course-tag">
-                               {course}
-                             </span>
-                           ))}
-                         </div>
-                       </div>
-                     )}
-
-                     <div>
-                       <p className="preview-label">Career Goal</p>
-                       <p className="preview-goal">
-                         {formData.careerGoal}
-                       </p>
-                     </div>
-                   </motion.div>
-
-                   <motion.div
-                     initial={{ opacity: 0, y: 10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ delay: 0.3 }}
-                     className="success-banner"
-                   >
-                     <CheckCircle size={18} color="#25D366" />
-                     <span>
-                       All information looks good? Click Submit to continue to WhatsApp.
-                     </span>
-                   </motion.div>
-                 </motion.div>
-               )}
-
-            </AnimatePresence>
-
-            {/* Navigation Buttons */}
-            <div className="navigation-buttons">
-              {currentStep > 1 && (
-                <motion.button
-                  type="button"
-                  onClick={prevStep}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="nav-button secondary"
-                >
-                  <ArrowLeft size={18} />
-                  Previous
-                </motion.button>
-              )}
-
-              {currentStep < steps.length ? (
-                <motion.button
-                  type="button"
-                  onClick={nextStep}
-                  disabled={!isStepValid()}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="nav-button primary"
-                  style={{
-                    background: !isStepValid() ? 'var(--border-color)' : 'var(--primary-color)',
-                    color: !isStepValid() ? 'var(--text-primary)' : 'white',
-                    cursor: !isStepValid() ? 'not-allowed' : 'pointer',
-                  }}
-                >
-                  Next Step
-                  <ArrowRight size={18} />
-                </motion.button>
-              ) : (
-                <motion.button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={loading || !isStepValid()}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="nav-button whatsapp"
-                  style={{
-                    background: loading ? 'var(--border-color)' : undefined,
-                    cursor: loading || !isStepValid() ? 'not-allowed' : 'pointer'
-                  }}
-                >
-                  {loading ? (
-                    <><div className="spinner" />Submitting...</>
-                  ) : (
-                    <><CheckCircle size={18} />Submit</>
-                  )}
-                </motion.button>
-               )}
-             </div>
-
-            {emailSent && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  gap: '0.5rem', color: '#25D366', fontSize: '0.9rem', fontWeight: '500',
-                  marginTop: '1rem', padding: '0.75rem',
-                  background: 'rgba(37, 211, 102, 0.1)', borderRadius: '8px'
-                }}
-              >
-                <CheckCircle size={16} />
-                Email sent! Redirecting to WhatsApp...
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Trust Badges */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="trust-badges"
-        >
-          {[
-            { icon: Lock, text: 'Secure & Private' },
-            { icon: Check, text: 'Quick Response' },
-            { icon: Award, text: 'Certified Courses' }
-          ].map((item, index) => (
-            <div key={index} className="trust-badge">
-              <item.icon size={16} color="var(--primary-color)" />
-              <span>{item.text}</span>
-            </div>
-          ))}
-        </motion.div>
-
-        {/* Success Message */}
-        {emailSent && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="success-message"
-          >
-            <CheckCircle size={16} />
-            Email sent! Redirecting to WhatsApp...
-          </motion.div>
+              ))}
+            </motion.div>
+          </>
         )}
       </div>
 
