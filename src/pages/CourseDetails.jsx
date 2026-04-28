@@ -137,7 +137,7 @@ const CourseDetails = () => {
                         </div>
                         <div className="tab-detail-item">
                             <Award size={20} />
-                            <span>Level: {course.level}</span>
+                            <span>Level: {course.level === 'C' ? 'Beginner - Advanced' : course.level === 'B' ? 'Intermediate - Advanced' : 'Advanced'}</span>
                         </div>
                     </div>
                 </div>
@@ -146,7 +146,7 @@ const CourseDetails = () => {
             learn: (
                 <div className="tab-content-inner">
                     <ul className="learn-list">
-                        {course.learns.map((learn, idx) => (
+                        {course.learns && course.learns.map((learn, idx) => (
                             <motion.li
                                 key={idx}
                                 className="learn-item"
@@ -168,7 +168,7 @@ const CourseDetails = () => {
                         Upon completion of this course, you'll be prepared for:
                     </p>
                     <ul className="opportunities-list">
-                        {course.opportunities?.map((opportunity, idx) => (
+                        {course.opportunities && course.opportunities?.map((opportunity, idx) => (
                             <motion.li
                                 key={idx}
                                 className="opportunity-item"
@@ -494,13 +494,13 @@ const CourseDetails = () => {
                                                         </div>
 
                                                         <div className="slider-course-features">
-                                                            {course.features.slice(0, 2).map((feature, idx) => (
+                                                            {course.skills && course.skills.slice(0, 2).map((skill, idx) => (
                                                                 <span key={idx} className="mini-feature-tag">
-                                                                    {feature}
+                                                                    {skill}
                                                                 </span>
                                                             ))}
-                                                            {course.features.length > 2 && (
-                                                                <span className="more-features">+{course.features.length - 2}</span>
+                                                            {course.skills && course.skills.length > 2 && (
+                                                                <span className="more-features">+{course.skills.length - 2}</span>
                                                             )}
                                                         </div>
 
