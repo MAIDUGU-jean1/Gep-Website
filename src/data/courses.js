@@ -28,35 +28,35 @@ export const fetchCourses = async () => {
 export const getCourseCategory = (course) => {
   if (course.category) return course.category;
 
-  const title = course.title.toLowerCase();
+  // const title = course.title.toLowerCase();
 
-  if (title.includes("front-end") || title.includes("backend") || 
-      title.includes("mobile") || title.includes("programming") ||
-      title.includes("devops") || title.includes("software") ||
-      title.includes("hardware") || title.includes("network") ||
-      title.includes("cyber") || title.includes("ai") ||
-      title.includes("data") || title.includes("cad") ||
-      title.includes("topography") || title.includes("cartography")) {
-    return "Tech";
-  }
+  // if (title.includes("front-end") || title.includes("backend") || 
+  //     title.includes("mobile") || title.includes("programming") ||
+  //     title.includes("devops") || title.includes("software") ||
+  //     title.includes("hardware") || title.includes("network") ||
+  //     title.includes("cyber") || title.includes("ai") ||
+  //     title.includes("data") || title.includes("cad") ||
+  //     title.includes("topography") || title.includes("cartography")) {
+  //   return "Tech";
+  // }
 
-  if (title.includes("design") || title.includes("ui/ux") ||
-      title.includes("graphic") || title.includes("ux") ||
-      title.includes("wireframing") || title.includes("prototyping")) {
-    return "Design";
-  }
+  // if (title.includes("design") || title.includes("ui/ux") ||
+  //     title.includes("graphic") || title.includes("ux") ||
+  //     title.includes("wireframing") || title.includes("prototyping")) {
+  //   return "Design";
+  // }
 
-  if (title.includes("marketing") || title.includes("business") ||
-      title.includes("management") || title.includes("project") ||
-      title.includes("intelligence")) {
-    return "Business";
-  }
+  // if (title.includes("marketing") || title.includes("business") ||
+  //     title.includes("management") || title.includes("project") ||
+  //     title.includes("intelligence")) {
+  //   return "Business";
+  // }
 
-  if (title.includes("development") || title.includes("development")) {
-    return "Development";
-  }
+  // if (title.includes("development") || title.includes("development")) {
+  //   return "Development";
+  // }
 
-  return "Tech"; // default category
+  // return "Tech"; // default category
 };
 
 /**

@@ -118,6 +118,11 @@ const Courses = () => {
     return result;
   }, [activeCategory, searchQuery, courses, courseCategories]);
 
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
+
   /* ------------------------------------------------ */
   /* LOADING & ERROR STATES */
   /* ------------------------------------------------ */
@@ -370,7 +375,9 @@ const Courses = () => {
                 <div className="course-info">
                   <h3 className="course-title">{course.title}</h3>
 
-                  <p className="course-description">{course.description}</p>
+                  <p className="course-description">
+                    {truncateText(course.description, 100)}
+                  </p>
 
                   <div className="course-details">
                     <div className="course-detail-item">
