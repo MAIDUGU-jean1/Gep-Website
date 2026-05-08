@@ -1,71 +1,618 @@
-* {
-    padding: 30px;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+/* Graduation Flyer Page - Modern Styling with Dark/Light Mode */
+
+.flyer-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 40px 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.flyer-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, rgba(218, 165, 32, 0.8) 100%);
+  border-radius: 0 0 50% 50%;
+  z-index: 0;
+  opacity: 0.1;
+}
+
+.flyer-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.flyer-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.flyer-title {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, var(--primary-color), #daa520);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.flyer-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.flyer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 968px) {
+  .flyer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Form Section */
+.flyer-form-section {
+  background: var(--card-bg);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .flyer-form-section {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.2);
+}
+
+.form-group input::placeholder {
+  color: var(--text-secondary);
+}
+
+.upload-container {
+  position: relative;
+  border: 2px dashed var(--border-color);
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: var(--bg-secondary);
+}
+
+.upload-container:hover {
+  border-color: var(--primary-color);
+  background: var(--hover-color);
+}
+
+.upload-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-color), #daa520);
+  border-radius: 50%;
+  color: white;
+}
+
+.upload-text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.upload-hint {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.upload-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Preview Section */
+.flyer-preview-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.graduation-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card-bg);
+  border-radius: 28px;
+  padding: 45px 35px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* A4 Card - No border radius, bigger layout */
+.a4-card {
+  max-width: 794px;
+  width: 100%;
+  border-radius: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.a4-layout {
+  display: flex;
+  min-height: 800px;
+}
+
+.a4-content-section {
+  flex: 1.2;
+  padding: 60px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.a4-image-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #daa520 100%);
+  padding: 40px;
+}
+
+.a4-image-container {
+  width: 300px;
+  height: 480px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 15px solid white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.a4-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.a4-name {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.a4-profession {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+.a4-event-details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.a4-event-date {
+  background: linear-gradient(135deg, var(--primary-color), #daa520);
+  color: #1a202c;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 25px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.a4-event-location,
+.a4-event-time {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.a4-card-footer {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid var(--border-color);
+}
+
+.organization-name {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+[data-theme="dark"] .graduation-card {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
 .graduation-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 12px;
-    background: linear-gradient(to right, gold, #001f54);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, var(--primary-color), #daa520, var(--primary-color));
+}
+
+.graduation-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(218, 165, 32, 0.1) 0%, transparent 70%);
+  border-radius: 0 0 0 100%;
 }
 
 .top-badge {
-    background: #001f54;
-    color: white;
-    padding: 12px;
-    border-radius: 50px;
-    font-weight: bold;
-    margin-bottom: 30px;
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary-color), #daa520);
+  color: white;
+  padding: 10px 28px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
 }
 
 .image-container {
-    width: 220px;
-    height: 220px;
-    margin: auto;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 6px solid gold;
-    margin-bottom: 25px;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 25px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 5px solid var(--primary-color);
+  box-shadow: 0 0 0 5px rgba(218, 165, 32, 0.2), 0 10px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
 }
 
 .image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.image-container:hover img {
+  transform: scale(1.05);
 }
 
 .placeholder-image {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f1f1f1;
-    color: #777;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, var(--bg-secondary), var(--card-bg));
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  gap: 8px;
+}
+
+.placeholder-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hover-color);
+  border-radius: 50%;
+  color: var(--primary-color);
+}
+
+.a4-placeholder {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
 }
 
 .graduation-card h2 {
-    color: #001f54;
-    font-size: 30px;
-    margin-bottom: 10px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 }
 
 .graduation-card p {
-    color: #444;
-    font-size: 18px;
-    margin-bottom: 30px;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+.event-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
 }
 
 .event-date {
-    background: gold;
-    color: #001f54;
-    display: inline-block;
-    padding: 12px 20px;
-    border-radius: 40px;
-    font-weight: bold;
+  background: linear-gradient(135deg, var(--primary-color), #daa520);
+  color: #1a202c;
+  display: inline-block;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+}
+
+.event-location {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.event-venue {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.card-footer {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border-color);
+}
+
+/* Action Buttons */
+.flyer-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-download,
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-download {
+  background: linear-gradient(135deg, var(--primary-color), #daa520);
+  color: #1a202c;
+  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+}
+
+.btn-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(218, 165, 32, 0.4);
+}
+
+.btn-whatsapp {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: white;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.btn-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+/* Graduation Info Section */
+.graduation-info {
+  margin-top: 60px;
+  padding: 40px;
+  background: var(--card-bg);
+  border-radius: 24px;
+  border: 1px solid var(--border-color);
+}
+
+.info-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.info-item {
+  display: flex;
+  gap: 15px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.info-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.info-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-color), #daa520);
+  border-radius: 12px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.info-content h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.info-content p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .flyer-page {
+    padding: 20px 15px;
+  }
+
+  .flyer-form-section {
+    padding: 30px 20px;
+  }
+
+  .a4-layout {
+    flex-direction: column;
+  }
+
+  .a4-image-section {
+    padding: 30px;
+  }
+
+  .a4-image-container {
+    width: 200px;
+    height: 200px;
+  }
+
+  .a4-content-section {
+    padding: 30px 20px;
+    text-align: center;
+  }
+
+  .a4-name {
+    font-size: 1.8rem;
+  }
+
+  .graduation-card {
+    padding: 35px 25px;
+  }
+
+  .image-container {
+    width: 160px;
+    height: 160px;
+  }
+
+  .graduation-card h2 {
+    font-size: 1.6rem;
+  }
+
+  .graduation-info {
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .flyer-title {
+    font-size: 2rem;
+  }
+
+  .flyer-form-section {
+    padding: 25px 15px;
+  }
+
+  .graduation-card {
+    padding: 30px 20px;
+  }
+
+  .top-badge {
+    padding: 8px 20px;
+    font-size: 0.8rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
 }
