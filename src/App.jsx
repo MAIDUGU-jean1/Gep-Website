@@ -24,6 +24,7 @@ import Events from './pages/Events';
 import DiscountCountdown from './components/DiscountCountdown';
 import Review from './pages/Review';
 import FindPath from './pages/FindPath';
+import GraduationFlyer from './pages/GraduationFlyer';
 
 const WelcomePopup = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -285,6 +286,7 @@ function App() {
               <Route path="/events" element={<Events />} />
               <Route path="/review" element={<Review />} />
               <Route path="/find-path" element={<FindPath />} />
+              <Route path="/graduation-flyer" element={<GraduationFlyer />} />
             </Routes>
           </main>
           <Footer />
