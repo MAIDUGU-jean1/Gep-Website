@@ -357,6 +357,15 @@ Sent from Gep Protech Academic Website
             >
               Find Your Path
             </a>
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              Don't miss our graduation Ceremony  click here to be part
+              <a
+                href="/graduation-flyer"
+                className="find-path-link"
+              >
+                Graduation Flyer
+              </a>
+            </span>
           </div>
 
           {/* Enrollment Type Radio Buttons */}

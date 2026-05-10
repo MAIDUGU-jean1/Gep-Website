@@ -70,9 +70,9 @@ const WelcomePopup = () => {
             <button
               className="modal-close-btn"
               onClick={() => setShowPopup(false)}
-              style={{ 
-                position: 'absolute', 
-                top: '15px', 
+              style={{
+                position: 'absolute',
+                top: '15px',
                 right: '15px',
                 background: 'var(--bg-primary)',
                 color: 'var(--text-secondary)'
@@ -149,7 +149,7 @@ const WelcomePopup = () => {
                 background: 'rgba(218, 165, 32, 0.1)',
                 borderRadius: '50%'
               }}></div>
-              
+
               <p style={{
                 color: 'var(--primary-color)',
                 fontSize: '0.8rem',
@@ -188,8 +188,8 @@ const WelcomePopup = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Link 
-                  to="/enroll" 
+                <Link
+                  to="/enroll"
                   onClick={() => setShowPopup(false)}
                   style={{
                     display: 'inline-flex',
@@ -210,13 +210,13 @@ const WelcomePopup = () => {
                   Apply Now
                 </Link>
               </motion.div>
-              
+
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <a 
-                  href="/#courses" 
+                <a
+                  href="/#courses"
                   onClick={() => setShowPopup(false)}
                   style={{
                     display: 'inline-flex',
@@ -245,7 +245,16 @@ const WelcomePopup = () => {
               fontStyle: 'italic'
             }}>
               "The best time to start was yesterday. The next best time is now."
-            </p>
+            </p> <br />
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              Don't miss our upcoming graduation
+              <a
+                href="/graduation-flyer"
+                className="find-path-link"
+              >
+                Graduation Flyer
+              </a>
+            </span>
           </motion.div>
         </motion.div>
       )}

@@ -4,7 +4,7 @@
   min-height: 100vh;
   background: var(--bg-primary);
   color: var(--text-primary);
-  padding: 40px 20px;
+  padding: 100px 20px;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -173,268 +173,397 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-}
-
-.graduation-card {
   width: 100%;
-  max-width: 420px;
-  background: var(--card-bg);
-  border-radius: 28px;
-  padding: 45px 35px;
-  text-align: center;
-  position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  border: 1px solid var(--border-color);
   overflow: hidden;
-  transition: all 0.3s ease;
 }
 
-/* A4 Card - No border radius, bigger layout */
-.a4-card {
-  max-width: 794px;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Great+Vibes&display=swap');
+
+.sq-wrapper {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+  transform-origin: top center;
+  /* Default scale for very large screens (> 1600px) */
+  transform: scale(0.65);
+  margin-bottom: calc(-1080px * (1 - 0.65));
+}
+
+/* Responsive Scaling for the 1080x1080 Square Card */
+@media (max-width: 1600px) {
+  .sq-wrapper {
+    transform: scale(0.55);
+    margin-bottom: calc(-1080px * (1 - 0.55));
+  }
+}
+@media (max-width: 1400px) {
+  .sq-wrapper {
+    transform: scale(0.5);
+    margin-bottom: calc(-1080px * (1 - 0.5));
+  }
+}
+@media (max-width: 1200px) {
+  .sq-wrapper {
+    transform: scale(0.45);
+    margin-bottom: calc(-1080px * (1 - 0.45));
+  }
+}
+@media (max-width: 968px) {
+  /* Layout breaks to 1 column, so we can use more width */
+  .sq-wrapper {
+    transform: scale(0.7);
+    margin-bottom: calc(-1080px * (1 - 0.7));
+  }
+}
+@media (max-width: 768px) {
+  .sq-wrapper {
+    transform: scale(0.55);
+    margin-bottom: calc(-1080px * (1 - 0.55));
+  }
+}
+@media (max-width: 576px) {
+  .sq-wrapper {
+    transform: scale(0.40);
+    margin-bottom: calc(-1080px * (1 - 0.40));
+  }
+}
+@media (max-width: 480px) {
+  .sq-wrapper {
+    transform: scale(0.32);
+    margin-bottom: calc(-1080px * (1 - 0.32));
+  }
+}
+@media (max-width: 400px) {
+  .sq-wrapper {
+    transform: scale(0.28);
+    margin-bottom: calc(-1080px * (1 - 0.28));
+  }
+}
+
+/* Square Card - Fixed dimensions 1080x1080 */
+.sq-card {
+  width: 1080px !important;
+  height: 1080px !important;
+  max-width: none !important;
   border-radius: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.a4-layout {
-  display: flex;
-  min-height: 800px;
-}
-
-.a4-content-section {
-  flex: 1.2;
-  padding: 60px 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  position: relative;
+  background-color: #ffffff;
+  overflow: hidden;
+  font-family: 'Montserrat', sans-serif;
+  color: #0a1c3a;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+  transform-origin: top center;
   text-align: left;
 }
 
-.a4-image-section {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--primary-color) 0%, #daa520 100%);
-  padding: 40px;
+/* Background Shapes */
+.sq-bg-top-right {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 450px;
+  height: 450px;
+  background: #0a1c3a;
+  border-radius: 0 0 0 100%;
+  box-shadow: -15px 15px 0 #c69c38;
+  z-index: 1;
 }
 
-.a4-image-container {
-  width: 300px;
-  height: 480px;
+.sq-bg-bottom-curve {
+  position: absolute;
+  bottom: 80px;
+  left: -10%;
+  width: 120%;
+  height: 300px;
+  background: transparent;
+  border-bottom: 30px solid #0a1c3a;
   border-radius: 50%;
-  overflow: hidden;
-  border: 15px solid white;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 15px 0 #c69c38;
+  z-index: 1;
 }
 
-.a4-image-container img {
+/* Content Container */
+.sq-content {
+  position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-}
-
-.a4-name {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 10px;
-}
-
-.a4-profession {
-  font-size: 1.3rem;
-  color: var(--text-secondary);
-  margin-bottom: 30px;
-  font-weight: 500;
-}
-
-.a4-event-details {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 30px;
 }
 
-.a4-event-date {
-  background: linear-gradient(135deg, var(--primary-color), #daa520);
-  color: #1a202c;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 25px;
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-.a4-event-location,
-.a4-event-time {
-  color: var(--text-secondary);
-  font-size: 1rem;
+/* Header */
+.sq-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  padding: 60px 80px;
+  gap: 30px;
 }
 
-.a4-card-footer {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 2px solid var(--border-color);
+.sq-logo-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: transparent;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.organization-name {
+.sq-header-text {
+  flex: 1;
+}
+
+.sq-header-text h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0a1c3a;
+  margin: 0 0 5px 0;
+  letter-spacing: 1px;
+}
+
+.sq-header-text p {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.sq-header-divider {
+  width: 2px;
+  height: 80px;
+  background-color: #c69c38;
+}
+
+.sq-header-slogan {
+  font-size: 28px;
   font-weight: 700;
-  color: var(--primary-color);
-  font-size: 1.2rem;
+  color: #c69c38;
+  line-height: 1.3;
 }
 
-[data-theme="dark"] .graduation-card {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+/* Body Layout */
+.sq-body {
+  display: flex;
+  flex: 1;
+  padding: 0 60px;
+  align-items: center;
+  margin-top: -40px;
 }
 
-.graduation-card::before {
-  content: "";
+/* Left Image Section */
+.sq-image-section {
+  flex: 1.1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 600px;
+}
+
+.sq-image-wrapper {
+  position: relative;
+  width: 480px;
+  height: 480px;
+}
+
+.sq-decor-blue {
+  position: absolute;
+  top: -40px;
+  left: 60px;
+  width: 160px;
+  height: 150px;
+  background: #0a1c3a;
+  clip-path: polygon(30% 60%, 65% 0, 120% 100%);
+
+  /* clip-path: polygon(0 0, 100% 30%, 100% 100%, 0 100%); */
+  z-index: 1;
+}
+
+.sq-decor-gold {
+  position: absolute;
+  top: -60px;
+  right: 100px;
+  width: 150px;
+  height: 150px;
+  background: #c69c38;
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  z-index: 1;
+}
+
+.sq-image-circle {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 8px;
-  background: linear-gradient(90deg, var(--primary-color), #daa520, var(--primary-color));
-}
-
-.graduation-card::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle, rgba(218, 165, 32, 0.1) 0%, transparent 70%);
-  border-radius: 0 0 0 100%;
-}
-
-.top-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, var(--primary-color), #daa520);
-  color: white;
-  padding: 10px 28px;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  margin-bottom: 30px;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
-}
-
-.image-container {
-  width: 200px;
-  height: 200px;
-  margin: 0 auto 25px;
+  height: 100%;
   border-radius: 50%;
+  background: white;
+  border: 15px solid #c69c38;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  z-index: 2;
   overflow: hidden;
-  border: 5px solid var(--primary-color);
-  box-shadow: 0 0 0 5px rgba(218, 165, 32, 0.2), 0 10px 30px rgba(0, 0, 0, 0.15);
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.image-container img {
+.sq-image-circle img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
 }
 
-.image-container:hover img {
-  transform: scale(1.05);
+.sq-placeholder {
+  color: #999;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
 
-.placeholder-image {
-  width: 100%;
-  height: 100%;
+/* Right Text Section */
+.sq-text-section {
+  flex: 1;
+  padding-left: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, var(--bg-secondary), var(--card-bg));
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  gap: 8px;
 }
 
-.placeholder-icon {
-  width: 50px;
-  height: 50px;
+.sq-name-badge {
+  display: inline-block;
+  background: #0a1c3a;
+  color: white;
+  padding: 8px 20px;
+  font-size: 24px;
+  font-weight: 700;
+  border-radius: 30px;
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+
+.sq-profession {
+  font-size: 20px;
+  color: #666;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.sq-iam {
+  font-size: 70px;
+  font-weight: 800;
+  color: #0a1c3a;
+  margin: 0;
+  line-height: 1;
+}
+
+.sq-attending {
+  font-family: 'Great Vibes', cursive;
+  font-size: 100px;
+  color: #c69c38;
+  font-style: italic;
+  font-family: 'great vibes';
+  font-weight: 400;
+  line-height: 1;
+  padding-left: 20px;
+}
+
+.sq-star-divider {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: var(--hover-color);
-  border-radius: 50%;
-  color: var(--primary-color);
-}
-
-.a4-placeholder {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-}
-
-.graduation-card h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
-}
-
-.graduation-card p {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
+  gap: 15px;
   margin-bottom: 30px;
+  width: 80%;
+}
+
+.sq-line {
+  flex: 1;
+  height: 2px;
+  background: #e0e0e0;
+}
+
+.sq-batch {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0a1c3a;
+  letter-spacing: 2px;
+  margin: 0 0 10px 0;
+}
+
+.sq-grad-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #0a1c3a;
+  margin: 0 0 30px 0;
+  line-height: 1.1;
+}
+
+.sq-gold-text {
+  color: #c69c38;
+}
+
+.sq-datetime {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sq-dt-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #0a1c3a;
+}
+
+.sq-icon {
+  color: #0a1c3a;
+}
+
+/* Footer */
+.sq-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: #0a1c3a;
+  z-index: 10;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.sq-footer-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
+  font-size: 20px;
   font-weight: 500;
 }
 
-.event-details {
+.sq-footer-icon {
+  width: 45px;
+  height: 45px;
+  background: #c69c38;
+  border-radius: 50%;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 25px;
-}
-
-.event-date {
-  background: linear-gradient(135deg, var(--primary-color), #daa520);
-  color: #1a202c;
-  display: inline-block;
-  padding: 12px 30px;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
-}
-
-.event-location {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 8px;
+  align-items: center;
+  color: #0a1c3a;
 }
 
-.event-venue {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
 
-.card-footer {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px dashed var(--border-color);
-}
 
 /* Action Buttons */
 .flyer-actions {
@@ -547,46 +676,15 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .flyer-page {
-    padding: 20px 15px;
+    padding: 150px 25px;
   }
 
   .flyer-form-section {
     padding: 30px 20px;
   }
 
-  .a4-layout {
-    flex-direction: column;
-  }
-
-  .a4-image-section {
-    padding: 30px;
-  }
-
-  .a4-image-container {
-    width: 200px;
-    height: 200px;
-  }
-
-  .a4-content-section {
-    padding: 30px 20px;
-    text-align: center;
-  }
-
-  .a4-name {
-    font-size: 1.8rem;
-  }
-
-  .graduation-card {
-    padding: 35px 25px;
-  }
-
-  .image-container {
-    width: 160px;
-    height: 160px;
-  }
-
-  .graduation-card h2 {
-    font-size: 1.6rem;
+  .sq-card {
+    /* Optional: any specific tweaks for mobile display can go here, but since it's scaled, we generally don't need them */
   }
 
   .graduation-info {
@@ -603,14 +701,7 @@
     padding: 25px 15px;
   }
 
-  .graduation-card {
-    padding: 30px 20px;
-  }
 
-  .top-badge {
-    padding: 8px 20px;
-    font-size: 0.8rem;
-  }
 
   .info-grid {
     grid-template-columns: 1fr;
