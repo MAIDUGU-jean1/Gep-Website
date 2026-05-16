@@ -369,7 +369,7 @@ const GraduationFlyer = () => {
                                             <div className="sq-datetime">
                                                 <div className="sq-dt-item">
                                                     <Calendar size={24} className="sq-icon" />
-                                                    <span>Friday, 23rd May 2026</span>
+                                                    <span>Saturday, 23rd May 2026</span>
                                                 </div>
                                                 <div className="sq-dt-item">
                                                     <Clock size={24} className="sq-icon" />
