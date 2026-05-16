@@ -76,9 +76,9 @@ const GraduationFlyer = () => {
     };
 
     const getInvitedText = () => {
-        if (formData.invitedAs === 'Guest') return 'Guest';
+        if (formData.invitedAs === 'Guest') return 'I am attending as a Guest';
         if (formData.invitedAs === 'Organiser') return 'Organiser';
-        if (formData.invitedAs === 'Graduant') return 'Graduant';
+        if (formData.invitedAs === 'Graduant') return 'I am Graduating';
         return `I am attending as a ${formData.invitedAs}`;
     };
 
@@ -228,7 +228,6 @@ const GraduationFlyer = () => {
                                 value={formData.title}
                                 onChange={handleInputChange}
                             >
-                                <option>Guest</option>
                                 <option>Dr</option>
                                 <option>Engr</option>
                                 <option>Mr</option>
@@ -353,7 +352,7 @@ const GraduationFlyer = () => {
                                             <p className="sq-profession">{getInvitedText()}</p>
 
                                             <h2 className="sq-iam">I AM</h2>
-                                            <h1 className="sq-attending">{formData.invitedAs === 'Graduant' ? 'Graduating' : 'Attending'}</h1>
+                                            <h1 className="sq-attending">attending</h1>
 
                                             <div className="sq-star-divider">
                                                 <div className="sq-line"></div>
@@ -374,7 +373,7 @@ const GraduationFlyer = () => {
                                                 </div>
                                                 <div className="sq-dt-item">
                                                     <Clock size={24} className="sq-icon" />
-                                                    <span>10:00 AM prompt</span>
+                                                    <span>1:00 PM prompt</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -410,7 +409,7 @@ const GraduationFlyer = () => {
                             </div>
                             <div className="info-content">
                                 <h4>Date & Time</h4>
-                                <p>23rd May, 2026 | 10:00 AM - 4:00 PM </p>
+                                <p>23rd May, 2026 | 1:00 PM - 6:00 PM </p>
                             </div>
                         </div>
                         <div className="info-item">
