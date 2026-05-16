@@ -76,9 +76,9 @@ const GraduationFlyer = () => {
     };
 
     const getInvitedText = () => {
-        if (formData.invitedAs === 'Guest') return 'I am attending as a Guest';
+        if (formData.invitedAs === 'Guest') return 'Guest';
         if (formData.invitedAs === 'Organiser') return 'Organiser';
-        if (formData.invitedAs === 'Graduant') return 'I am Graduating';
+        if (formData.invitedAs === 'Graduant') return 'Graduant';
         return `I am attending as a ${formData.invitedAs}`;
     };
 
@@ -353,7 +353,7 @@ const GraduationFlyer = () => {
                                             <p className="sq-profession">{getInvitedText()}</p>
 
                                             <h2 className="sq-iam">I AM</h2>
-                                            <h1 className="sq-attending">attending</h1>
+                                            <h1 className="sq-attending">{formData.invitedAs === 'Graduant' ? 'Graduating' : 'Attending'}</h1>
 
                                             <div className="sq-star-divider">
                                                 <div className="sq-line"></div>
