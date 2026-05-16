@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Download, Share2, MapPin, Calendar, Clock, Users, MessageCircle, Phone, Mail, Star } from "lucide-react";
 import html2canvas from "html2canvas";
 import axios from "axios";
@@ -48,12 +48,12 @@ const GraduationFlyer = () => {
         offScreen.style.left = '-9999px';
         offScreen.style.width = '1080px';
         offScreen.style.height = '1080px';
-        
+
         const clone = cardRef.current.cloneNode(true);
         clone.style.transform = 'none';
         clone.style.margin = '0';
         clone.style.boxShadow = 'none';
-        
+
         offScreen.appendChild(clone);
         document.body.appendChild(offScreen);
 
@@ -77,8 +77,8 @@ const GraduationFlyer = () => {
 
     const getInvitedText = () => {
         if (formData.invitedAs === 'Guest') return 'I am attending as a Guest';
-        if (formData.invitedAs === 'Organiser') return 'I am an Organiser';
-        if (formData.invitedAs === 'Graduant') return 'I am the Graduant';
+        if (formData.invitedAs === 'Organiser') return 'Organiser';
+        if (formData.invitedAs === 'Graduant') return 'I am Graduating';
         return `I am attending as a ${formData.invitedAs}`;
     };
 
@@ -128,6 +128,15 @@ const GraduationFlyer = () => {
             alert("Unable to download flyer. Please try again.");
         }
     };
+
+    useEffect(() => {
+        if (downloadError) {
+            const timer = setTimeout(() => {
+                setDownloadError(false);
+            }, 20000);
+            return () => clearTimeout(timer);
+        }
+    }, [downloadError]);
 
     const handleShare = async () => {
         if (!formData.name || formData.name.trim() === "") {
@@ -182,12 +191,18 @@ const GraduationFlyer = () => {
 
                 {downloadError && (
                     <div style={{
-                        background: "rgba(220, 20, 60, 0.1)",
-                        border: "1px solid rgba(220, 20, 60, 0.3)",
+                        position: "fixed",
+                        top: "20px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        zIndex: 9999,
+                        background: "rgba(220, 20, 60, 0.95)",
+                        border: "1px solid rgba(220, 20, 60, 0.5)",
                         borderRadius: "12px",
-                        padding: "15px",
-                        marginBottom: "20px",
-                        color: "#dc143c"
+                        padding: "15px 30px",
+                        color: "#fff",
+                        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
+                        animation: "slideDown 0.3s ease-out"
                     }}>
                         Please you can't download empty or incomplete
                     </div>

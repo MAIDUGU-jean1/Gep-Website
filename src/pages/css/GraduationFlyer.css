@@ -1,5 +1,16 @@
 /* Graduation Flyer Page - Modern Styling with Dark/Light Mode */
 
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
 .flyer-page {
   min-height: 100vh;
   background: var(--bg-primary);
