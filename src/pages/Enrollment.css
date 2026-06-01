@@ -6,7 +6,11 @@
 
 .enrollment-section {
   padding: clamp(6rem, 10vw, 8rem) 0;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(var(--primary-color-rgb), 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bg-primary) 0%,
+    rgba(var(--primary-color-rgb), 0.05) 100%
+  );
   min-height: calc(100vh - 140px);
   display: flex;
   align-items: center;
@@ -32,7 +36,11 @@
 .enrollment-header-icon {
   width: 70px;
   height: 70px;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -78,6 +86,7 @@
   border-bottom: 1px solid var(--primary-color);
   padding-bottom: 2px;
   transition: all 0.3s ease;
+  
 }
 
 .find-path-link:hover {
@@ -212,7 +221,11 @@
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   border-radius: 4px;
 }
 
@@ -422,7 +435,8 @@ select[multiple] option {
 }
 
 select[multiple] option:checked {
-  background: var(--primary-color) linear-gradient(0deg, var(--primary-color) 0%, var(--primary-color) 100%);
+  background: var(--primary-color)
+    linear-gradient(0deg, var(--primary-color) 0%, var(--primary-color) 100%);
   color: white;
 }
 
@@ -540,7 +554,7 @@ select[multiple] option:checked {
 }
 
 .success-banner svg {
-  color: #25D366;
+  color: #25d366;
 }
 
 .success-banner span {
@@ -592,7 +606,7 @@ select[multiple] option:checked {
 }
 
 .nav-button.whatsapp {
-  background: linear-gradient(135deg, #25D366, #128C7E);
+  background: linear-gradient(135deg, #25d366, #128c7e);
   color: white;
   width: 100%;
 }
@@ -614,7 +628,7 @@ select[multiple] option:checked {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  color: #25D366;
+  color: #25d366;
   font-size: 0.9rem;
   font-weight: 500;
   margin-top: 1rem;
@@ -690,7 +704,7 @@ select[multiple] option:checked {
 .modal-icon {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #25D366, #128C7E);
+  background: linear-gradient(135deg, #25d366, #128c7e);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -732,7 +746,7 @@ select[multiple] option:checked {
 }
 
 .modal-button.whatsapp {
-  background: linear-gradient(135deg, #25D366, #128C7E);
+  background: linear-gradient(135deg, #25d366, #128c7e);
   color: white;
 }
 
@@ -756,8 +770,12 @@ select[multiple] option:checked {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* ====================== */
@@ -827,5 +845,425 @@ select[multiple] option:checked {
 
   .modal-content {
     padding: 1.5rem;
+  }
+}
+
+/* ============================================= */
+/* SADP — SOAP & DETERGENT PRODUCTION ADDITIONS  */
+/* ============================================= */
+
+/* SaDP CSS variables — hoisted to :root-level class scope
+   so they inherit the site theme without conflicts */
+.sadp-type-label,
+.sadp-form-container,
+.sadp-curriculum-grid,
+.sadp-fee-card,
+.sadp-program-banner,
+.sadp-contact-info,
+.sadp-preview-card {
+  --sadp-primary: #1a3a6b;
+  --sadp-secondary: #c8982a;
+  --sadp-accent: #e8b84b;
+  --sadp-soft-bg: rgba(26, 58, 107, 0.07);
+  --sadp-border: rgba(26, 58, 107, 0.2);
+  --sadp-gold-bg: rgba(200, 152, 42, 0.1);
+  --sadp-gold-border: rgba(200, 152, 42, 0.3);
+}
+
+/* ── Enrollment type card ── */
+.sadp-type-label {
+  border-color: var(--sadp-border, rgba(26, 58, 107, 0.25));
+  background: var(--sadp-soft-bg, rgba(26, 58, 107, 0.04));
+}
+
+.sadp-type-label:hover {
+  border-color: var(--sadp-primary, #1a3a6b) !important;
+  box-shadow: 0 4px 18px rgba(26, 58, 107, 0.15);
+}
+
+.sadp-type-label.sadp-selected {
+  border-color: var(--sadp-primary, #1a3a6b) !important;
+  background: rgba(26, 58, 107, 0.1) !important;
+}
+
+.sadp-type-label.sadp-selected .check-badge {
+  background: var(--sadp-secondary, #c8982a) !important;
+}
+
+.sadp-type-label input[type="radio"] {
+  accent-color: var(--sadp-primary, #1a3a6b);
+}
+
+.sadp-badge-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-secondary, #c8982a)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.sadp-title {
+  color: var(--sadp-primary, #1a3a6b) !important;
+  font-weight: 700 !important;
+  font-size: 1.15rem !important;
+  letter-spacing: 0.04em;
+}
+
+.sadp-fee-preview {
+  font-size: 0.75rem;
+  color: var(--sadp-secondary, #c8982a);
+  font-weight: 600;
+  background: rgba(200, 152, 42, 0.12);
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  border: 1px solid rgba(200, 152, 42, 0.3);
+  margin-top: 0.25rem;
+}
+
+/* ── Progress bar SaDP override ── */
+.sadp-progress-badge {
+  background: linear-gradient(
+    135deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-secondary, #c8982a)
+  ) !important;
+}
+
+.sadp-progress-fill {
+  background: linear-gradient(
+    90deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-accent, #e8b84b)
+  ) !important;
+}
+
+/* ── Step nav SaDP active ── */
+.step-item.sadp-active {
+  background: linear-gradient(
+    135deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-secondary, #c8982a)
+  ) !important;
+}
+
+.step-item.sadp-active .step-number {
+  color: var(--sadp-primary, #1a3a6b) !important;
+}
+
+/* ── Form container SaDP ── */
+.sadp-form-container {
+  border-color: var(--sadp-border, rgba(26, 58, 107, 0.25)) !important;
+}
+
+/* ── Form header SaDP ── */
+.sadp-form-header {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 58, 107, 0.06) 0%,
+    rgba(200, 152, 42, 0.06) 100%
+  ) !important;
+  border-bottom-color: var(--sadp-border, rgba(26, 58, 107, 0.2)) !important;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.sadp-form-header-icon {
+  background: linear-gradient(
+    135deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-secondary, #c8982a)
+  ) !important;
+}
+
+.sadp-header-badge {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(
+    135deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-secondary, #c8982a)
+  );
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ── Input fields SaDP focus ── */
+.sadp-input-field:focus {
+  border-color: var(--sadp-primary, #1a3a6b) !important;
+  box-shadow: 0 0 0 3px rgba(26, 58, 107, 0.1);
+}
+
+/* ── Program info banner (step 1) ── */
+.sadp-program-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 58, 107, 0.07) 0%,
+    rgba(200, 152, 42, 0.07) 100%
+  );
+  border: 1px solid var(--sadp-border, rgba(26, 58, 107, 0.2));
+  border-left: 4px solid var(--sadp-primary, #1a3a6b);
+  border-radius: 10px;
+}
+
+.sadp-program-banner svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sadp-program-banner-title {
+  font-weight: 700;
+  color: var(--sadp-primary, #1a3a6b);
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.sadp-program-banner-sub {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  opacity: 0.75;
+  line-height: 1.4;
+}
+
+/* ── Curriculum intro ── */
+.sadp-curriculum-intro {
+  text-align: center;
+  padding: 0.5rem 0 0.75rem;
+}
+
+.sadp-curriculum-heading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--sadp-primary, #1a3a6b);
+  margin-bottom: 0.5rem;
+}
+
+.sadp-curriculum-subheading {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  opacity: 0.8;
+}
+
+/* ── Curriculum cards grid ── */
+.sadp-curriculum-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sadp-curriculum-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.25s ease;
+}
+
+.sadp-curriculum-card:hover {
+  border-color: var(--sadp-border, rgba(26, 58, 107, 0.3));
+  box-shadow: 0 4px 16px rgba(26, 58, 107, 0.08);
+  transform: translateX(4px);
+}
+
+.sadp-curriculum-card-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-secondary, #c8982a)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sadp-curriculum-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.sadp-curriculum-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.35rem;
+}
+
+.sadp-curriculum-card-title {
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.sadp-curriculum-card-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--sadp-secondary, #c8982a);
+  background: rgba(200, 152, 42, 0.12);
+  border: 1px solid rgba(200, 152, 42, 0.3);
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+}
+
+.sadp-curriculum-card-desc {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  opacity: 0.75;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Fee card ── */
+.sadp-fee-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 58, 107, 0.06) 0%,
+    rgba(200, 152, 42, 0.08) 100%
+  );
+  border: 2px solid var(--sadp-gold-border, rgba(200, 152, 42, 0.35));
+  border-radius: 14px;
+  margin-top: 0.5rem;
+}
+
+.sadp-fee-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.sadp-fee-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+  color: var(--text-primary);
+  opacity: 0.7;
+}
+
+.sadp-fee-amount {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--sadp-primary, #1a3a6b);
+}
+
+.sadp-fee-divider {
+  width: 1px;
+  height: 50px;
+  background: var(--sadp-gold-border, rgba(200, 152, 42, 0.35));
+  margin: 0 1.5rem;
+}
+
+/* ── Contact info bar ── */
+.sadp-contact-info {
+  text-align: center;
+  padding: 0.75rem 1rem;
+  background: var(--bg-primary);
+  border: 1px dashed var(--border-color);
+  border-radius: 10px;
+}
+
+.sadp-contact-info p {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  opacity: 0.8;
+  margin: 0.25rem 0;
+}
+
+/* ── SaDP next button override ── */
+.sadp-nav-primary {
+  background: linear-gradient(
+    135deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-secondary, #c8982a)
+  ) !important;
+}
+
+/* ── SaDP submit button ── */
+.sadp-submit-btn {
+  background: linear-gradient(
+    135deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-secondary, #c8982a)
+  ) !important;
+}
+
+/* ── SaDP preview card ── */
+.sadp-preview-card {
+  border-color: var(--sadp-primary, #1a3a6b) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 58, 107, 0.04) 0%,
+    rgba(200, 152, 42, 0.04) 100%
+  ) !important;
+}
+
+.sadp-preview-tag {
+  background: linear-gradient(
+    135deg,
+    var(--sadp-primary, #1a3a6b),
+    var(--sadp-secondary, #c8982a)
+  ) !important;
+  border-radius: 10px !important;
+  font-size: 0.85rem !important;
+  padding: 0.5rem 1rem !important;
+}
+
+/* ── Responsive SaDP ── */
+@media (max-width: 600px) {
+  .sadp-fee-card {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .sadp-fee-divider {
+    width: 60px;
+    height: 1px;
+    margin: 0;
+  }
+
+  .sadp-curriculum-card {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .sadp-curriculum-card:hover {
+    transform: none;
+  }
+
+  .sadp-header-badge {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
   }
 }

@@ -885,3 +885,259 @@ select[multiple] option:checked {
     padding: 1.5rem;
   }
 }
+
+/* ====================== */
+/* SADP CURRICULUM SECTION */
+/* ====================== */
+
+:root {
+  --sadp-primary: #06b6d4; /* Teal / Cyan vibe for Soap & Detergent */
+  --sadp-primary-rgb: 6, 182, 212;
+}
+
+[data-theme="dark"] {
+  --sadp-primary: #22d3ee;
+  --sadp-primary-rgb: 34, 211, 238;
+}
+
+/* Enrollment Type Badge */
+.sadp-badge-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--sadp-primary), #0284c7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.sadp-type-label.sadp-selected {
+  border-color: var(--sadp-primary) !important;
+  background: rgba(var(--sadp-primary-rgb), 0.1) !important;
+}
+
+.sadp-type-label .check-badge {
+  background: var(--sadp-primary) !important;
+}
+
+.sadp-progress-badge {
+  background: var(--sadp-primary) !important;
+}
+
+.sadp-progress-fill {
+  background: linear-gradient(90deg, var(--sadp-primary), #0284c7) !important;
+}
+
+.step-item.sadp-active {
+  background: var(--sadp-primary) !important;
+}
+
+.step-item.sadp-active .step-number {
+  color: var(--sadp-primary) !important;
+}
+
+.step-item.completed.sadp-active .step-number {
+  background: var(--sadp-primary) !important;
+}
+
+.sadp-form-header-icon {
+  background: var(--sadp-primary) !important;
+}
+
+.sadp-header-badge {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(var(--sadp-primary-rgb), 0.1);
+  color: var(--sadp-primary);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.sadp-program-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(var(--sadp-primary-rgb), 0.05);
+  border-left: 4px solid var(--sadp-primary);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.sadp-program-banner-title {
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.sadp-program-banner-sub {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  opacity: 0.85;
+  margin: 0;
+}
+
+.sadp-input-field:focus {
+  border-color: var(--sadp-primary) !important;
+}
+
+/* Curriculum Grid */
+.sadp-curriculum-intro {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.sadp-curriculum-heading {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.sadp-curriculum-subheading {
+  color: var(--text-primary);
+  opacity: 0.85;
+  font-size: 1.05rem;
+}
+
+.sadp-curriculum-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.sadp-curriculum-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.sadp-curriculum-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--sadp-primary);
+  box-shadow: 0 12px 24px rgba(var(--sadp-primary-rgb), 0.12);
+}
+
+.sadp-curriculum-card-icon {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--sadp-primary), #0284c7);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(var(--sadp-primary-rgb), 0.25);
+}
+
+.sadp-curriculum-card-body {
+  flex: 1;
+}
+
+.sadp-curriculum-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.sadp-curriculum-card-title {
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.sadp-curriculum-card-tag {
+  background: rgba(var(--sadp-primary-rgb), 0.1);
+  color: var(--sadp-primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sadp-curriculum-card-desc {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  opacity: 0.8;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Fee Card */
+.sadp-fee-card {
+  background: linear-gradient(135deg, rgba(var(--sadp-primary-rgb), 0.08), rgba(var(--sadp-primary-rgb), 0.02));
+  border: 1px solid rgba(var(--sadp-primary-rgb), 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.sadp-fee-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sadp-fee-label {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  opacity: 0.85;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sadp-fee-amount {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+
+.sadp-fee-divider {
+  width: 2px;
+  height: 50px;
+  background: rgba(var(--sadp-primary-rgb), 0.2);
+}
+
+@media (max-width: 600px) {
+  .sadp-fee-card {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  .sadp-fee-divider {
+    width: 100%;
+    height: 2px;
+  }
+  .sadp-curriculum-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .sadp-curriculum-card-header {
+    flex-direction: column;
+    align-items: center;
+  }
+}

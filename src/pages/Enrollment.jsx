@@ -4,7 +4,8 @@ import {
   Mail, Phone, MapPin, Clock, Users, GraduationCap,
   CheckCircle, User, Briefcase, BookOpen, ArrowRight,
   ArrowLeft, Award, Check, Lock, ChevronRight, Home,
-  School, MessageSquare
+  School, MessageSquare, FlaskConical, Droplets, ShoppingBag,
+  Star, Sparkles, Package
 } from 'lucide-react';
 import axios from 'axios';
 import { useRef } from 'react';
@@ -44,6 +45,58 @@ const Enrollment = () => {
   const isBootcampOpen = false;
   const isInternshipOpen = true;
 
+  // Soap & Detergent curriculum from the flyer
+  const sadpCurriculum = [
+    {
+      icon: Droplets,
+      title: 'Savon Transparent',
+      description: 'Master the production of crystal-clear transparent soap using professional techniques and quality ingredients.',
+      tag: 'Soap Making',
+    },
+    {
+      icon: Package,
+      title: 'Savon Macabo',
+      description: 'Learn the art of producing traditional Savon Macabo, a locally beloved soap variety with market demand.',
+      tag: 'Soap Making',
+    },
+    {
+      icon: FlaskConical,
+      title: 'Omo (Laundry Powder)',
+      description: 'Produce high-quality laundry detergent powder from raw materials, ready for household and commercial use.',
+      tag: 'Detergent',
+    },
+    {
+      icon: Droplets,
+      title: 'Liquid Soap',
+      description: 'Formulate and bottle premium liquid soap products suitable for kitchens, bathrooms, and handwashing.',
+      tag: 'Liquid Products',
+    },
+    {
+      icon: Star,
+      title: 'Chocolate Soap',
+      description: 'Craft specialty chocolate-infused soaps — a growing niche with high retail value and unique appeal.',
+      tag: 'Specialty Soap',
+    },
+    {
+      icon: Sparkles,
+      title: 'Ovaltine Soap',
+      description: 'Produce Ovaltine-enriched beauty soaps, combining skincare ingredients for a premium product line.',
+      tag: 'Beauty Soap',
+    },
+    {
+      icon: Package,
+      title: 'Matina Soap',
+      description: 'Learn to produce Matina soap, a popular brand-style product with wide consumer recognition.',
+      tag: 'Soap Making',
+    },
+    {
+      icon: ShoppingBag,
+      title: 'Sell on Upwork & LinkedIn',
+      description: 'Turn your skills into income learn how to market and sell your soap knowledge online via Upwork and LinkedIn.',
+      tag: 'Business Skills',
+    },
+  ];
+
   const coursesList = [
     "BackEnd Web Development",
     "Cartography and GIS",
@@ -67,11 +120,16 @@ const Enrollment = () => {
     "IT Project Management",
   ];
 
-  // FIX 1: Bootcamp/Internship Preview step number is now 3 (not 4) so currentStep reaches it correctly
-  const steps = (formData.enrollmentType === 'bootcamp' || formData.enrollmentType === 'internship') ? [
+  // Steps definition per enrollment type
+  const isSaDP = formData.enrollmentType === 'sadp';
+  const isBootcamp = formData.enrollmentType === 'bootcamp';
+  const isInternship = formData.enrollmentType === 'internship';
+
+  const steps = (isBootcamp || isInternship || isSaDP) ? [
     { number: 1, title: 'Personal Info', icon: User, description: 'Tell us about yourself' },
     { number: 2, title: 'Background', icon: School, description: 'Your education & occupation' },
-    { number: 3, title: 'Preview', icon: CheckCircle, description: 'Review and submit' }
+    { number: 3, title: isSaDP ? 'What You\'ll Learn' : 'Preview', icon: isSaDP ? BookOpen : CheckCircle, description: isSaDP ? 'Explore the full curriculum' : 'Review and submit' },
+    ...(isSaDP ? [{ number: 4, title: 'Preview', icon: CheckCircle, description: 'Review and submit' }] : []),
   ] : [
     { number: 1, title: 'Personal Info', icon: User, description: 'Tell us about yourself' },
     { number: 2, title: 'Background', icon: School, description: 'Your education & occupation' },
@@ -84,7 +142,7 @@ const Enrollment = () => {
 
   // Handle step adjustment when enrollment type changes
   useEffect(() => {
-    if ((formData.enrollmentType === 'bootcamp' || formData.enrollmentType === 'internship') && currentStep > 2) {
+    if ((isBootcamp || isInternship) && currentStep > 2) {
       setCurrentStep(2);
     }
   }, [formData.enrollmentType, currentStep, steps.length]);
@@ -115,7 +173,8 @@ const Enrollment = () => {
       const apiUrl = import.meta.env.VITE_API_URL;
       if (!apiUrl) throw new Error('API URL is not configured');
 
-      const enrollmentData = {
+      let endpoint = 'public-enrollment';
+      let requestData = {
         name: formData.name,
         email: formData.email,
         contact: formData.contact,
@@ -127,14 +186,28 @@ const Enrollment = () => {
         message: formData.careerGoal,
       };
 
-      let endpoint = 'public-enrollment';
-      if (formData.enrollmentType === 'bootcamp') endpoint = 'bootcamp-application';
-      else if (formData.enrollmentType === 'internship') endpoint = 'internship-application';
+      if (isSaDP) {
+        endpoint = 'dproduction';
+        requestData = {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.contact,
+          education: formData.education === 'Other'
+            ? formData.educationOther || 'Other'
+            : formData.education,
+          occupation: formData.occupation,
+          goals: formData.careerGoal,
+        };
+      } else if (isBootcamp) {
+        endpoint = 'bootcamp-application';
+      } else if (isInternship) {
+        endpoint = 'internship-application';
+      }
 
       console.log('📤 Sending to:', `${apiUrl}/${endpoint}`);
-      console.log('📦 Payload:', enrollmentData);
+      console.log('📦 Payload:', requestData);
 
-      const dbResult = await axios.post(`${apiUrl}/${endpoint}`, enrollmentData, {
+      const dbResult = await axios.post(`${apiUrl}/${endpoint}`, requestData, {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -146,10 +219,13 @@ const Enrollment = () => {
         submissionSucceeded = true;
 
         let successMessage = '';
-        if (formData.enrollmentType === 'internship') {
+        if (isSaDP) {
+          successMessage = dbResult.data.message || 'Soap & Detergent Production application submitted successfully!\n\n';
+          successMessage += `📧 We'll contact you soon with confirmation details.`;
+        } else if (isInternship) {
           successMessage = dbResult.data.message || 'Internship application submitted successfully!\n\n';
           successMessage += `📧 We'll contact you soon with confirmation details.`;
-        } else if (formData.enrollmentType === 'bootcamp') {
+        } else if (isBootcamp) {
           successMessage = dbResult.data.message || 'Bootcamp application submitted successfully!\n\n';
           successMessage += `📧 We'll contact you soon with confirmation details.`;
         } else {
@@ -159,8 +235,9 @@ const Enrollment = () => {
 
         showNotification(successMessage, 'success');
 
-        const typeLabel = formData.enrollmentType === 'internship' ? 'Internship' :
-          formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : 'Vocational Training';
+        const typeLabel = isSaDP ? 'Soap & Detergent Production' :
+          isInternship ? 'Internship' :
+            isBootcamp ? 'Bootcamp' : 'Vocational Training';
 
         const whatsappMessage = `
 New ${typeLabel} Application from Gep Protech Website:
@@ -168,7 +245,7 @@ New ${typeLabel} Application from Gep Protech Website:
 *Name:* ${formData.name}
 *Email:* ${formData.email}
 *Contact:* ${formData.contact}
-*Course Interests:* ${formData.enrollmentType === 'bootcamp' ? 'Not required for Bootcamp' : (formData.courses.length > 0 ? formData.courses.join(', ') : 'Not specified')}
+*Program:* ${typeLabel}
 *Career Goal:*
 ${formData.careerGoal}
 
@@ -238,12 +315,10 @@ Sent from Gep Protech Academic Website
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Handle enrollment type change - reset to step 1 to avoid validation errors
     if (name === 'enrollmentType') {
       setFormData({
         ...formData,
         enrollmentType: value,
-        // Reset step 2+ fields when switching types
         education: '',
         educationOther: '',
         occupation: '',
@@ -273,10 +348,9 @@ Sent from Gep Protech Academic Website
     setShowGroupPopup(false);
   };
 
-  // FIX 3: nextStep/prevStep are now fully sequential — no manual skipping needed
   const nextStep = () => {
     if (currentStep === 1 && !formData.enrollmentType) {
-      showNotification('Please choose an enrollment type (Internship or Vocational Training) to continue.', 'error');
+      showNotification('Please choose an enrollment type to continue.', 'error');
       return;
     }
     if (currentStep < steps.length) {
@@ -291,16 +365,17 @@ Sent from Gep Protech Academic Website
   };
 
   const isStepValid = () => {
-    const isBootcamp = formData.enrollmentType === 'bootcamp';
     switch (currentStep) {
       case 1:
         return formData.enrollmentType && formData.name && formData.email && formData.contact;
       case 2:
         return formData.education && (formData.education !== 'Other' || formData.educationOther);
       case 3:
-        // For bootcamp, step 3 is Preview — always valid
-        if (isBootcamp) return true;
-        // For enrollment, step 3 is Courses & Goals — require selection + career goal
+        // SaDP: step 3 is curriculum — always valid (read-only showcase)
+        if (isSaDP) return true;
+        // Bootcamp/Internship: step 3 is Preview — always valid
+        if (isBootcamp || isInternship) return true;
+        // Enrollment: step 3 is Courses & Goals
         return formData.courses.length > 0 && formData.careerGoal.trim();
       case 4:
         return true;
@@ -339,25 +414,28 @@ Sent from Gep Protech Academic Website
               Choose the section below to enroll or apply for :
             </a>
           </p>
-          <p className="enrollment-description">
+          {/* <p className="enrollment-description">
             Complete the steps below to begin your journey with us. Your information is secure and will be sent to our team.
-          </p>
+          </p> */}
 
           <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
               Don't know what path to choose?
             </span>
-            <a
-              href="/find-path"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = '/find-path';
-              }}
-              className="find-path-link"
-            >
-              Find Your Path
-            </a>
-            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <button style={{ marginLeft: '10px', padding: '10px 20px', borderRadius: '10px', border: '2px solid var(--primary-color)', background: 'var(--bg-secondary)', cursor: 'pointer' }}>
+              <a
+                href="/find-path"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = '/find-path';
+                }}
+                className="find-path-link"
+              >
+                Find Your Path
+              </a>
+            </button>
+
+            {/* <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
               Don't miss our graduation Ceremony  click here to be part
               <a
                 href="/graduation-flyer"
@@ -366,6 +444,7 @@ Sent from Gep Protech Academic Website
                 Graduation Flyer
               </a>
             </span>
+            */}
           </div>
 
           {/* Enrollment Type Radio Buttons */}
@@ -390,6 +469,7 @@ Sent from Gep Protech Academic Website
                 )}
               </label>
             )}
+
             <label className={`enrollment-type-label ${formData.enrollmentType === 'enrollment' ? 'selected' : ''}`}>
               <input
                 type="radio"
@@ -408,9 +488,35 @@ Sent from Gep Protech Academic Website
                 </div>
               )}
             </label>
+
+            {/* ── NEW: Soap & Detergent Production ── */}
+            <label className={`enrollment-type-label sadp-type-label ${formData.enrollmentType === 'sadp' ? 'selected sadp-selected' : ''}`}>
+              <input
+                type="radio"
+                name="enrollmentType"
+                value="sadp"
+                checked={formData.enrollmentType === 'sadp'}
+                onChange={handleChange}
+              />
+              <div className="sadp-badge-icon">
+                <FlaskConical size={18} color="white" />
+              </div>
+              <span className="type-title sadp-title">
+                Soap & Detergent Production
+              </span>
+              <span className="type-description">
+                Professional training in soap and detergent production from raw materials to mark-ready products.
+              </span>
+              {/* <span className="sadp-fee-preview">50,000 FRS · Reg: 5,000 FRS</span> */}
+              {formData.enrollmentType === 'sadp' && (
+                <div className="check-badge">
+                  <Check size={12} color="white" />
+                </div>
+              )}
+            </label>
           </div>
 
-          {/* Security message after radio buttons - only visible when no radio button selected */}
+          {/* Security message after radio buttons */}
           {!formData.enrollmentType && (
             <motion.p
               initial={{ opacity: 0, y: 10 }}
@@ -435,7 +541,7 @@ Sent from Gep Protech Academic Website
             >
               <div className="progress-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span className="progress-step-badge">
+                  <span className={`progress-step-badge ${isSaDP ? 'sadp-progress-badge' : ''}`}>
                     Step {currentStep}/{steps.length}
                   </span>
                   <span className="progress-step-title">
@@ -452,7 +558,7 @@ Sent from Gep Protech Academic Website
                   initial={{ width: 0 }}
                   animate={{ width: `${getProgressPercentage()}%` }}
                   transition={{ duration: 0.3 }}
-                  className="progress-bar-fill"
+                  className={`progress-bar-fill ${isSaDP ? 'sadp-progress-fill' : ''}`}
                 />
               </div>
             </motion.div>
@@ -468,14 +574,14 @@ Sent from Gep Protech Academic Website
                 <motion.div
                   key={step.number}
                   whileHover={{ y: -2 }}
-                  className={`step-item ${index + 1 < currentStep ? 'completed' : ''} ${index + 1 === currentStep ? 'active' : ''}`}
+                  className={`step-item ${index + 1 < currentStep ? 'completed' : ''} ${index + 1 === currentStep ? `active ${isSaDP ? 'sadp-active' : ''}` : ''}`}
                   onClick={() => setCurrentStep(step.number)}
                 >
                   <div className="step-number">
                     {index + 1 < currentStep ? (
                       <Check size={14} color="white" />
                     ) : (
-                      <step.icon size={14} color={index + 1 === currentStep ? 'var(--primary-color)' : 'var(--text-primary)'} />
+                      <step.icon size={14} color={index + 1 === currentStep ? (isSaDP ? 'var(--sadp-primary)' : 'var(--primary-color)') : 'var(--text-primary)'} />
                     )}
                   </div>
                   <span className="step-label">
@@ -490,14 +596,14 @@ Sent from Gep Protech Academic Website
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="form-container"
+              className={`form-container ${isSaDP ? 'sadp-form-container' : ''}`}
             >
               {/* Current Step Header */}
-              <div className="form-header">
+              <div className={`form-header ${isSaDP ? 'sadp-form-header' : ''}`}>
                 {(() => {
                   const StepIcon = steps[currentStep - 1]?.icon;
                   return StepIcon ? (
-                    <div className="form-header-icon">
+                    <div className={`form-header-icon ${isSaDP ? 'sadp-form-header-icon' : ''}`}>
                       <StepIcon size={20} color="white" />
                     </div>
                   ) : null;
@@ -510,6 +616,12 @@ Sent from Gep Protech Academic Website
                     {steps[currentStep - 1].description}
                   </p>
                 </div>
+                {isSaDP && (
+                  <div className="sadp-header-badge">
+                    <FlaskConical size={14} />
+                    SaDP Program
+                  </div>
+                )}
               </div>
 
               {/* Form Steps */}
@@ -526,6 +638,20 @@ Sent from Gep Protech Academic Website
                       transition={{ duration: 0.3 }}
                       className="step-content"
                     >
+                      {isSaDP && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="sadp-program-banner"
+                        >
+                          <FlaskConical size={20} color="var(--sadp-primary)" />
+                          <div>
+                            <p className="sadp-program-banner-title">Soap & Detergent Production Program</p>
+                            <p className="sadp-program-banner-sub">Registration: 5,000 FRS · Training: 50,000 FRS · From Raw Materials to Market-Ready Products</p>
+                          </div>
+                        </motion.div>
+                      )}
+
                       <div className="input-group">
                         <label className="input-label">
                           <User size={16} style={{ marginRight: '0.5rem' }} />
@@ -538,7 +664,7 @@ Sent from Gep Protech Academic Website
                           onChange={handleChange}
                           required
                           disabled={loading}
-                          className="input-field"
+                          className={`input-field ${isSaDP ? 'sadp-input-field' : ''}`}
                           placeholder="Enter your full name"
                         />
                       </div>
@@ -555,7 +681,7 @@ Sent from Gep Protech Academic Website
                           onChange={handleChange}
                           required
                           disabled={loading}
-                          className="input-field"
+                          className={`input-field ${isSaDP ? 'sadp-input-field' : ''}`}
                           placeholder="Enter your email address"
                         />
                       </div>
@@ -572,7 +698,7 @@ Sent from Gep Protech Academic Website
                           onChange={handleChange}
                           required
                           disabled={loading}
-                          className="input-field"
+                          className={`input-field ${isSaDP ? 'sadp-input-field' : ''}`}
                           placeholder="+237 XXX XXX XXX"
                         />
                         <p className="helper-text">We'll use this to contact you via WhatsApp</p>
@@ -601,7 +727,7 @@ Sent from Gep Protech Academic Website
                           onChange={handleChange}
                           required
                           disabled={loading}
-                          className="input-field"
+                          className={`input-field ${isSaDP ? 'sadp-input-field' : ''}`}
                         >
                           <option value="">Select qualification</option>
                           <option value="No formal education">No formal education</option>
@@ -627,7 +753,7 @@ Sent from Gep Protech Academic Website
                             value={formData.educationOther}
                             onChange={handleChange}
                             placeholder="Specify your qualification"
-                            className="input-field"
+                            className={`input-field ${isSaDP ? 'sadp-input-field' : ''}`}
                           />
                         </motion.div>
                       )}
@@ -643,7 +769,7 @@ Sent from Gep Protech Academic Website
                           value={formData.occupation}
                           onChange={handleChange}
                           disabled={loading}
-                          className="input-field"
+                          className={`input-field ${isSaDP ? 'sadp-input-field' : ''}`}
                           placeholder="e.g., Student, Software Engineer, etc."
                         />
                       </div>
@@ -660,14 +786,85 @@ Sent from Gep Protech Academic Website
                           required
                           disabled={loading}
                           rows="4"
-                          className="input-field"
-                          placeholder="Tell us about your career goals and background. Why are you interested in these courses?"
+                          className={`input-field ${isSaDP ? 'sadp-input-field' : ''}`}
+                          placeholder={isSaDP
+                            ? "Tell us why you want to join the Soap & Detergent Production program and what you hope to achieve..."
+                            : "Tell us about your career goals and background. Why are you interested in these courses?"}
                         />
                       </div>
                     </motion.div>
                   )}
 
-                  {/* Step: Courses & Goals — only renders for enrollment (bootcamp never reaches this title) */}
+                  {/* Step: What You'll Learn — SaDP ONLY */}
+                  {steps[currentStep - 1]?.title === "What You'll Learn" && (
+                    <motion.div
+                      key="step-sadp-curriculum"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="step-content"
+                    >
+                      <div className="sadp-curriculum-intro">
+                        <h4 className="sadp-curriculum-heading">
+                          🧼 Professional Training in Soap & Detergent Production
+                        </h4>
+                        <p className="sadp-curriculum-subheading">
+                          From Raw Materials to Market-Ready Products. <strong>Learn. Produce. Sell.</strong>
+                        </p>
+                      </div>
+
+                      <div className="sadp-curriculum-grid">
+                        {sadpCurriculum.map((item, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.07 }}
+                            className="sadp-curriculum-card"
+                          >
+                            <div className="sadp-curriculum-card-icon">
+                              <item.icon size={20} color="white" />
+                            </div>
+                            <div className="sadp-curriculum-card-body">
+                              <div className="sadp-curriculum-card-header">
+                                <span className="sadp-curriculum-card-title">
+                                  How to Produce {item.title !== 'Sell on Upwork & LinkedIn' ? item.title : ''}
+                                  {item.title === 'Sell on Upwork & LinkedIn' ? 'Sell Your Knowledge Online' : ''}
+                                </span>
+                                <span className="sadp-curriculum-card-tag">{item.tag}</span>
+                              </div>
+                              <p className="sadp-curriculum-card-desc">{item.description}</p>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+
+                      <div className="sadp-fee-card">
+                        <div className="sadp-fee-item">
+                          <span className="sadp-fee-label">Registration Fee</span>
+                          <span className="sadp-fee-amount">5,000 FRS</span>
+                        </div>
+                        <div className="sadp-fee-divider" />
+                        <div className="sadp-fee-item">
+                          <span className="sadp-fee-label">Training Fee</span>
+                          <span className="sadp-fee-amount">50,000 FRS</span>
+                        </div>
+                      </div>
+
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="sadp-contact-info"
+                      >
+                        {/* <p>📞 <strong>+237 670 011 511</strong> &nbsp;|&nbsp; <strong>674 386 778</strong></p> */}
+                        {/* <p>🌐 <strong>www.geprotechacademy.com</strong></p> */}
+                      </motion.div>
+                    </motion.div>
+                  )}
+
+                  {/* Step: Courses & Goals — enrollment ONLY */}
                   {steps[currentStep - 1]?.title === 'Courses & Goals' && (
                     <motion.div
                       key="step3"
@@ -723,10 +920,10 @@ Sent from Gep Protech Academic Website
                     </motion.div>
                   )}
 
-                  {/* Step: Preview — renders for both bootcamp (step 3) and enrollment (step 4) */}
+                  {/* Step: Preview */}
                   {steps[currentStep - 1]?.title === 'Preview' && (
                     <motion.div
-                      key="step4"
+                      key="step-preview"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
@@ -737,10 +934,14 @@ Sent from Gep Protech Academic Website
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
-                        className="preview-card"
+                        className={`preview-card ${isSaDP ? 'sadp-preview-card' : ''}`}
                       >
                         <h4 className="preview-title">
-                          📋 Preview Your {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : formData.enrollmentType === 'internship' ? 'Internship' : 'Vocational Training'}
+                          {isSaDP ? '🧼' : '📋'} Preview Your {
+                            isSaDP ? 'Soap & Detergent Production Application' :
+                              isBootcamp ? 'Bootcamp' :
+                                isInternship ? 'Internship' : 'Vocational Training'
+                          }
                         </h4>
 
                         <div className="preview-grid">
@@ -767,14 +968,27 @@ Sent from Gep Protech Academic Website
                             <p className="preview-value">{formData.occupation}</p>
                           </div>
                           <div>
-                            <p className="preview-label">Enrollment Type</p>
+                            <p className="preview-label">Program</p>
                             <p className="preview-value">
-                              {formData.enrollmentType === 'bootcamp' ? 'Bootcamp' : formData.enrollmentType === 'internship' ? 'Internship' : 'Vocational Training'}
+                              {isSaDP ? 'Soap & Detergent Production (SaDP)' :
+                                isBootcamp ? 'Bootcamp' :
+                                  isInternship ? 'Internship' : 'Vocational Training'}
                             </p>
                           </div>
                         </div>
 
-                        {formData.enrollmentType !== 'bootcamp' && (
+                        {isSaDP && (
+                          <div className="preview-courses">
+                            <p className="preview-courses-title">Enrolled Program</p>
+                            <div className="preview-courses-list">
+                              <span className="preview-course-tag sadp-preview-tag">
+                                🧼 Soap & Detergent Production — Full Curriculum (8 Modules)
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {!isSaDP && !isBootcamp && formData.courses.length > 0 && (
                           <div className="preview-courses">
                             <p className="preview-courses-title">Selected Courses</p>
                             <div className="preview-courses-list">
@@ -803,7 +1017,7 @@ Sent from Gep Protech Academic Website
                       >
                         <CheckCircle size={18} color="#25D366" />
                         <span>
-                          All information looks good? Click Submit to continue to WhatsApp.
+                          All information looks good? Click Submit to continue.
                         </span>
                       </motion.div>
                     </motion.div>
@@ -833,14 +1047,18 @@ Sent from Gep Protech Academic Website
                       disabled={!isStepValid()}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="nav-button primary"
+                      className={`nav-button primary ${isSaDP ? 'sadp-nav-primary' : ''}`}
                       style={{
-                        background: !isStepValid() ? 'var(--border-color)' : 'var(--primary-color)',
+                        background: !isStepValid()
+                          ? 'var(--border-color)'
+                          : isSaDP
+                            ? '#128c7e'
+                            : 'var(--primary-color)',
                         color: !isStepValid() ? 'var(--text-primary)' : 'white',
                         cursor: !isStepValid() ? 'not-allowed' : 'pointer',
                       }}
                     >
-                      Next Step
+                      {currentStep === 2 && isSaDP ? 'See Curriculum' : 'Next Step'}
                       <ArrowRight size={18} />
                     </motion.button>
                   ) : (
@@ -850,7 +1068,7 @@ Sent from Gep Protech Academic Website
                       disabled={loading || !isStepValid()}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="nav-button whatsapp"
+                      className={`nav-button whatsapp ${isSaDP ? 'sadp-submit-btn' : ''}`}
                       style={{
                         background: loading ? 'var(--border-color)' : undefined,
                         cursor: loading || !isStepValid() ? 'not-allowed' : 'pointer'
@@ -859,7 +1077,7 @@ Sent from Gep Protech Academic Website
                       {loading ? (
                         <><div className="spinner" />Submitting...</>
                       ) : (
-                        <><CheckCircle size={18} />Submit</>
+                        <><CheckCircle size={18} />Submit Application</>
                       )}
                     </motion.button>
                   )}
@@ -878,7 +1096,7 @@ Sent from Gep Protech Academic Website
                     }}
                   >
                     <CheckCircle size={16} />
-                    Email sent! Redirecting to WhatsApp...
+                    Submitted! Redirecting...
                   </motion.div>
                 )}
               </div>
@@ -958,6 +1176,36 @@ Sent from Gep Protech Academic Website
                 </motion.button>
               </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification.visible && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className={`notification-toast ${notification.type}`}
+            onClick={() => setNotification(prev => ({ ...prev, visible: false }))}
+          >
+            <div className="notification-icon">
+              {notification.type === 'success' ? (
+                <CheckCircle size={20} />
+              ) : (
+                <span style={{ fontSize: '1.2rem' }}>⚠️</span>
+              )}
+            </div>
+            <div className="notification-message">
+              {notification.message}
+            </div>
+            <div className="notification-close" onClick={(e) => {
+              e.stopPropagation();
+              setNotification(prev => ({ ...prev, visible: false }));
+            }}>
+              &times;
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
