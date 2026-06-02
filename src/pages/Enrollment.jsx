@@ -34,6 +34,7 @@ const Enrollment = () => {
 
   const [loading, setLoading] = useState(false);
   const [showGroupPopup, setShowGroupPopup] = useState(false);
+  const [submittedType, setSubmittedType] = useState(null);
   const [emailSent, setEmailSent] = useState(false);
   const [notification, setNotification] = useState({
     message: '',
@@ -125,11 +126,10 @@ const Enrollment = () => {
   const isBootcamp = formData.enrollmentType === 'bootcamp';
   const isInternship = formData.enrollmentType === 'internship';
 
-  const steps = (isBootcamp || isInternship || isSaDP) ? [
+  const steps = (isBootcamp || isSaDP) ? [
     { number: 1, title: 'Personal Info', icon: User, description: 'Tell us about yourself' },
     { number: 2, title: 'Background', icon: School, description: 'Your education & occupation' },
-    { number: 3, title: isSaDP ? 'What You\'ll Learn' : 'Preview', icon: isSaDP ? BookOpen : CheckCircle, description: isSaDP ? 'Explore the full curriculum' : 'Review and submit' },
-    ...(isSaDP ? [{ number: 4, title: 'Preview', icon: CheckCircle, description: 'Review and submit' }] : []),
+    { number: 3, title: 'Preview', icon: CheckCircle, description: 'Review and submit' },
   ] : [
     { number: 1, title: 'Personal Info', icon: User, description: 'Tell us about yourself' },
     { number: 2, title: 'Background', icon: School, description: 'Your education & occupation' },
@@ -139,13 +139,6 @@ const Enrollment = () => {
 
   const notifTimerRef = useRef(null);
   const innerNotifTimerRef = useRef(null);
-
-  // Handle step adjustment when enrollment type changes
-  useEffect(() => {
-    if ((isBootcamp || isInternship) && currentStep > 2) {
-      setCurrentStep(2);
-    }
-  }, [formData.enrollmentType, currentStep, steps.length]);
 
   const showNotification = (message, type) => {
     if (notifTimerRef.current) clearTimeout(notifTimerRef.current);
@@ -259,6 +252,7 @@ Sent from Gep Protech Academic Website
         const whatsappUrl = `https://wa.me/237674386778?text=${encodeURIComponent(whatsappMessage)}`;
 
         setEmailSent(true);
+        setSubmittedType(formData.enrollmentType);
 
         setTimeout(() => {
           // window.open(whatsappUrl, '_blank');
@@ -336,6 +330,12 @@ Sent from Gep Protech Academic Website
 
   const handleCourseChange = (e) => {
     const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+    
+    if (isInternship && selectedOptions.length > 2) {
+      showNotification('Please, you are allowed to take only 2 courses for an internship.', 'error');
+      return;
+    }
+    
     setFormData({
       ...formData,
       courses: selectedOptions
@@ -343,7 +343,7 @@ Sent from Gep Protech Academic Website
   };
 
   const handleJoinGroup = () => {
-    const groupLink = 'https://chat.whatsapp.com/GhT341sUq7GIfQLQexCFmN';
+    const groupLink = submittedType === 'sadp' ? 'https://chat.whatsapp.com/JVAtXsVuepPDcmMgJ7ckUB' : 'https://chat.whatsapp.com/GhT341sUq7GIfQLQexCFmN';
     window.open(groupLink, '_blank');
     setShowGroupPopup(false);
   };
@@ -369,13 +369,9 @@ Sent from Gep Protech Academic Website
       case 1:
         return formData.enrollmentType && formData.name && formData.email && formData.contact;
       case 2:
-        return formData.education && (formData.education !== 'Other' || formData.educationOther);
+        return formData.education && (formData.education !== 'Other' || formData.educationOther) && ((isBootcamp || isSaDP) ? formData.careerGoal.trim() !== '' : true);
       case 3:
-        // SaDP: step 3 is curriculum — always valid (read-only showcase)
-        if (isSaDP) return true;
-        // Bootcamp/Internship: step 3 is Preview — always valid
-        if (isBootcamp || isInternship) return true;
-        // Enrollment: step 3 is Courses & Goals
+        if (isBootcamp || isSaDP) return true;
         return formData.courses.length > 0 && formData.careerGoal.trim();
       case 4:
         return true;
@@ -795,74 +791,7 @@ Sent from Gep Protech Academic Website
                     </motion.div>
                   )}
 
-                  {/* Step: What You'll Learn — SaDP ONLY */}
-                  {steps[currentStep - 1]?.title === "What You'll Learn" && (
-                    <motion.div
-                      key="step-sadp-curriculum"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className="step-content"
-                    >
-                      <div className="sadp-curriculum-intro">
-                        <h4 className="sadp-curriculum-heading">
-                          🧼 Professional Training in Soap & Detergent Production
-                        </h4>
-                        <p className="sadp-curriculum-subheading">
-                          From Raw Materials to Market-Ready Products. <strong>Learn. Produce. Sell.</strong>
-                        </p>
-                      </div>
 
-                      <div className="sadp-curriculum-grid">
-                        {sadpCurriculum.map((item, index) => (
-                          <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.07 }}
-                            className="sadp-curriculum-card"
-                          >
-                            <div className="sadp-curriculum-card-icon">
-                              <item.icon size={20} color="white" />
-                            </div>
-                            <div className="sadp-curriculum-card-body">
-                              <div className="sadp-curriculum-card-header">
-                                <span className="sadp-curriculum-card-title">
-                                  How to Produce {item.title !== 'Sell on Upwork & LinkedIn' ? item.title : ''}
-                                  {item.title === 'Sell on Upwork & LinkedIn' ? 'Sell Your Knowledge Online' : ''}
-                                </span>
-                                <span className="sadp-curriculum-card-tag">{item.tag}</span>
-                              </div>
-                              <p className="sadp-curriculum-card-desc">{item.description}</p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-
-                      <div className="sadp-fee-card">
-                        <div className="sadp-fee-item">
-                          <span className="sadp-fee-label">Registration Fee</span>
-                          <span className="sadp-fee-amount">5,000 FRS</span>
-                        </div>
-                        <div className="sadp-fee-divider" />
-                        <div className="sadp-fee-item">
-                          <span className="sadp-fee-label">Training Fee</span>
-                          <span className="sadp-fee-amount">50,000 FRS</span>
-                        </div>
-                      </div>
-
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                        className="sadp-contact-info"
-                      >
-                        {/* <p>📞 <strong>+237 670 011 511</strong> &nbsp;|&nbsp; <strong>674 386 778</strong></p> */}
-                        {/* <p>🌐 <strong>www.geprotechacademy.com</strong></p> */}
-                      </motion.div>
-                    </motion.div>
-                  )}
 
                   {/* Step: Courses & Goals — enrollment ONLY */}
                   {steps[currentStep - 1]?.title === 'Courses & Goals' && (
