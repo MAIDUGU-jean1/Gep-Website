@@ -10,6 +10,7 @@ import {
 import axios from 'axios';
 import { useRef } from 'react';
 import './css/Enrollment.css';
+import { useNavigate } from 'react-router-dom';
 
 const Enrollment = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -42,6 +43,7 @@ const Enrollment = () => {
     visible: false
   });
 
+  const navigate = useNavigate();
   // Configuration for enrollment types
   const isBootcampOpen = false;
   const isInternshipOpen = true;
@@ -405,14 +407,12 @@ Sent from Gep Protech Academic Website
           <h2 className="section-title enrollment-title">
             Enroll at Gep Protech
           </h2>
-          <p className="section-subtitle enrollment-subtitle">
+          {/* <p className="section-subtitle enrollment-subtitle">
             <a href="#" onClick={(e) => e.preventDefault()} style={{ color: 'var(--primary-color)', textDecoration: 'none', fontWeight: '600' }}>
               Choose the section below to enroll or apply for :
             </a>
-          </p>
-          {/* <p className="enrollment-description">
-            Complete the steps below to begin your journey with us. Your information is secure and will be sent to our team.
           </p> */}
+
 
           <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
@@ -441,30 +441,42 @@ Sent from Gep Protech Academic Website
               </a>
             </span>
             */}
+
+            <div className='program-container'>
+              <div className='program-link'>
+                <a href='https://internship.gepprotech.com/internship-application' target='_blank'>
+                  <div className="type-title">Internship</div>
+                  {/* <div className="type-description">
+                    2-months internship program from August to September 2026.
+                  </div> */}
+                </a>
+              </div>
+
+              {/* Special training for kids */}
+              <div className='program-link'>
+                <a
+                  onClick={() => {
+                    navigate('/');
+                    setTimeout(() => {
+                      document.getElementById('courses')?.scrollIntoView();
+                    }, 100);
+                  }}             
+                
+                >
+
+                  <div className="type-title">Holiday Training</div>
+                  {/* <div className="type-description">
+                    2-months internship program from August to September 2026.
+                  </div> */}
+                </a>
+              </div>
+            </div>
+
+
           </div>
 
           {/* Enrollment Type Radio Buttons */}
           <div className="enrollment-types">
-            {isInternshipOpen && (
-              <label className={`enrollment-type-label ${formData.enrollmentType === 'internship' ? 'selected' : ''}`}>
-                <input
-                  type="radio"
-                  name="enrollmentType"
-                  value="internship"
-                  checked={formData.enrollmentType === 'internship'}
-                  onChange={handleChange}
-                />
-                <span className="type-title">Internship</span>
-                <span className="type-description">
-                  2-months internship program from August to September 2026.
-                </span>
-                {formData.enrollmentType === 'internship' && (
-                  <div className="check-badge">
-                    <Check size={12} color="white" />
-                  </div>
-                )}
-              </label>
-            )}
 
             <label className={`enrollment-type-label ${formData.enrollmentType === 'enrollment' ? 'selected' : ''}`}>
               <input
@@ -494,9 +506,6 @@ Sent from Gep Protech Academic Website
                 checked={formData.enrollmentType === 'sadp'}
                 onChange={handleChange}
               />
-              <div className="sadp-badge-icon">
-                <FlaskConical size={18} color="white" />
-              </div>
               <span className="type-title sadp-title">
                 Soap & Detergent Production
               </span>
@@ -612,12 +621,7 @@ Sent from Gep Protech Academic Website
                     {steps[currentStep - 1].description}
                   </p>
                 </div>
-                {isSaDP && (
-                  <div className="sadp-header-badge">
-                    <FlaskConical size={14} />
-                    SaDP Program
-                  </div>
-                )}
+                
               </div>
 
               {/* Form Steps */}
@@ -640,7 +644,6 @@ Sent from Gep Protech Academic Website
                           animate={{ opacity: 1, y: 0 }}
                           className="sadp-program-banner"
                         >
-                          <FlaskConical size={20} color="var(--sadp-primary)" />
                           <div>
                             <p className="sadp-program-banner-title">Soap & Detergent Production Program</p>
                             <p className="sadp-program-banner-sub">Registration: 5,000 FRS · Training: 50,000 FRS · From Raw Materials to Market-Ready Products</p>
@@ -899,7 +902,7 @@ Sent from Gep Protech Academic Website
                           <div>
                             <p className="preview-label">Program</p>
                             <p className="preview-value">
-                              {isSaDP ? 'Soap & Detergent Production (SaDP)' :
+                              {isSaDP ? 'Soap & Detergent Production ' :
                                 isBootcamp ? 'Bootcamp' :
                                   isInternship ? 'Internship' : 'Vocational Training'}
                             </p>
@@ -911,7 +914,7 @@ Sent from Gep Protech Academic Website
                             <p className="preview-courses-title">Enrolled Program</p>
                             <div className="preview-courses-list">
                               <span className="preview-course-tag sadp-preview-tag">
-                                🧼 Soap & Detergent Production — Full Curriculum (8 Modules)
+                                Soap & Detergent Production — Full Curriculum
                               </span>
                             </div>
                           </div>

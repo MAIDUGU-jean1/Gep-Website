@@ -85,6 +85,54 @@
   border-bottom-color: #b8942e !important;
 }
 
+
+
+
+
+
+.program-container{
+  display: flex;
+  justify-content: center;
+  margin: 15px 5px;
+  gap: 20px;
+}
+
+.program-link {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.program-link a {
+  text-decoration: none;
+
+}
+
+.program-link:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 20px rgba(var(--primary-color-rgb), 0.2);
+}
+
+.program-link .type-title {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.program-link .type-description {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 200px;
+}
+
 /* Enrollment Type Radio Buttons */
 .enrollment-types {
   display: flex;
@@ -338,6 +386,7 @@
   font-size: 1.3rem;
   color: var(--text-secondary);
   margin-bottom: 0.25rem;
+  text-align: left;
 }
 
 .form-header-description {

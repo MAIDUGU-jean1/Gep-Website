@@ -94,6 +94,8 @@
   border-bottom-color: #b8942e !important;
 }
 
+
+
 /* Enrollment Type Radio Buttons */
 .enrollment-types {
   display: flex;
@@ -115,6 +117,7 @@
   background: transparent;
   transition: all 0.3s ease;
   position: relative;
+  text-decoration: none;
 }
 
 .enrollment-type-label.selected {
