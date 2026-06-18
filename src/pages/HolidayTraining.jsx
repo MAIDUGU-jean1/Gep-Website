@@ -59,7 +59,13 @@ const HolidayTraining = () => {
 
   const handleCategoryToggle = (category) => {
     // Mutually exclusive: only one category at a time
-    setCategories([category]);
+    // If the same category is clicked again, deselect it.
+    setCategories(prev => {
+      const isSelected = prev.includes(category);
+      // update formData.isJunior based on whether 'kid' is selected
+      setFormData(prevForm => ({ ...prevForm, isJunior: isSelected ? 'false' : (category === 'kid' ? 'true' : 'false') }));
+      return isSelected ? [] : [category];
+    });
   };
 
   const handleChange = (e) => {
@@ -110,7 +116,7 @@ const HolidayTraining = () => {
       // Simulating API call as per current project pattern
       console.log('Submitting Holiday Training:', payload);
       
-      const endpoint = 'holiday-enrollment'; // Assuming this endpoint exists or will be handled
+      const endpoint = 'public-enrollment'; // Assuming this endpoint exists or will be handled
       await axios.post(`${apiUrl}/${endpoint}`, payload);
 
       setSubmitted(true);
