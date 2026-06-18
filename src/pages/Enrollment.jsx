@@ -10,7 +10,7 @@ import {
 import axios from 'axios';
 import { useRef } from 'react';
 import './css/Enrollment.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Enrollment = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -454,21 +454,9 @@ Sent from Gep Protech Academic Website
 
               {/* Special training for kids */}
               <div className='program-link'>
-                <a
-                  onClick={() => {
-                    navigate('/');
-                    setTimeout(() => {
-                      document.getElementById('courses')?.scrollIntoView();
-                    }, 100);
-                  }}             
-                
-                >
-
+                <Link to='/holiday-training'>
                   <div className="type-title">Holiday Training</div>
-                  {/* <div className="type-description">
-                    2-months internship program from August to September 2026.
-                  </div> */}
-                </a>
+                </Link>
               </div>
             </div>
 

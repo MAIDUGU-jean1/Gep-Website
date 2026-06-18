@@ -25,6 +25,7 @@ import DiscountCountdown from './components/DiscountCountdown';
 import Review from './pages/Review';
 import FindPath from './pages/FindPath';
 import GraduationFlyer from './pages/GraduationFlyer';
+import HolidayTraining from './pages/HolidayTraining';
 
 const WelcomePopup = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -250,6 +251,7 @@ function App() {
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogPost />} />
               <Route path="/enroll" element={<Enrollment />} />
+              <Route path="/holiday-training" element={<HolidayTraining />} />
               <Route path="/course/:id" element={<CourseDetails />} />
               <Route path="/bootcamp" element={<Bootcamp />} />
               <Route path="/events" element={<Events />} />
