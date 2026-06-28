@@ -797,12 +797,12 @@ select[multiple] option:checked {
 
 .notification-toast {
   position: fixed;
-  top: 1.5rem;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
   z-index: 9999;
   min-width: 320px;
-  max-width: 90vw;
+  width: max-content;
+  max-width: min(90vw, 560px);
   padding: 1rem 1.5rem;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);

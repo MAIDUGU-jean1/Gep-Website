@@ -195,6 +195,87 @@
   cursor: not-allowed;
 }
 
+.success-message,
+.error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.success-message {
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+}
+
+.error-message {
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+}
+
+.success-message svg,
+.error-message svg {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.notification-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 9999;
+  min-width: 320px;
+  width: max-content;
+  max-width: min(90vw, 560px);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.notification-toast.success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+.notification-toast.error {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+}
+
+.notification-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.notification-message {
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.notification-close {
+  flex-shrink: 0;
+  opacity: 0.8;
+  font-size: 1.1rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.notification-close:hover {
+  opacity: 1;
+}
+
 /* Multi-select for courses */
 select[multiple] {
   min-height: 200px;
@@ -218,4 +299,16 @@ select[multiple] option:checked {
 
 [data-theme="dark"] .category-checkbox-label.selected {
   background: rgba(var(--primary-color-rgb), 0.2);
+}
+
+[data-theme="dark"] .success-message {
+  color: #bbf7d0;
+  background: rgba(22, 101, 52, 0.25);
+  border-color: rgba(134, 239, 172, 0.45);
+}
+
+[data-theme="dark"] .error-message {
+  color: #fecaca;
+  background: rgba(153, 27, 27, 0.25);
+  border-color: rgba(252, 165, 165, 0.45);
 }

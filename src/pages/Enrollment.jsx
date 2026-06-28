@@ -5,7 +5,7 @@ import {
   CheckCircle, User, Briefcase, BookOpen, ArrowRight,
   ArrowLeft, Award, Check, Lock, ChevronRight, Home,
   School, MessageSquare, FlaskConical, Droplets, ShoppingBag,
-  Star, Sparkles, Package
+  Star, Sparkles, Package, AlertCircle
 } from 'lucide-react';
 import axios from 'axios';
 import { useRef } from 'react';
@@ -158,6 +158,39 @@ const Enrollment = () => {
     }, 50);
   };
 
+  const getSubmissionErrorMessage = (error) => {
+    if (error.response) {
+      const { data } = error.response;
+      const serverMessage =
+        typeof data?.message === 'string' ? data.message :
+          typeof data?.error === 'string' ? data.error :
+            typeof data === 'string' ? data : '';
+
+      if (data?.errors) {
+        const validationMessages = Object.entries(data.errors).map(([field, messages]) => {
+          const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+          const message = Array.isArray(messages) ? messages[0] : messages;
+          return `${fieldName}: ${message}`;
+        });
+
+        if (validationMessages.length) {
+          const details = `Please check the following:\n${validationMessages.map(message => `• ${message}`).join('\n')}`;
+          return serverMessage ? `${serverMessage}\n\n${details}` : details;
+        }
+
+        return serverMessage || 'Please check your information and try again.';
+      }
+
+      if (serverMessage) return serverMessage;
+    }
+
+    if (error.request) {
+      return 'Unable to connect to our servers. Please check your internet connection and try again.';
+    }
+
+    return error.message || 'Oops! Something went wrong. Please try again.';
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -281,27 +314,7 @@ Sent from Gep Protech Academic Website
       }
 
       console.error('❌ Submission error:', error);
-
-      let errorMessage = 'Oops! Something went wrong. Please try again.';
-
-      if (error.response) {
-        const { status, statusText, data } = error.response;
-        const serverMsg = data?.message || data?.error || JSON.stringify(data);
-
-        if (data?.errors) {
-          errorMessage += '\n\nPlease check the following:';
-          Object.entries(data.errors).forEach(([field, messages]) => {
-            const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
-            errorMessage += `\n• ${fieldName}: ${Array.isArray(messages) ? messages[0] : messages}`;
-          });
-        }
-      } else if (error.request) {
-        errorMessage = 'Unable to connect to our servers. Please check your internet connection and try again.';
-      } else {
-        errorMessage = `Error: ${error.message}`;
-      }
-
-      showNotification(errorMessage, 'error');
+      showNotification(getSubmissionErrorMessage(error), 'error');
 
     } finally {
       setLoading(false);
@@ -1104,9 +1117,9 @@ Sent from Gep Protech Academic Website
       <AnimatePresence>
         {notification.visible && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, x: '-50%', y: '-60%' }}
+            animate={{ opacity: 1, x: '-50%', y: '-50%' }}
+            exit={{ opacity: 0, x: '-50%', y: '-60%' }}
             className={`notification-toast ${notification.type}`}
             onClick={() => setNotification(prev => ({ ...prev, visible: false }))}
           >
@@ -1114,7 +1127,7 @@ Sent from Gep Protech Academic Website
               {notification.type === 'success' ? (
                 <CheckCircle size={20} />
               ) : (
-                <span style={{ fontSize: '1.2rem' }}>⚠️</span>
+                <AlertCircle size={20} />
               )}
             </div>
             <div className="notification-message">

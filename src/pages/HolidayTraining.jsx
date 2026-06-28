@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import {
   User, Mail, Phone, MapPin, Calendar, BookOpen,
   GraduationCap, CheckCircle, ArrowRight, ArrowLeft,
-  Check, Lock, Briefcase, Heart, Baby, Star
+  Check, Lock, Briefcase, Heart, Baby, Star, AlertCircle
 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +29,7 @@ const HolidayTraining = () => {
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const navigate = useNavigate();
 
   const isAdult = categories.includes('adult');
@@ -101,9 +102,43 @@ const HolidayTraining = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  const getSubmissionErrorMessage = (error) => {
+    if (error.response) {
+      const { data } = error.response;
+      const serverMessage =
+        typeof data?.message === 'string' ? data.message :
+          typeof data?.error === 'string' ? data.error :
+            typeof data === 'string' ? data : '';
+
+      if (data?.errors) {
+        const validationMessages = Object.entries(data.errors).map(([field, messages]) => {
+          const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+          const message = Array.isArray(messages) ? messages[0] : messages;
+          return `${fieldName}: ${message}`;
+        });
+
+        if (validationMessages.length) {
+          const details = `Please check the following:\n${validationMessages.map(message => `• ${message}`).join('\n')}`;
+          return serverMessage ? `${serverMessage}\n\n${details}` : details;
+        }
+
+        return serverMessage || 'Please check your information and try again.';
+      }
+
+      if (serverMessage) return serverMessage;
+    }
+
+    if (error.request) {
+      return 'Unable to connect to our servers. Please check your internet connection and try again.';
+    }
+
+    return error.message || 'Something went wrong. Please try again.';
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setSubmitError('');
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
@@ -125,7 +160,7 @@ const HolidayTraining = () => {
       }, 3000);
     } catch (error) {
       console.error('Submission error:', error);
-      alert('Something went wrong. Please try again.');
+      setSubmitError(getSubmissionErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -134,7 +169,7 @@ const HolidayTraining = () => {
   return (
     <section className="holiday-training-section">
       <div className="holiday-training-container">
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="enrollment-header"
@@ -146,7 +181,7 @@ const HolidayTraining = () => {
           <p className="enrollment-subtitle">
             Specialized training programs for all ages and abilities.
           </p>
-        </motion.div>
+        </Motion.div>
 
         <div className="form-container">
           <div className="form-header">
@@ -162,7 +197,7 @@ const HolidayTraining = () => {
           <div className="step-content">
             <AnimatePresence mode="wait">
               {currentStep === 1 && (
-                <motion.div
+                <Motion.div
                   key="step1"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -189,11 +224,11 @@ const HolidayTraining = () => {
                       <span className="category-description">{cat.desc}</span>
                     </label>
                   ))}
-                </motion.div>
+                </Motion.div>
               )}
 
               {currentStep === 2 && (
-                <motion.div
+                <Motion.div
                   key="step2"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -223,11 +258,11 @@ const HolidayTraining = () => {
                       </div>
                     </>
                   )}
-                </motion.div>
+                </Motion.div>
               )}
 
               {currentStep === 3 && (
-                <motion.div
+                <Motion.div
                   key="step3"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -277,11 +312,11 @@ const HolidayTraining = () => {
                       </label>
                     </div>
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {currentStep === 4 && isAdult && (
-                <motion.div
+                <Motion.div
                   key="step4"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -298,11 +333,11 @@ const HolidayTraining = () => {
                     <label className="input-label"><Star size={16} /> Career Goal *</label>
                     <textarea name="careerGoal" value={formData.careerGoal} onChange={handleChange} required className="input-field" placeholder="Tell us about your goals..." />
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {((currentStep === 4 && !isAdult) || (currentStep === 5 && isAdult)) && (
-                <motion.div
+                <Motion.div
                   key="preview"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -344,7 +379,7 @@ const HolidayTraining = () => {
                       <span>Submitted successfully! Redirecting...</span>
                     </div>
                   )}
-                </motion.div>
+                </Motion.div>
               )}
             </AnimatePresence>
           </div>
@@ -365,6 +400,35 @@ const HolidayTraining = () => {
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {submitError && (
+          <Motion.div
+            initial={{ opacity: 0, x: '-50%', y: '-60%' }}
+            animate={{ opacity: 1, x: '-50%', y: '-50%' }}
+            exit={{ opacity: 0, x: '-50%', y: '-60%' }}
+            className="notification-toast error"
+            role="alert"
+            onClick={() => setSubmitError('')}
+          >
+            <div className="notification-icon">
+              <AlertCircle size={20} />
+            </div>
+            <div className="notification-message">
+              {submitError}
+            </div>
+            <div
+              className="notification-close"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSubmitError('');
+              }}
+            >
+              &times;
+            </div>
+          </Motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
