@@ -87,36 +87,73 @@ const InternshipAttendance = () => {
     setLocation(null);
     setLocationError('');
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude });
+    const options = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
+    
+    let watchId;
+    let bestPos = null;
+    let timeoutId;
+
+    const finalize = () => {
+      if (watchId) navigator.geolocation.clearWatch(watchId);
+      if (timeoutId) clearTimeout(timeoutId);
+      
+      if (bestPos) {
+        setLocation({ 
+          latitude: bestPos.coords.latitude, 
+          longitude: bestPos.coords.longitude,
+          accuracy: bestPos.coords.accuracy 
+        });
         setLocationStatus('success');
-      },
-      (err) => {
+      } else {
         setLocationStatus('error');
-        switch (err.code) {
-          case err.PERMISSION_DENIED:
-            setLocationError('Location access denied. Please allow location permission in your browser settings and try again.');
-            break;
-          case err.POSITION_UNAVAILABLE:
-            setLocationError('Location information is currently unavailable. Please check your device GPS and try again.');
-            break;
-          case err.TIMEOUT:
-            setLocationError('Location request timed out. Please ensure you have a stable connection and try again.');
-            break;
-          default:
-            setLocationError('An unknown error occurred while detecting your location.');
+        setLocationError('Could not determine an accurate location. Please check your device GPS and try again outside.');
+      }
+    };
+
+    watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        if (!bestPos || pos.coords.accuracy < bestPos.coords.accuracy) {
+          bestPos = pos;
+        }
+        // Stop watching early if accuracy is 40m or better
+        if (pos.coords.accuracy <= 40) {
+          finalize();
         }
       },
-      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+      (err) => {
+        if (!bestPos) {
+          setLocationStatus('error');
+          switch (err.code) {
+            case err.PERMISSION_DENIED:
+              setLocationError('Location access denied. Please allow location permission in your browser settings and try again.');
+              break;
+            case err.POSITION_UNAVAILABLE:
+              setLocationError('Location information is currently unavailable. Please check your device GPS and try again.');
+              break;
+            case err.TIMEOUT:
+              setLocationError('Location request timed out. Please ensure you have a stable connection and try again.');
+              break;
+            default:
+              setLocationError('An unknown error occurred while detecting your location.');
+          }
+          if (watchId) navigator.geolocation.clearWatch(watchId);
+          if (timeoutId) clearTimeout(timeoutId);
+        }
+      },
+      options
     );
+
+    // Allow up to 10 seconds to find the best accuracy
+    timeoutId = setTimeout(() => {
+      finalize();
+    }, 10000);
+
   }, []);
 
-  // Auto-detect on mount
+  // Removed auto-detect on mount so the user explicitly asks for coordinates
   useEffect(() => {
-    detectLocation();
     return () => { if (notifTimer.current) clearTimeout(notifTimer.current); };
-  }, [detectLocation]);
+  }, []);
 
   // ── Submit attendance ────────────────────────────────────────────────────────
   const handleSubmit = async (e) => {
@@ -214,18 +251,29 @@ const InternshipAttendance = () => {
 
   // ─── Location status helper UI ──────────────────────────────────────────────
   const renderLocationStatus = () => {
-    if (locationStatus === 'idle') return null;
+    if (locationStatus === 'idle') {
+      return (
+        <button 
+          className="att-location-retry-btn" 
+          onClick={detectLocation} 
+          type="button"
+          style={{ width: '100%', justifyContent: 'center', padding: '12px', fontSize: '0.95rem', background: 'rgba(255, 255, 255, 0.1)' }}
+        >
+          <MapPin size={18} style={{ marginRight: '8px' }} /> Get My Current Coordinates
+        </button>
+      );
+    }
 
     const config = {
       detecting: {
         cls: 'detecting',
         icon: <Loader2 size={16} className="att-spin-icon" style={{ animation: 'spin 0.8s linear infinite' }} />,
-        text: 'Detecting your location…',
+        text: 'Acquiring high-accuracy GPS signal…',
       },
       success: {
         cls: 'success',
         icon: <Navigation size={16} />,
-        text: `Location acquired (${location?.latitude?.toFixed(5)}, ${location?.longitude?.toFixed(5)})`,
+        text: `Location acquired (Accuracy: ${location?.accuracy ? Math.round(location.accuracy) + 'm' : 'Unknown'})`,
       },
       error: {
         cls: 'error',
@@ -247,15 +295,25 @@ const InternshipAttendance = () => {
           </button>
         )}
         {locationStatus === 'success' && (
-          <a
-            href={`https://www.google.com/maps?q=${location.latitude},${location.longitude}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="campus-hint"
-          >
-            <ExternalLink size={13} />
-            <span>View your position on Google Maps</span>
-          </a>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <a
+              href={`https://www.google.com/maps?q=${location.latitude},${location.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="campus-hint"
+            >
+              <ExternalLink size={13} />
+              <span>View your position on Google Maps</span>
+            </a>
+            <button 
+              className="att-location-retry-btn" 
+              onClick={detectLocation} 
+              type="button"
+              style={{ background: 'transparent', padding: '4px 8px', fontSize: '0.75rem', marginTop: 0 }}
+            >
+              <RefreshCw size={12} /> Refresh
+            </button>
+          </div>
         )}
       </div>
     );
