@@ -1,0 +1,637 @@
+/* ===================================================
+   INTERNSHIP ATTENDANCE PAGE — GeP ProTech
+   Premium dark glassmorphism design with gold accents
+   =================================================== */
+
+/* ─── Base Layout ─── */
+.attendance-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding: 2rem 1rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative background blobs */
+.attendance-page::before {
+  content: '';
+  position: fixed;
+  top: -200px;
+  left: -200px;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(218, 165, 32, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.attendance-page::after {
+  content: '';
+  position: fixed;
+  bottom: -200px;
+  right: -200px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(218, 165, 32, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.attendance-container {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Page Header ─── */
+.attendance-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.attendance-header-icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), #b8860b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.2rem;
+  box-shadow: 0 8px 30px rgba(218, 165, 32, 0.45);
+  animation: iconPulse 3s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { box-shadow: 0 8px 30px rgba(218, 165, 32, 0.45); }
+  50%       { box-shadow: 0 8px 45px rgba(218, 165, 32, 0.7); }
+}
+
+.attendance-title {
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 800;
+  color: var(--text-secondary);
+  letter-spacing: -0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.attendance-subtitle {
+  font-size: 1rem;
+  color: var(--text-primary);
+  opacity: 0.7;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ─── Info Banner ─── */
+.attendance-info-banner {
+  background: linear-gradient(135deg,
+    rgba(218, 165, 32, 0.12) 0%,
+    rgba(218, 165, 32, 0.05) 100%);
+  border: 1px solid rgba(218, 165, 32, 0.3);
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.attendance-info-banner svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.attendance-info-banner p {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  opacity: 0.85;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ─── Card / Glass Panel ─── */
+.attendance-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(12px);
+  margin-bottom: 1.5rem;
+}
+
+.attendance-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.attendance-card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary-color), #b8860b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.attendance-card-header-text h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.attendance-card-header-text p {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  opacity: 0.6;
+  margin: 0;
+}
+
+/* ─── Form Elements ─── */
+.att-input-group {
+  margin-bottom: 1.2rem;
+}
+
+.att-input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.att-input-field {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  outline: none;
+  letter-spacing: 0.5px;
+}
+
+.att-input-field:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.18);
+}
+
+.att-input-field::placeholder {
+  opacity: 0.45;
+  letter-spacing: 0.2px;
+}
+
+.att-helper-text {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  opacity: 0.55;
+  margin-top: 0.35rem;
+}
+
+/* ─── Location Status ─── */
+.location-status {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  font-size: 0.87rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.location-status.detecting {
+  background: rgba(218, 165, 32, 0.08);
+  border: 1px solid rgba(218, 165, 32, 0.25);
+  color: var(--primary-color);
+}
+
+.location-status.success {
+  background: rgba(56, 161, 105, 0.1);
+  border: 1px solid rgba(56, 161, 105, 0.3);
+  color: #38a169;
+}
+
+.location-status.error {
+  background: rgba(229, 62, 62, 0.08);
+  border: 1px solid rgba(229, 62, 62, 0.25);
+  color: #e53e3e;
+}
+
+.location-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.location-dot.detecting {
+  background: var(--primary-color);
+  animation: dotPulse 1.2s ease-in-out infinite;
+}
+
+.location-dot.success {
+  background: #38a169;
+}
+
+.location-dot.error {
+  background: #e53e3e;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.75); }
+}
+
+/* ─── Submit Button ─── */
+.att-submit-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary-color), #b8860b);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  letter-spacing: 0.3px;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 20px rgba(218, 165, 32, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.att-submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s ease;
+}
+
+.att-submit-btn:hover::before {
+  left: 100%;
+}
+
+.att-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(218, 165, 32, 0.5);
+}
+
+.att-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner inside button */
+.att-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Notification / Toast ─── */
+.att-notification {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  min-width: 300px;
+  max-width: 480px;
+  width: 92%;
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+}
+
+.att-notification.success {
+  background: rgba(56, 161, 105, 0.95);
+  border: 1px solid rgba(56, 161, 105, 0.6);
+  color: white;
+}
+
+.att-notification.error {
+  background: rgba(229, 62, 62, 0.95);
+  border: 1px solid rgba(229, 62, 62, 0.5);
+  color: white;
+}
+
+.att-notification.warning {
+  background: rgba(221, 107, 32, 0.95);
+  border: 1px solid rgba(221, 107, 32, 0.5);
+  color: white;
+}
+
+.att-notification-content {
+  flex: 1;
+}
+
+.att-notification-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+.att-notification-msg {
+  font-size: 0.87rem;
+  opacity: 0.92;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.att-notification-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.att-notification-close:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* ─── Success Result Card ─── */
+.att-result-card {
+  background: linear-gradient(135deg,
+    rgba(56, 161, 105, 0.12) 0%,
+    rgba(56, 161, 105, 0.05) 100%);
+  border: 1.5px solid rgba(56, 161, 105, 0.4);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.att-result-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #38a169, #276749);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.2rem;
+  box-shadow: 0 6px 24px rgba(56, 161, 105, 0.4);
+}
+
+.att-result-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #38a169;
+  margin-bottom: 0.4rem;
+}
+
+.att-result-date {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  opacity: 0.7;
+  margin-bottom: 1.5rem;
+}
+
+.att-result-stats {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.att-stat-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 0.8rem 1.2rem;
+  text-align: center;
+  min-width: 120px;
+}
+
+.att-stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.att-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+
+.att-result-student {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.att-mark-again-btn {
+  margin-top: 1.5rem;
+  padding: 0.75rem 2rem;
+  border-radius: 30px;
+  border: 2px solid var(--primary-color);
+  background: transparent;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.att-mark-again-btn:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* ─── Already Marked State ─── */
+.att-already-card {
+  background: linear-gradient(135deg,
+    rgba(218, 165, 32, 0.1) 0%,
+    rgba(218, 165, 32, 0.04) 100%);
+  border: 1.5px solid rgba(218, 165, 32, 0.35);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.att-already-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), #b8860b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.2rem;
+  box-shadow: 0 6px 24px rgba(218, 165, 32, 0.4);
+}
+
+.att-already-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 0.4rem;
+}
+
+.att-already-sub {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  opacity: 0.7;
+  line-height: 1.5;
+}
+
+/* ─── Location Retry Button ─── */
+.att-location-retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1.5px solid var(--primary-color);
+  border-radius: 8px;
+  color: var(--primary-color);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.att-location-retry-btn:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* ─── Distance Badge ─── */
+.distance-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.distance-badge.in-range {
+  background: rgba(56, 161, 105, 0.12);
+  color: #38a169;
+  border: 1px solid rgba(56, 161, 105, 0.3);
+}
+
+.distance-badge.out-of-range {
+  background: rgba(229, 62, 62, 0.1);
+  color: #e53e3e;
+  border: 1px solid rgba(229, 62, 62, 0.3);
+}
+
+/* ─── Campus Map hint ─── */
+.campus-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  opacity: 0.8;
+  margin-top: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.campus-hint:hover {
+  border-color: var(--primary-color);
+  opacity: 1;
+}
+
+/* ─── Divider ─── */
+.att-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 1.2rem 0;
+}
+
+/* ─── Today's date chip ─── */
+.att-date-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.9rem;
+  background: rgba(218, 165, 32, 0.1);
+  border: 1px solid rgba(218, 165, 32, 0.25);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 480px) {
+  .attendance-card {
+    padding: 1.4rem;
+  }
+
+  .att-result-stats {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .att-stat-item {
+    width: 100%;
+  }
+}
