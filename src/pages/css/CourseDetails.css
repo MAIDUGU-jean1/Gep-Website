@@ -633,6 +633,8 @@
   
   .showcase-image-wrapper {
     min-height: 250px;
+    max-width: 100%;
+
   }
 
   .details-info-grid {
