@@ -228,7 +228,7 @@ const Courses = () => {
                 }`}
             >
               {category}{" "}
-              {category !== "All" &&
+              {category !== "All" && category !== "Other" &&
                 `(${courseCategories[category]?.length || 0})`}
             </motion.button>
           ))}
