@@ -126,7 +126,7 @@ const Footer = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Mail size={18} color="var(--primary-color)" />
-                <span style={{ opacity: 0.8 }}>info@gepprotech.cm</span>
+                <span style={{ opacity: 0.8 }}>info@gepprotech.com</span>
               </div>
             </div>
           </div>

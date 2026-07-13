@@ -207,6 +207,7 @@ const CourseDetails = () => {
                                 src={getCourseImageSrc(mainCourse)}
                                 alt={mainCourse.title}
                             />
+                            <div className="level-badge">{mainCourse.level === 'C' ? 'Beginner - Advanced' : mainCourse.level === 'B' ? 'Intermediate - Advanced' : 'Advanced'}</div>
                             {mainCourse.bonus > 0 && (
                                 <div className="price-tag-badge">
                                     {mainCourse.bonus}% OFF
@@ -244,14 +245,14 @@ const CourseDetails = () => {
                                 <Award size={16} />
                                 <div>
                                     <small>Level</small>
-                                    <span>{mainCourse.level || 'Professional'}</span>
+                                    <span>{mainCourse.level === 'C' ? 'Beginner - Advanced' : mainCourse.level === 'B' ? 'Intermediate - Advanced' : 'Advanced'}</span>
                                 </div>
                             </div>
                         </div>
 
                         {mainCourse.skills && mainCourse.skills.length > 0 && (
                             <div className="key-skills-section">
-                                <strong>Skills Covered:</strong>
+                                <b>Skills Covered:</b>
                                 <div className="skills-tag-cloud">
                                     {mainCourse.skills.map((skill, index) => (
                                         <span key={index} className="skill-tag-pill">{skill}</span>
