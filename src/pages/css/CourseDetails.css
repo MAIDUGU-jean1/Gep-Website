@@ -347,14 +347,13 @@
 .learnings-list-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
 }
 
 .learn-point-row {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 1rem;
+  padding: 0.7rem;
   background: var(--bg-secondary);
   border-radius: 10px;
   transition: transform 0.2s ease;
@@ -561,6 +560,7 @@
   margin-bottom: 1.25rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -640,7 +640,7 @@
   .course-showcase-card {
     grid-template-columns: 1fr;
     gap: 2rem;
-    padding: 2rem;
+    padding: 1rem;
   }
   
   .showcase-image-wrapper {
@@ -654,8 +654,16 @@
 }
 
 @media (max-width: 768px) {
+  .course-details-page {
+    padding-top: 200px;
+  }
+
   .course-details-container {
     padding: 0 1.25rem;
+  }
+
+  .course-showcase-card {
+    padding: 0.7rem;
   }
 
   .course-title {
@@ -679,7 +687,17 @@
   }
 
   .slider-control-arrow {
-    display: none; /* Hide arrows on touch screens */
+    display: flex;
+    width: 36px;
+    height: 36px;
+  }
+
+  .left-control {
+    left: -5px;
+  }
+
+  .right-control {
+    right: -5px;
   }
 
   .recommendations-container {
