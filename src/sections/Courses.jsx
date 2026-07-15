@@ -228,7 +228,7 @@ const Courses = () => {
                 }`}
             >
               {category}{" "}
-              {category !== "All" &&
+              {category !== "All" && category !== "Other" &&
                 `(${courseCategories[category]?.length || 0})`}
             </motion.button>
           ))}
@@ -408,13 +408,13 @@ const Courses = () => {
 
                       return (
                         <div className="price-display">
-                          <span className="original-price">
+                          <div className="original-price">
                             {formatPrice(original )}
-                          </span>
+                          </div>
 
-                          <span className="discounted-price">
+                          <div className="discounted-price">
                             {formatPrice(discounted)}
-                          </span>
+                          </div>
                         </div>
                       );
                     })()}
@@ -427,7 +427,6 @@ const Courses = () => {
                       onClick={() => navigate(`/course/${course.id}`)}
                       className="course-details-button"
                     >
-                      <BookOpen size={16} />
                       Course Details
                     </motion.button>
 

@@ -68,7 +68,11 @@ export const getCategoriesFromCourses = (courses) => {
   const categories = new Set();
   courses.forEach(course => {
     const category = getCourseCategory(course);
-    categories.add(category);
+    if(category !== undefined && category !== null && category !== "All" && category !== "" && category !== "Other"){
+      categories.add(category);
+    }else{
+      categories.add("Other");
+    }
   });
   return ["All", ...Array.from(categories).filter(c => c !== "All")];
 };
