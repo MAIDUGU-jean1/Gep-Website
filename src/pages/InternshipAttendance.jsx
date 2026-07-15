@@ -25,7 +25,21 @@ const formatTime = (timeStr) => {
 
 const getTodayString = () => new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-// ── Notification Toast ────────────────────────────────────────────────────────
+const CAMPUS_LAT = 6.007528;
+const CAMPUS_LNG = 10.258176;
+const MAX_RADIUS = 230000;
+const REQ_ACCURACY = 500000;
+
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371000; // meters
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+};
+
 const Notification = ({ type, title, message, onClose }) => {
   const icons = {
     success: <CheckCircle2 size={20} />,
@@ -57,7 +71,7 @@ const Notification = ({ type, title, message, onClose }) => {
 // ── Main Component ─────────────────────────────────────────────────────────────
 const InternshipAttendance = () => {
   const [approvalCode, setApprovalCode] = useState('');
-  const [location, setLocation]         = useState(null);        // { latitude, longitude }
+  const [location, setLocation]         = useState(null);        // { latitude, longitude, accuracy, distance, isAccurate, isInRadius }
   const [locationStatus, setLocationStatus] = useState('idle');  // idle | detecting | success | error
   const [locationError, setLocationError]   = useState('');
   const [loading, setLoading]   = useState(false);
@@ -65,6 +79,7 @@ const InternshipAttendance = () => {
   const [alreadyMarkedMsg, setAlreadyMarkedMsg] = useState('');
   const [notification, setNotification]   = useState(null);
   const notifTimer = useRef(null);
+  const watchIdRef = useRef(null);
 
   // ── Show notification ───────────────────────────────────────────────────────
   const showNotification = useCallback((type, message, title = '', duration = 8000) => {
@@ -72,6 +87,13 @@ const InternshipAttendance = () => {
     setNotification({ type, message, title });
     if (duration !== Infinity) {
       notifTimer.current = setTimeout(() => setNotification(null), duration);
+    }
+  }, []);
+
+  const stopWatching = useCallback(() => {
+    if (watchIdRef.current) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
     }
   }, []);
 
@@ -83,77 +105,56 @@ const InternshipAttendance = () => {
       return;
     }
 
+    stopWatching();
     setLocationStatus('detecting');
     setLocation(null);
     setLocationError('');
 
     const options = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
     
-    let watchId;
-    let bestPos = null;
-    let timeoutId;
-
-    const finalize = () => {
-      if (watchId) navigator.geolocation.clearWatch(watchId);
-      if (timeoutId) clearTimeout(timeoutId);
-      
-      if (bestPos) {
-        setLocation({ 
-          latitude: bestPos.coords.latitude, 
-          longitude: bestPos.coords.longitude,
-          accuracy: bestPos.coords.accuracy 
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (pos) => {
+        const { latitude, longitude, accuracy } = pos.coords;
+        const distance = calculateDistance(latitude, longitude, CAMPUS_LAT, CAMPUS_LNG);
+        
+        setLocation({
+          latitude,
+          longitude,
+          accuracy,
+          distance,
+          isAccurate: accuracy <= REQ_ACCURACY,
+          isInRadius: distance <= MAX_RADIUS,
         });
         setLocationStatus('success');
-      } else {
-        setLocationStatus('error');
-        setLocationError('Could not determine an accurate location. Please check your device GPS and try again outside.');
-      }
-    };
-
-    watchId = navigator.geolocation.watchPosition(
-      (pos) => {
-        if (!bestPos || pos.coords.accuracy < bestPos.coords.accuracy) {
-          bestPos = pos;
-        }
-        // Stop watching early if accuracy is 40m or better
-        if (pos.coords.accuracy <= 40) {
-          finalize();
-        }
       },
       (err) => {
-        if (!bestPos) {
-          setLocationStatus('error');
-          switch (err.code) {
-            case err.PERMISSION_DENIED:
-              setLocationError('Location access denied. Please allow location permission in your browser settings and try again.');
-              break;
-            case err.POSITION_UNAVAILABLE:
-              setLocationError('Location information is currently unavailable. Please check your device GPS and try again.');
-              break;
-            case err.TIMEOUT:
-              setLocationError('Location request timed out. Please ensure you have a stable connection and try again.');
-              break;
-            default:
-              setLocationError('An unknown error occurred while detecting your location.');
-          }
-          if (watchId) navigator.geolocation.clearWatch(watchId);
-          if (timeoutId) clearTimeout(timeoutId);
+        setLocationStatus('error');
+        switch (err.code) {
+          case err.PERMISSION_DENIED:
+            setLocationError('Location access denied. Please allow location permission in your browser settings and try again.');
+            break;
+          case err.POSITION_UNAVAILABLE:
+            setLocationError('Location information is currently unavailable. Please check your device GPS and try again.');
+            break;
+          case err.TIMEOUT:
+            setLocationError('Location request timed out. Please ensure you have a stable connection and try again.');
+            break;
+          default:
+            setLocationError('An unknown error occurred while detecting your location.');
         }
+        stopWatching();
       },
       options
     );
-
-    // Allow up to 10 seconds to find the best accuracy
-    timeoutId = setTimeout(() => {
-      finalize();
-    }, 10000);
-
-  }, []);
+  }, [stopWatching]);
 
   // Removed auto-detect on mount so the user explicitly asks for coordinates
   useEffect(() => {
-    return () => { if (notifTimer.current) clearTimeout(notifTimer.current); };
-  }, []);
+    return () => { 
+      if (notifTimer.current) clearTimeout(notifTimer.current); 
+      stopWatching();
+    };
+  }, [stopWatching]);
 
   // ── Submit attendance ────────────────────────────────────────────────────────
   const handleSubmit = async (e) => {
@@ -172,6 +173,16 @@ const InternshipAttendance = () => {
           : 'We could not detect your location. Please allow location access and tap "Retry Location".',
         'Location Not Ready'
       );
+      return;
+    }
+
+    if (!location.isAccurate) {
+      showNotification('error', `Your location accuracy (${Math.round(location.accuracy)}m) is too low. Please step outside for a clearer GPS signal and wait for accuracy to reach under ${REQ_ACCURACY}m.`, 'Accuracy Too Low');
+      return;
+    }
+
+    if (!location.isInRadius) {
+      showNotification('error', `You are ${Math.round(location.distance)}m away from campus. You must be within ${MAX_RADIUS}m to check in.`, 'Too Far From Campus');
       return;
     }
 
@@ -273,7 +284,22 @@ const InternshipAttendance = () => {
       success: {
         cls: 'success',
         icon: <Navigation size={16} />,
-        text: `Location acquired (Accuracy: ${location?.accuracy ? Math.round(location.accuracy) + 'm' : 'Unknown'})`,
+        text: (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', lineHeight: '1.4' }}>
+            <span>Location acquired (Live Tracking)</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', opacity: 0.8 }}>
+              Coords: [{location?.latitude?.toFixed(6)}, {location?.longitude?.toFixed(6)}]
+            </span>
+            <span style={{ fontSize: '0.85rem', color: location?.isAccurate ? 'inherit' : '#e53e3e', fontWeight: 500 }}>
+              Accuracy: {location?.accuracy ? Math.round(location.accuracy) + 'm' : 'Unknown'} {location?.isAccurate ? '✓' : `(Needs to be < ${REQ_ACCURACY}m)`}
+            </span>
+            {location?.isAccurate && (
+              <span style={{ fontSize: '0.85rem', color: location?.isInRadius ? 'inherit' : '#e53e3e', fontWeight: 500 }}>
+                Distance to class: {Math.round(location.distance)}m {location?.isInRadius ? '✓ (Within range)' : `(Too far, max ${MAX_RADIUS}m)`}
+              </span>
+            )}
+          </div>
+        ),
       },
       error: {
         cls: 'error',
@@ -287,7 +313,7 @@ const InternshipAttendance = () => {
         <div className={`location-status ${config.cls}`}>
           <div className={`location-dot ${config.cls}`} />
           {config.icon}
-          <span>{config.text}</span>
+          <div style={{ flex: 1 }}>{config.text}</div>
         </div>
         {locationStatus === 'error' && (
           <button className="att-location-retry-btn" onClick={detectLocation} type="button">
@@ -311,7 +337,7 @@ const InternshipAttendance = () => {
               type="button"
               style={{ background: 'transparent', padding: '4px 8px', fontSize: '0.75rem', marginTop: 0 }}
             >
-              <RefreshCw size={12} /> Refresh
+              <RefreshCw size={12} /> Restart Tracking
             </button>
           </div>
         )}
@@ -532,7 +558,7 @@ const InternshipAttendance = () => {
                   <motion.button
                     type="submit"
                     className="att-submit-btn"
-                    disabled={loading || locationStatus === 'detecting'}
+                    disabled={loading || locationStatus === 'detecting' || (location && (!location.isAccurate || !location.isInRadius))}
                     whileHover={!loading ? { scale: 1.01 } : {}}
                     whileTap={!loading  ? { scale: 0.98 } : {}}
                   >
