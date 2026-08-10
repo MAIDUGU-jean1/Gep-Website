@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Award, Users, BookOpen, Mail } from 'lucide-react';
-import Jean from '../assets/Images/jean.png';
+import Jean from '../assets/Images/jean2.jpeg';
 import Fien from '../assets/Images/fien.jpeg';
 import Elvis from '../assets/Images/elvis.jpeg';
 import Noel from '../assets/Images/Noel.jpeg';
@@ -30,13 +30,13 @@ const tutors = [
   {
     id: 6,
     name: "Mr Ngulefac Terence",
-    specialization: "Web Development, App Development & Full-Stack",
+    specialization: "Full-Stack Developer",
     experience: "6 years",
     image: Terence,
-    bio: "Full-stack developer skilled in React, Node.js, and Laravel. Passionate about building innovative web solutions and sharing knowledge with others.",
+    bio: "Full-stack developer skilled in React, Node.js, React Native, Laravel and more. Passionate about building innovative web solutions and sharing knowledge with others.",
     rating: 4.9,
     courses: ["Web Development", "React Masterclass", "LaravelBackend", "Express", "Node.js"],
-    students: 2500,
+    students: 20,
     email: "terencen143@icloud.com"
   },
 
@@ -68,30 +68,30 @@ const tutors = [
   {
     id: 6,
     name: "Mr. Jean De Dieu Maidugu",
-    specialization: "Web Development & Full-Stack",
+    specialization: "Full-Stack Developer",
     experience: "4 years",
     image: Jean,
     // image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-    bio: "enginee with language like React, Node.js, Laravel, and more. Passionate about teaching modern web development.",
+    bio: "Software engineer with languages like React, Node.js, Laravel, and more. Passionate about teaching modern web development.",
     rating: 4.9,
     courses: ["Web Development", "React Masterclass", "LaravelBackend"],
-    students: 2500,
+    students: 20,
     email: "maidugujeandedieu600@gmail.com"
   },
 
 
-  {
-    id: 7,
-    name: "Mr Nengang Noel",
-    specialization: "Mobile App Development",
-    experience: "4 years",
-    image: Noel,
-    bio: "Cross Platform Mobile App Developer skilled in React Native. Developed apps for startups and enterprises. Skilled in TypeScript, Basic UI Design, Node js and many more",
-    rating: 4.7,
-    courses: ["Web Development", "React Masterclass", "LaravelBackend"],
-    students: 2500,
-    email: ""
-  },
+  // {
+  //   id: 7,
+  //   name: "Mr Nengang Noel",
+  //   specialization: "Mobile App Development",
+  //   experience: "4 years",
+  //   image: Noel,
+  //   bio: "Cross Platform Mobile App Developer skilled in React Native. Developed apps for startups and enterprises. Skilled in TypeScript, Basic UI Design, Node js and many more",
+  //   rating: 4.7,
+  //   courses: ["Web Development", "React Masterclass", "LaravelBackend"],
+  //   students: 2500,
+  //   email: ""
+  // },
 
   {
     id: 8,
@@ -322,7 +322,7 @@ const Tutors = () => {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    // onClick={() => navigate(`/tutor/${tutor.id}`)} // Add this onClick
+                    onClick={() => navigate(`/tutor/${tutor.id}`)} // Add this onClick
                   >
                     View Profile
                   </motion.button>

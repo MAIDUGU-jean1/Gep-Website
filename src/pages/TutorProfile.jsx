@@ -15,7 +15,7 @@ import {
   Share2
 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Jean from '../assets/Images/jean.jpeg';
+import Jean from '../assets/Images/jean2.jpeg';
 import Fien from '../assets/Images/fien.jpeg';
 import Elvis from '../assets/Images/elvis.jpeg';
 import Noel from '../assets/Images/Noel.jpeg';
@@ -72,7 +72,7 @@ const tutors = [
     {
     id: 4,
     name: 'Mr Jean De Dieu Maidugu',
-    specialization: "Web Development & Full-Stack",
+    specialization: "Full-Stack Developer",
     experience: "4 years",
     image: {Jean},
     bio: "Full-stack developer skilled in React, Node.js, and Laravel. Passionate about building innovative web solutions and sharing knowledge with others.",
@@ -82,7 +82,7 @@ const tutors = [
     email: "maidugujeandedieu600@gmail.com",
     detailedBio: "Jean is a passionate full-stack developer with extensive experience in modern web technologies. He has built numerous web applications and enjoys mentoring aspiring developers.",
     achievements: [
-      "Built 50+ web applications",
+      "Built 10+ web applications",
       "React Certified Developer",
       "Mentored 1000+ students"
     ],

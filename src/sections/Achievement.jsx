@@ -5,101 +5,111 @@ import award from '../assets/Videos/award.mp4';
 import Lauching from '../assets/Images/lauching.jpg';
 import Launch from '../assets/Videos/Launching.mp4';
 import Graduation from '../assets/Videos/graduation.mp4';
-import { th } from 'framer-motion/client';
-import Jean from '../../src/assets/Images/jean.jpeg'
+import AdvertVideo from '../assets/Videos/advert.mp4';
+import Jean from '../assets/Images/jean.jpeg';
+import GraduationImg from '../assets/Images/graduation.jpeg';
+import CertificateAwardImg from '../assets/Images/gallery/certificate award.jpeg';
+import ActImg from '../assets/Images/gallery/act.jpeg';
 
 // Data for achievements and testimonials
 const achievementsData = {
   ceremonies: [
     {
       id: 1,
-      title: '2024 Graduation Ceremony',
-      description: 'Celebrating our latest batch of successful graduates',
-      date: '2024-01-15',
+      title: '2026 Graduation Ceremony',
+      description: 'Grand celebration of the graduating batch of 2026 with capstone awards and certifications',
+      date: '2026-05-23',
       videoUrl: Graduation,
-    //   videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    thumbnail: "https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",      awards: ['Best Overall Student', 'Most Innovative Project', 'Academic Excellence']
+      thumbnail: GraduationImg,
+      awards: ['Outstanding Innovation Award', 'Valedictorian Excellence', 'Best Capstone Project']
     },
     {
       id: 2,
+      title: '2024 Graduation Ceremony',
+      description: 'Celebrating our latest batch of successful graduates and project showcases',
+      date: '2024-01-15',
+      videoUrl: AdvertVideo,
+      thumbnail: CertificateAwardImg,
+      awards: ['Best Overall Student', 'Most Innovative Project', 'Academic Excellence']
+    },
+    {
+      id: 3,
       title: 'Graduation and awards ceremony for 9&8 batch',
-      description: 'Honoring outstanding student achievements and project showcases',
+      description: 'Honoring outstanding student achievements and project showcases for Batch 8 & 9',
       date: '2024-01-15',
       videoUrl: award,
-      thumbnail: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      thumbnail: ActImg,
       awards: ['Best Web App', 'Most Creative Design', 'Technical Excellence']
     },
     {
-      id: 3,
+      id: 4,
       title: 'Launching of the 9 batch',
-      description: 'Recognizing outstanding industry collaborations',
+      description: 'Recognizing outstanding industry collaborations and welcoming new intake',
       date: '2023-11-20',
-        videoUrl: Launch,
-    //   videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      videoUrl: Launch,
       thumbnail: Lauching,
-    //   thumbnail: 'https://images.unsplash.com/photo-1551836026-d5c2e0c49b13?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
       awards: ['Best Industry Project', 'Outstanding Partnership', 'Innovation Award']
     }
   ],
-  testimonials: [
+  // testimonials: [
 
-    {
-      id: 2,
-      name: 'Maidugu',
-      course: 'Web Development and Data Analysis',
-      graduation: '2024',
-      currentRole: 'Full Stack developper',
-      image: Jean,
-      quote: 'The practical approach to learning and industry-relevant curriculum gave me the confidence to excel in my data science career.',
-      rating: 5
-    },
-    // {
-    //   id: 3,
-    //   name: 'Emily Rodriguez',
-    //   course: 'Graphic Design',
-    //   graduation: '2023',
-    //   currentRole: 'UI/UX Designer at CreativeStudio',
-    //   image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-    //   quote: 'The mentorship and portfolio-building opportunities at Gep Protech were invaluable. I landed my dream job within weeks of graduating.',
-    //   rating: 5
-    // },
-    // {
-    //   id: 4,
-    //   name: 'David Thompson',
-    //   course: 'Digital Marketing',
-    //   graduation: '2023',
-    //   currentRole: 'Marketing Specialist at GrowthAgency',
-    //   image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-    //   quote: 'The real-world marketing campaigns we worked on gave me practical experience that directly translated to my current role.',
-    //   rating: 5
-    // }
-  ],
-  awards: [
-    {
-      id: 1,
-      title: 'Excellence in Vocational Education',
-      organization: 'National Education Board',
-      year: '2024',
-      description: 'Recognized for outstanding contribution to vocational training and skill development',
-      icon: Trophy
-    },
-    {
-      id: 2,
-      title: 'Best Tech Training Institute',
-      organization: 'Tech Innovation Awards',
-      year: '2023',
-      description: 'Awarded for innovative curriculum and exceptional student outcomes in technology education',
-      icon: Award
-    },
-    {
-      id: 3,
-      title: 'Industry Partnership Excellence',
-      organization: 'Business Education Council',
-      year: '2023',
-      description: 'Recognized for outstanding collaboration with industry partners and job placement success',
-      icon: GraduationCap
-    }
-  ]
+  //   {
+  //     id: 2,
+  //     name: 'Maidugu',
+  //     course: 'Web Development and Data Analysis',
+  //     graduation: '2024',
+  //     currentRole: 'Full Stack developper',
+  //     image: Jean,
+  //     quote: 'The practical approach to learning and industry-relevant curriculum gave me the confidence to excel in my data science career.',
+  //     rating: 5
+  //   },
+  //   // {
+  //   //   id: 3,
+  //   //   name: 'Emily Rodriguez',
+  //   //   course: 'Graphic Design',
+  //   //   graduation: '2023',
+  //   //   currentRole: 'UI/UX Designer at CreativeStudio',
+  //   //   image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+  //   //   quote: 'The mentorship and portfolio-building opportunities at Gep Protech were invaluable. I landed my dream job within weeks of graduating.',
+  //   //   rating: 5
+  //   // },
+  //   // {
+  //   //   id: 4,
+  //   //   name: 'David Thompson',
+  //   //   course: 'Digital Marketing',
+  //   //   graduation: '2023',
+  //   //   currentRole: 'Marketing Specialist at GrowthAgency',
+  //   //   image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+  //   //   quote: 'The real-world marketing campaigns we worked on gave me practical experience that directly translated to my current role.',
+  //   //   rating: 5
+  //   // }
+  // ],
+  // awards: [
+  //   {
+  //     id: 1,
+  //     title: 'Excellence in Vocational Education',
+  //     organization: 'National Education Board',
+  //     year: '2024',
+  //     description: 'Recognized for outstanding contribution to vocational training and skill development',
+  //     icon: Trophy
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Best Tech Training Institute',
+  //     organization: 'Tech Innovation Awards',
+  //     year: '2023',
+  //     description: 'Awarded for innovative curriculum and exceptional student outcomes in technology education',
+  //     icon: Award
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Industry Partnership Excellence',
+  //     organization: 'Business Education Council',
+  //     year: '2023',
+  //     description: 'Recognized for outstanding collaboration with industry partners and job placement success',
+  //     icon: GraduationCap
+  //   }
+  // ]
 };
 
 const Achievements = () => {

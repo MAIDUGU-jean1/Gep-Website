@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Image, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import Graduatiion from '../../src/assets/Images/graduation.jpeg'
-import Student from '../../src/assets/Images/student.jpeg'
-import Show from '../../src/assets/Images/Show.jpeg'
-import Team from '../../src/assets/Images/team.jpeg'
-import { image } from 'framer-motion/client';
+
+import GraduationImg from '../assets/Images/graduation.jpeg';
+import StudentImg from '../assets/Images/student.jpeg';
+import ShowImg from '../assets/Images/Show.jpeg';
+import TeamImg from '../assets/Images/team.jpeg';
+import ActImg from '../assets/Images/gallery/act.jpeg';
+import CertificateAwardImg from '../assets/Images/gallery/certificate award.jpeg';
+import EncouragementImg from '../assets/Images/gallery/encouragement.jpeg';
+import StaffImg from '../assets/Images/gallery/staff.jpeg';
+import Staff2Img from '../assets/Images/gallery/staff2.jpeg';
+import Jean2Img from '../assets/Images/gallery/jean2.jpeg';
+import BootcampImg from '../assets/Images/bootcamp-image.jpeg';
+import LaunchingImg from '../assets/Images/lauching.jpg';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -14,55 +22,91 @@ const Gallery = () => {
   const galleryImages = [
     {
       id: 1,
-      title: 'Photoshoot 2024',
-      description: 'Our latest batch of graduates celebrating their success',
-      category: 'Events',
-      date: '2024-01-15',
-      imageUrl: Graduatiion,
-    //   imageUrl: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      title: 'Graduation Ceremony & Awards',
+      description: 'Our graduates celebrating their hard-earned milestone and transition into the tech industry.',
+      category: 'Ceremonies',
+      date: '2026-05-23',
+      imageUrl: GraduationImg,
     },
     {
       id: 2,
-      title: 'Web Development Class',
-      description: 'Students working on real-world projects',
-      category: 'Classes',
-      date: '2024-01-10',
-      imageUrl: Student,
-    //   imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      title: 'Certificate Presentation & Honors',
+      description: 'Awarding certificates of excellence and technical merit to outstanding students.',
+      category: 'Ceremonies',
+      date: '2026-01-15',
+      imageUrl: CertificateAwardImg,
     },
-    // {
-    //   id: 3,
-    //   title: 'Industry Workshop',
-    //   description: 'Guest speaker from tech industry sharing insights',
-    //   category: 'Workshops',
-    //   date: '2023-12-20',
-    //   imageUrl: 'https://images.unsplash.com/photo-1551836026-d5c2e0c49b13?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
-    // },
+    {
+      id: 3,
+      title: 'Hands-on Practical Coding',
+      description: 'Students engaged in collaborative coding, building robust software architectures.',
+      category: 'Workshops',
+      date: '2025-11-10',
+      imageUrl: ActImg,
+    },
     {
       id: 4,
-      title: 'Student Projects Showcase',
-      description: 'Display of exceptional student work',
-      category: 'Showcase',
-      date: '2023-12-15',
-      imageUrl: Show,
-    //   imageUrl: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      title: 'Interactive Classroom Learning',
+      description: 'Dynamic lectures and mentorship sessions on modern full-stack web technologies.',
+      category: 'Classes',
+      date: '2025-10-15',
+      imageUrl: StudentImg,
     },
     {
       id: 5,
-      title: 'Campus Facilities',
-      description: 'State-of-the-art learning environment',
-      category: 'Campus',
-      date: '2023-12-10',
-      imageUrl: 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      title: 'Student Projects Showcase & Expo',
+      description: 'Showcasing exceptional capstone applications built by our talented students.',
+      category: 'Showcase',
+      date: '2025-09-20',
+      imageUrl: ShowImg,
     },
     {
       id: 6,
-      title: 'Team Building Activity',
-      description: 'Students collaborating on group projects',
+      title: 'Gift from Our ex student',
+      description: 'Inspiring guidance and career mentoring from experienced industry leaders.',
+      category: 'Mentorship',
+      date: '2025-08-18',
+      imageUrl: EncouragementImg,
+    },
+    {
+      id: 7,
+      title: 'Faculty & Academic Team',
+      description: 'Our dedicated team of lecturers, engineers, and technical trainers.',
+      category: 'Staff',
+      date: '2025-07-12',
+      imageUrl: StaffImg,
+    },
+    {
+      id: 8,
+      title: 'Instructors & Technical Staff',
+      description: 'Academic staff collaborating on state-of-the-art tech curriculum standards.',
+      category: 'Staff',
+      date: '2025-06-25',
+      imageUrl: Staff2Img,
+    },
+    {
+      id: 10,
+      title: 'Team Building & Hackathons',
+      description: 'Fostering teamwork, problem-solving, and innovative hackathon sprints.',
       category: 'Activities',
-      date: '2023-11-28',
-      imageUrl: Team,
-    //   imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      date: '2025-04-14',
+      imageUrl: TeamImg,
+    },
+    {
+      id: 11,
+      title: 'Intensive Tech Bootcamp',
+      description: 'Accelerated bootcamp immersions transforming beginners into industry-ready devs.',
+      category: 'Workshops',
+      date: '2025-03-05',
+      imageUrl: BootcampImg,
+    },
+    {
+      id: 12,
+      title: 'Official Cohort Launch Event',
+      description: 'Welcoming the new intake of eager tech learners to the GeP ProTech ecosystem.',
+      category: 'Events',
+      date: '2025-01-20',
+      imageUrl: LaunchingImg,
     }
   ];
 
