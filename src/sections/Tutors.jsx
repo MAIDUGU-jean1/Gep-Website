@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Award, Users, BookOpen, Mail } from 'lucide-react';
 import Jean from '../assets/Images/jean2.jpeg';
-import Fien from '../assets/Images/fien.jpeg';
+import Fien from '../assets/Images/fiency.jpeg';
 import Elvis from '../assets/Images/elvis.jpeg';
 import Noel from '../assets/Images/Noel.jpeg';
 import { image } from 'framer-motion/client';
@@ -60,7 +60,7 @@ const tutors = [
     image: Geo,
     bio: "Generally, I am a geographer with keen attention to environmental issues, sustainability, contemporary challenges that incorporate to mapping by GIS and topography. I am eager to extend my tentacles in skills acquisition and dispensation to the younger generation",
     rating: 4.7,
-    courses: ["Cartography and GIS","Topography and Remote sensing", "Secretarial duties "],
+    courses: ["Cartography and GIS", "Topography and Remote sensing", "Secretarial duties "],
     students: 100,
     email: "ashangaboris@gmail.com"
   },
@@ -113,14 +113,14 @@ const tutors = [
 const Tutors = () => {
 
   const navigate = useNavigate(); // Add this hook
-  
+
   return (
     <section id="tutors" style={{
       padding: 'clamp(4rem, 8vw, 8rem) 0',
       background: 'var(--bg-primary)'
     }}>
       <div className="container">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -154,7 +154,7 @@ const Tutors = () => {
                 transition: 'all 0.3s ease',
                 textAlign: 'center'
               }}
-              whileHover={{ 
+              whileHover={{
                 y: -10,
                 borderColor: 'var(--primary-color)',
                 boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
@@ -166,8 +166,8 @@ const Tutors = () => {
                 position: 'relative',
                 overflow: 'hidden'
               }}>
-                <img 
-                  src={tutor.image} 
+                <img
+                  src={tutor.image}
                   alt={tutor.name}
                   style={{
                     width: '100%',
@@ -204,22 +204,22 @@ const Tutors = () => {
                 }}>
                   {tutor.name}
                 </h3>
-                <p style={{ 
-                  marginBottom: '1rem', 
+                <p style={{
+                  marginBottom: '1rem',
                   opacity: 0.8,
                   fontSize: '0.9rem'
                 }}>
                   {tutor.specialization} • {tutor.experience} experience
                 </p>
-                <p style={{ 
-                  marginBottom: '1.5rem', 
+                <p style={{
+                  marginBottom: '1.5rem',
                   opacity: 0.8,
                   lineHeight: '1.6',
                   fontSize: '0.9rem'
                 }}>
                   {tutor.bio}
                 </p>
-                
+
                 {/* Tutor Details */}
                 <div style={{
                   display: 'grid',
@@ -261,11 +261,11 @@ const Tutors = () => {
                   marginBottom: '1.5rem'
                 }}>
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <Star 
-                      key={star} 
-                      size={16} 
-                      color="var(--primary-color)" 
-                      fill={star <= Math.floor(tutor.rating) ? "var(--primary-color)" : "none"} 
+                    <Star
+                      key={star}
+                      size={16}
+                      color="var(--primary-color)"
+                      fill={star <= Math.floor(tutor.rating) ? "var(--primary-color)" : "none"}
                     />
                   ))}
                   <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>
@@ -278,9 +278,9 @@ const Tutors = () => {
                   marginBottom: '1.5rem',
                   textAlign: 'left'
                 }}>
-                  <div style={{ 
-                    fontSize: '0.8rem', 
-                    fontWeight: '600', 
+                  <div style={{
+                    fontSize: '0.8rem',
+                    fontWeight: '600',
                     marginBottom: '0.5rem',
                     color: 'var(--text-secondary)'
                   }}>
@@ -292,7 +292,7 @@ const Tutors = () => {
                     gap: '0.3rem'
                   }}>
                     {tutor.courses.map((course, idx) => (
-                      <span 
+                      <span
                         key={idx}
                         style={{
                           background: 'var(--primary-color)',
@@ -313,10 +313,10 @@ const Tutors = () => {
                   display: 'flex',
                   gap: '0.5rem'
                 }}>
-                  <motion.button 
-                    className="btn-primary" 
-                    style={{ 
-                      padding: '8px 16px', 
+                  <motion.button
+                    className="btn-primary"
+                    style={{
+                      padding: '8px 16px',
                       fontSize: '0.8rem',
                       flex: 1
                     }}
@@ -326,10 +326,10 @@ const Tutors = () => {
                   >
                     View Profile
                   </motion.button>
-                  <motion.button 
-                    className="btn-secondary" 
-                    style={{ 
-                      padding: '8px', 
+                  <motion.button
+                    className="btn-secondary"
+                    style={{
+                      padding: '8px',
                       fontSize: '0.8rem',
                       display: 'flex',
                       alignItems: 'center',
@@ -347,7 +347,7 @@ const Tutors = () => {
         </div>
 
         {/* Stats Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -360,10 +360,10 @@ const Tutors = () => {
             textAlign: 'center'
           }}
         >
-          <h3 style={{ 
-            fontSize: '2rem', 
-            marginBottom: '2rem', 
-            fontWeight: '600' 
+          <h3 style={{
+            fontSize: '2rem',
+            marginBottom: '2rem',
+            fontWeight: '600'
           }}>
             Why Learn With Our Experts?
           </h3>
@@ -374,32 +374,32 @@ const Tutors = () => {
             textAlign: 'center'
           }}>
             {[
-              { 
-                icon: Users, 
-                number: tutors.length + '+', 
+              {
+                icon: Users,
+                number: tutors.length + '+',
                 label: 'Expert Tutors',
                 description: 'Industry professionals with real-world experience'
               },
-              { 
-                icon: Award, 
-                number: tutors.reduce((acc, tutor) => acc + tutor.students, 0).toLocaleString() + '+', 
+              {
+                icon: Award,
+                number: tutors.reduce((acc, tutor) => acc + tutor.students, 0).toLocaleString() + '+',
                 label: 'Students Trained',
                 description: 'Successful graduates worldwide'
               },
-              { 
-                icon: Star, 
-                number: '4.8', 
+              {
+                icon: Star,
+                number: '4.8',
                 label: 'Average Rating',
                 description: 'Based on student feedback and reviews'
               },
-              { 
-                icon: BookOpen, 
-                number: tutors.reduce((acc, tutor) => acc + tutor.courses.length, 0) + '+', 
+              {
+                icon: BookOpen,
+                number: tutors.reduce((acc, tutor) => acc + tutor.courses.length, 0) + '+',
                 label: 'Courses Available',
                 description: 'Comprehensive learning programs'
               }
             ].map((item, index) => (
-              <motion.div 
+              <motion.div
                 key={index}
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
