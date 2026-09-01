@@ -131,13 +131,8 @@ const Gallery = () => {
       .filter((post) => {
         const isPublic = post.target_type === 'public' || !post.target_type;
         const isGalleryCategory = post.category === 'Gallery';
-        const hasImages = post.files && post.files.some((f) =>
-          ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(
-            f.filetype?.toLowerCase() || ''
-          ) || (f.filepath && f.filepath.match(/\.(png|jpg|jpeg|webp|gif|svg)$/i))
-        );
 
-        return isPublic && (isGalleryCategory || hasImages);
+        return isPublic && isGalleryCategory;
       })
       .map((post) => {
         const imageFiles = (post.files || []).filter((f) =>
