@@ -1,41 +1,19 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, Users, BookOpen, Search, X, Sparkles } from "lucide-react";
+import { Clock, Users, BookOpen, Search, X, Sparkles, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { fetchCourses, getCategoriesFromCourses, getCourseCategoriesMapping } from "../data/courses";
+import { useCourses, getCategoriesFromCourses, getCourseCategoriesMapping } from "../data/courses";
 import "./styles/Courses.css";
 
 const Courses = () => {
   const navigate = useNavigate();
 
-  const [courses, setCourses] = useState([]);
+  const { data: rawCourses = [], isLoading, isFetching, error, refetch } = useCourses();
+  const courses = Array.isArray(rawCourses) ? rawCourses : [];
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Fetch courses on component mount
-  useEffect(() => {
-    const loadCourses = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchCourses();
-        if (data.length === 0) {
-          console.warn("No courses fetched from API, using fallback data if available");
-        }
-        setCourses(data);
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-        console.error("Failed to load courses:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadCourses();
-  }, []);
 
   /* ------------------------------------------------ */
   /* CATEGORY CONFIGURATION - DYNAMIC */
@@ -127,7 +105,7 @@ const Courses = () => {
   /* LOADING & ERROR STATES */
   /* ------------------------------------------------ */
 
-  if (loading) {
+  if (isLoading) {
     return (
       <section id="courses" className="courses-section">
         <div className="courses-container">
@@ -144,7 +122,7 @@ const Courses = () => {
     );
   }
 
-  if (error) {
+  if (error && courses.length === 0) {
     return (
       <section id="courses" className="courses-section">
         <div className="courses-container">
@@ -154,9 +132,9 @@ const Courses = () => {
             className="error-state"
           >
             <h3>Failed to load courses</h3>
-            <p>{error}</p>
+            <p>{error?.message || "An error occurred while fetching courses."}</p>
             <button 
-              onClick={() => window.location.reload()}
+              onClick={() => refetch()}
               className="retry-button"
             >
               Retry
@@ -191,6 +169,21 @@ const Courses = () => {
   return (
     <section id="courses" className="courses-section">
       <div className="courses-container">
+
+        {/* BACKGROUND REFETCH INDICATOR */}
+        <AnimatePresence>
+          {isFetching && !isLoading && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="subtle-refresh-badge"
+            >
+              <RefreshCw className="spinning-icon" size={14} />
+              <span>Syncing fresh data...</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* HEADER */}
 

@@ -1,3 +1,6 @@
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
 
 /**
@@ -5,19 +8,20 @@ const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
  * @returns {Promise<Array>} Array of course objects
  */
 export const fetchCourses = async () => {
-  try {
-    const response = await fetch(`${API_URL}/courses`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    console.log("Fetched courses:", data);
-    return data.data;
-  } catch (error) {
-    console.error("Error fetching courses:", error);
-    return [];
-  }
+  const response = await axios.get(`${API_URL}/courses`);
+  console.log("Fetched courses:", response.data);
+  return response.data.data || response.data;
 };
+
+/**
+ * Custom React Query hook for fetching and caching courses
+ */
+export function useCourses() {
+  return useQuery({
+    queryKey: ['courses'],
+    queryFn: fetchCourses,
+  });
+}
 
 /**
  * Helper to assign a category to a course based on its title or other properties

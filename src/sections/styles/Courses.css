@@ -972,3 +972,23 @@
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.3);
 }
+
+/* Subtle Background Refresh Indicator */
+.subtle-refresh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(147, 51, 234, 0.1);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  color: var(--primary-color, #9333ea);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(8px);
+}
+
+.spinning-icon {
+  animation: spin 1.2s linear infinite;
+}

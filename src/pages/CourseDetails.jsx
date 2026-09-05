@@ -12,7 +12,7 @@ import {
     CheckCircle,
     Award
 } from 'lucide-react';
-import { fetchCourses } from '../data/courses';
+import { useCourses } from '../data/courses';
 import './css/CourseDetails.css';
 
 const CourseDetails = () => {
@@ -20,9 +20,9 @@ const CourseDetails = () => {
     const navigate = useNavigate();
     const courseId = parseInt(id);
 
-    const [courses, setCourses] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { data: rawCourses = [], isLoading, error, refetch } = useCourses();
+    const courses = Array.isArray(rawCourses) ? rawCourses : [];
+
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
     const [itemsPerSlide, setItemsPerSlide] = useState(3);
@@ -31,25 +31,6 @@ const CourseDetails = () => {
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
     }, [courseId]);
-
-    // Fetch all courses
-    useEffect(() => {
-        const loadCourses = async () => {
-            try {
-                setLoading(true);
-                const data = await fetchCourses();
-                setCourses(data);
-                setError(null);
-            } catch (err) {
-                setError(err.message);
-                console.error("Failed to load courses:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadCourses();
-    }, []);
 
     // Find the main course
     const mainCourse = courses.find(c => c.id === courseId);
@@ -142,7 +123,7 @@ const CourseDetails = () => {
     };
 
     // Loading state
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="course-details-page">
                 <div className="loading-state">
@@ -154,13 +135,13 @@ const CourseDetails = () => {
     }
 
     // Error state
-    if (error) {
+    if (error && courses.length === 0) {
         return (
             <div className="course-details-page">
                 <div className="error-state">
                     <h2>Failed to load course</h2>
-                    <p>{error}</p>
-                    <button onClick={() => window.location.reload()} className="retry-button">
+                    <p>{error?.message || "An error occurred while fetching course details."}</p>
+                    <button onClick={() => refetch()} className="retry-button">
                         Retry
                     </button>
                 </div>
